@@ -10,7 +10,7 @@ Organization:
       RootEmail: root@jompx.com
       Alias: jompx-management
       Tags:
-        budget-alarm-hreshold: '25'
+        BudgetAlarmThreshold: '25'
 
   OrganizationRoot:
     Type: OC::ORG::OrganizationRoot
@@ -26,11 +26,35 @@ Organization:
         - !Ref CicdTestAccount
         - !Ref CicdProdAccount
 
+  SandboxOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Sandbox
+      Accounts: !Ref Sandbox1Account
+
+  WorkloadsOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Workloads
+      OrganizationalUnits:
+        - !Ref TestOU
+        - !Ref ProdOU
+
   SuspendedOU:
     Type: OC::ORG::OrganizationalUnit
     Properties:
       OrganizationalUnitName: Suspended
       Accounts: !Ref OrganizationAccount
+
+  TestOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Test
+
+  ProdOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Prod
 
   OrganizationAccount:
     Type: OC::ORG::Account
@@ -38,6 +62,13 @@ Organization:
       AccountName: Organization
       AccountId: '076164328019'
       RootEmail: organization@jompx.com
+
+  Sandbox1Account:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: sandbox1
+      AccountId: '066209653567'
+      RootEmail: sandbox1@jompx.com
 
   CicdTestAccount:
     Type: OC::ORG::Account
@@ -52,38 +83,6 @@ Organization:
       AccountName: cicd-prod
       AccountId: '896371249616'
       RootEmail: cicd-prod@jompx.com
-
-  WorkloadsOU:
-    Type: OC::ORG::OrganizationalUnit
-    Properties:
-      OrganizationalUnitName: Workloads
-      OrganizationalUnits:
-        - !Ref ProdOU
-        - !Ref TestOU
-
-  ProdOU:
-    Type: OC::ORG::OrganizationalUnit
-    Properties:
-      OrganizationalUnitName: Prod
-
-  TestOU:
-    Type: OC::ORG::OrganizationalUnit
-    Properties:
-      OrganizationalUnitName: Test
-
-  SandboxOU:
-    Type: OC::ORG::OrganizationalUnit
-    Properties:
-      OrganizationalUnitName: Sandbox
-      Accounts:
-        - !Ref Sandbox1Account
-
-  Sandbox1Account:
-    Type: OC::ORG::Account
-    Properties:
-      AccountName: sandbox1
-      AccountId: '066209653567'
-      RootEmail: sandbox1@jompx.com
 
   RestrictUnusedRegionsSCP:
     Type: OC::ORG::ServiceControlPolicy
@@ -105,3 +104,5 @@ Organization:
               StringNotEquals:
                 'aws:RequestedRegion':
                   - us-west-2
+        
+

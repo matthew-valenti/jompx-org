@@ -1,0 +1,25 @@
+{
+  "root": "apps/cdk",
+  "projectType": "application",
+  "sourceRoot": "apps/cdk",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/workspace:run-script",
+      "options": {
+        "script": "build"
+      }
+    },
+    "synth": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx -p aws-cdk cdk synth",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    }
+  }
+}
