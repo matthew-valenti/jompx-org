@@ -15,7 +15,19 @@
         "cwd": "apps/cdk",
         "commands": [
           {
-            "command": "npx -p aws-cdk cdk synth",
+            "command": "npx aws-cdk synth",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk deploy",
             "forwardAllArgs": true
           }
         ]

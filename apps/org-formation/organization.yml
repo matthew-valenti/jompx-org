@@ -10,7 +10,7 @@ Organization:
       RootEmail: root@jompx.com
       Alias: jompx-management
       Tags:
-        budget-alarm-hreshold: '25'
+        budget-alarm-threshold: '25'
 
   OrganizationRoot:
     Type: OC::ORG::OrganizationRoot
@@ -38,6 +38,7 @@ Organization:
       AccountName: Organization
       AccountId: '076164328019'
       RootEmail: organization@jompx.com
+      
 
   CicdTestAccount:
     Type: OC::ORG::Account
@@ -45,6 +46,8 @@ Organization:
       AccountName: cicd-test
       AccountId: '863054937555'
       RootEmail: cicd-test@jompx.com
+      Tags:
+        stage: 'test'
 
   CicdProdAccount:
     Type: OC::ORG::Account
@@ -52,6 +55,8 @@ Organization:
       AccountName: cicd-prod
       AccountId: '896371249616'
       RootEmail: cicd-prod@jompx.com
+      Tags:
+        stage: 'prod'
 
   WorkloadsOU:
     Type: OC::ORG::OrganizationalUnit
@@ -84,6 +89,8 @@ Organization:
       AccountName: sandbox1
       AccountId: '066209653567'
       RootEmail: sandbox1@jompx.com
+      Tags:
+        stage: 'sandbox1'
 
   RestrictUnusedRegionsSCP:
     Type: OC::ORG::ServiceControlPolicy

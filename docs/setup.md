@@ -184,6 +184,12 @@ npx aws-cdk --version
 npx aws-cdk init app --language typescript
 ```
 
+To automate:
+- Move all packages to root package.json
+- Rename tsconfig.json to tsconfig.cdk.json
+- Add tsconfig.json that extends from tsconfig.cdk.json
+- Delete node_modules folder
+
 ```
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
@@ -199,6 +205,8 @@ nx build cdk
 nx run cdk:build
 
 nx synth cdk
+
+npx aws-cdk --version
 ```
 
 TODO: Automate this with an nx plugin.
@@ -249,9 +257,12 @@ https://www.npmjs.com/package/cdk-sso-sync
 After sso login with aws sso login --profile <YOUR PROFILE NAME> just run cdk-sso-sync <YOUR PROFILE NAME> to be able to use CDK with the same profile (cdk deploy --profile <YOUR PROFILE NAME>)
 ```
 npm install --save-dev cdk-sso-sync
-// T
 aws sso login --profile jompx-management
 npx cdk-sso-sync jompx-management
+
+aws sso login --profile jompx-cicd-test
+npx cdk-sso-sync jompx-cicd-test
+// Simply creates credentials in .aws\credentials
 
 aws sso login --profile jompx-sandbox1
 npx cdk-sso-sync jompx-sandbox1
@@ -271,7 +282,9 @@ You can also check "Receive Free Tier Usage Alerts" if you're trying to stay wit
 https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html
 
 ### Boostrap CDK
-ugg-nightmare can we have a jompx cli command that picks up from config?
+ugh-nightmare can we have a jompx cli command that picks up from config?
+Version can be found in parameter store variable: /cdk-bootstrap/xxxxxxxxx/version
+Maybe this helps -- boostrap all accounts in one script: https://stackoverflow.com/questions/59206845/how-to-provide-multiple-account-credentials-to-cdk-bootstrap
 
  Bootstrap an environment that can provision an AWS CDK pipeline.
  Bootstrap CI/CD test and prod accounts.
@@ -307,6 +320,10 @@ npx cdk bootstrap aws://066209653567/us-west-2 --profile jompx-sandbox1 ^
     aws://066209653567/us-west-2
 ```
 
+### CDK Custom Config
+cdk.json and cdk.context.json is used by the CDK.
+Use our own custom config.ts file.
+
 ### CI/CD
 
 Cost: Necessary for cross account actions.
@@ -325,3 +342,10 @@ npx cdk bootstrap --profile account2-profile --trust ACCOUNT1 --cloudformation-e
 pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
     env: { account: 'ACCOUNT2', region: 'us-west-2' }
 }));
+
+```
+// We want to do this but: Error terminal (TTY) is not attached so we are unable to get a confirmation from the user
+nx deploy cdk --profile jompx-cicd-test
+
+npx -p aws-cdk cdk deploy --profile jompx-cicd-test
+```

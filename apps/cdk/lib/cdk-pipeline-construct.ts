@@ -1,0 +1,32 @@
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import { PipelineStage } from './pipeline-stage';
+
+export interface JompxCdkPipelineProps {
+    test?: string;
+}
+
+export class JompxCdkPipeline extends Construct {
+    constructor(scope: Construct, id: string, props: JompxCdkPipelineProps = {}) {
+        super(scope, id);
+
+        const pipeline = new CodePipeline(this, 'Pipeline', {
+            pipelineName: 'CdkPipeline',
+            crossAccountKeys: true, // Required for cross account deploys.
+            synth: new ShellStep('Synth', {
+                input: CodePipelineSource.gitHub('matthew-valenti/jompx-org', 'ci', {
+                    // authentication: cdk.SecretValue.ssmSecure('/cicd/github/token', '1')
+                    authentication: cdk.SecretValue.secretsManager('cicd/github/token')
+                }), // AWS Secrets: github-token
+                // commands: ['npm ci', 'npm run build', 'npx cdk synth']
+                commands: ['npm ci', 'nx build cdk', 'nx synth cdk']
+            })
+        });
+
+        // pipeline.addStage(new PipelineStage(this, "test", {
+        //     env: { account: "066209653567", region: "us-west-2" }
+        // }));
+
+    }
+}
