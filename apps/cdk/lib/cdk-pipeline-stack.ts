@@ -12,7 +12,6 @@ import { PipelineStage } from './pipeline-stage';
 // } from './cdk-pipeline-construct';
 import { JompxCdkPipeline, IJompxCdkPipelineProps } from '@jompx/constructs';
 
-
 export class CdkPipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
