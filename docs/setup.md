@@ -348,4 +348,6 @@ pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
 nx deploy cdk --profile jompx-cicd-test
 
 npx -p aws-cdk cdk deploy --profile jompx-cicd-test
+
+nx synth cdk --args="CdkPipelineStack"
 ```

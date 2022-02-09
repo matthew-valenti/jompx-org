@@ -1,11 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import {
-  CodePipeline,
-  CodePipelineSource,
-  ShellStep,
-} from 'aws-cdk-lib/pipelines';
-import { PipelineStage } from './pipeline-stage';
+// import {
+//   CodePipeline,
+//   CodePipelineSource,
+//   ShellStep,
+// } from 'aws-cdk-lib/pipelines';
+// import { PipelineStage } from './pipeline-stage';
 // import {
 //   JompxCdkPipeline,
 //   JompxCdkPipelineProps,
@@ -16,7 +16,7 @@ export class CdkPipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const cdkPipeline = new JompxCdkPipeline(scope, 'JompxCdkPipeline', { test: 'testmatthew' });
+    new JompxCdkPipeline(this, 'JompxCdkPipeline', { test: 'testmatthew' });
 
     // const pipeline = new CodePipeline(this, 'Pipeline', {
     //     pipelineName: 'CdkPipeline',

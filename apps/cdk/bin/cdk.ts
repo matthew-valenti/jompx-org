@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { CdkStack } from '../lib/cdk-stack';
 import { CdkPipelineStack } from '../lib/cdk-pipeline-stack';
+import { S3Stack } from '../lib/s3-stack';
 import { TestStack } from '../lib/test-stack';
 import config from '../config';
 
@@ -29,7 +30,7 @@ const app = new cdk.App({
 
 // jompx.getAccountIdFromName('cicd-test');
 
-console.log('!!!!!!!!!!!!!!!!!!!!', app.node.tryGetContext('@app').stage);
+console.log('22222', app.node.tryGetContext('@app').stage);
 
 // cicd if cli context = test then deploy to test account otherwise production.
 
@@ -66,6 +67,24 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
 
     env: app.node.tryGetContext('stage') === 'prod' ? { account: '896371249616', region: 'us-west-2' } : { account: '863054937555', region: 'us-west-2' }
   });
+
+//   new S3Stack(app, 'S3Stack', {
+//     /* If you don't specify 'env', this stack will be environment-agnostic.
+//      * Account/Region-dependent features and context lookups will not work,
+//      * but a single synthesized template can be deployed anywhere. */
+  
+//     /* Uncomment the next line to specialize this stack for the AWS Account
+//      * and Region that are implied by the current CLI configuration. */
+//     // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+  
+//     /* Uncomment the next line if you know exactly what Account and Region you
+//      * want to deploy the stack to. */
+//     // env: { account: '123456789012', region: 'us-east-1' },
+  
+//     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+//   });
+
+  
 
 //   new CdkStack(app, 'CdkStack', {
 //     /* If you don't specify 'env', this stack will be environment-agnostic.

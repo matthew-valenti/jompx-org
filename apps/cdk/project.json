@@ -32,6 +32,18 @@
           }
         ]
       }
+    },
+    "destroy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk destroy",
+            "forwardAllArgs": true
+          }
+        ]
+      }
     }
   }
 }
