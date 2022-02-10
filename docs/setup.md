@@ -48,6 +48,9 @@ This means that you might have to use "yarn nx" or "npx nx" to execute commands 
 npm install -g nx // TODO: Do we need this to be global?
 ```
 
+### 5.5 Upgrade Nx Workspace
+https://nx.dev/using-nx/updating-nx
+
 ### 6. Create an AWS Account
 Requires a credit card.
 Create your "root" AWS account with root@ email address (or similar).
@@ -345,9 +348,10 @@ pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
 
 ```
 // We want to do this but: Error terminal (TTY) is not attached so we are unable to get a confirmation from the user
-nx deploy cdk --profile jompx-cicd-test
-
-npx -p aws-cdk cdk deploy --profile jompx-cicd-test
-
 nx synth cdk --args="CdkPipelineStack"
+nx deploy cdk --profile jompx-cicd-test
+nx deploy cdk --args="CdkPipelineStack" --profile jompx-cicd-test
+
+npx -p aws-cdk cdk deploy --profile jompx-cicd-test // Does NOT work because prompts for user confirmation i.e. --require-approval. Posted to nx slack support.
+npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test
 ```
