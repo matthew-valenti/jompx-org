@@ -1,0 +1,60 @@
+{
+  "root": "apps/cdk",
+  "projectType": "application",
+  "sourceRoot": "apps/cdk",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/workspace:run-script",
+      "options": {
+        "script": "build"
+      }
+    },
+    "synth": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk synth",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk deploy --require-approval=never",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "destroy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk destroy",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "login": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "parallel": false,
+        "commands": [
+            "aws sso login --profile {args.profile}",
+            "npx cdk-sso-sync {args.profile}"
+        ]
+      }
+    }
+  }
+}

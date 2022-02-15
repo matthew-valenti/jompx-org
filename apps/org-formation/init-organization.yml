@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: '2010-09-09-OC'
+Description: default template generated for organization with master account 015117255009
+
+Organization:
+  MasterAccount:
+    Type: OC::ORG::MasterAccount
+    Properties:
+      AccountName: jompx-management
+      AccountId: '015117255009'
+      RootEmail: root@jompx.com
+      Alias: jompx-management
+      Tags:
+        BudgetAlarmThreshold: '25'
+
+  OrganizationRoot:
+    Type: OC::ORG::OrganizationRoot
+    Properties:
+      DefaultOrganizationAccessRoleName: OrganizationAccountAccessRole
+      ServiceControlPolicies: !Ref RestrictUnusedRegionsSCP
+
+  DeploymentOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Deployment
+      Accounts:
+        - !Ref CicdTestAccount
+        - !Ref CicdProdAccount
+
+  SandboxOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Sandbox
+      Accounts: !Ref Sandbox1Account
+
+  WorkloadsOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Workloads
+      OrganizationalUnits:
+        - !Ref TestOU
+        - !Ref ProdOU
+
+  SuspendedOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Suspended
+      Accounts: !Ref OrganizationAccount
+
+  TestOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Test
+
+  ProdOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Prod
+
+  OrganizationAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: Organization
+      AccountId: '076164328019'
+      RootEmail: organization@jompx.com
+
+  Sandbox1Account:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: sandbox1
+      AccountId: '066209653567'
+      RootEmail: sandbox1@jompx.com
+
+  CicdTestAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: cicd-test
+      AccountId: '863054937555'
+      RootEmail: cicd-test@jompx.com
+
+  CicdProdAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: cicd-prod
+      AccountId: '896371249616'
+      RootEmail: cicd-prod@jompx.com
+
+  RestrictUnusedRegionsSCP:
+    Type: OC::ORG::ServiceControlPolicy
+    Properties:
+      PolicyName: RestrictUnusedRegions
+      Description: Restrict Unused regions
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyUnsupportedRegions
+            Effect: Deny
+            NotAction:
+              - 'cloudfront:*'
+              - 'iam:*'
+              - 'route53:*'
+              - 'support:*'
+            Resource: '*'
+            Condition:
+              StringNotEquals:
+                'aws:RequestedRegion':
+                  - us-west-2
+        
+

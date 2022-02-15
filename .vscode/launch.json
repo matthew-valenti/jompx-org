@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "CDK",
+      "cwd": "${workspaceFolder}/apps/cdk",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "runtimeArgs": [
+        "-r",
+        "./node_modules/ts-node/register/transpile-only"
+      ],
+      "args": [
+        "${workspaceFolder}/apps/cdk/bin/cdk.ts"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    }
+  ]
+}

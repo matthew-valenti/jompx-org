@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09-OC'
+Description: default template generated for organization with master account 015117255009
+
+Organization:
+  MasterAccount:
+    Type: OC::ORG::MasterAccount
+    Properties:
+      AccountName: jompx-management
+      AccountId: '015117255009'
+      RootEmail: root@jompx.com
+      Alias: jompx-management
+      Tags:
+        budget-alarm-threshold: '25'
+
+  OrganizationRoot:
+    Type: OC::ORG::OrganizationRoot
+    Properties:
+      DefaultOrganizationAccessRoleName: OrganizationAccountAccessRole
+      ServiceControlPolicies: !Ref RestrictUnusedRegionsSCP
+
+  DeploymentOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Deployment
+      Accounts:
+        - !Ref CicdTestAccount
+        - !Ref CicdProdAccount
+
+  SuspendedOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Suspended
+      Accounts: !Ref OrganizationAccount
+
+  OrganizationAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: Organization
+      AccountId: '076164328019'
+      RootEmail: organization@jompx.com
+      
+
+  CicdTestAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: cicd-test
+      AccountId: '863054937555'
+      RootEmail: cicd-test@jompx.com
+      Tags:
+        stage: 'test'
+
+  CicdProdAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: cicd-prod
+      AccountId: '896371249616'
+      RootEmail: cicd-prod@jompx.com
+      Tags:
+        stage: 'prod'
+
+  WorkloadsOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Workloads
+      OrganizationalUnits:
+        - !Ref ProdOU
+        - !Ref TestOU
+
+  ProdOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Prod
+
+  TestOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Test
+
+  SandboxOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Sandbox
+      Accounts:
+        - !Ref Sandbox1Account
+
+  Sandbox1Account:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: sandbox1
+      AccountId: '066209653567'
+      RootEmail: sandbox1@jompx.com
+      Tags:
+        stage: 'sandbox1'
+
+  RestrictUnusedRegionsSCP:
+    Type: OC::ORG::ServiceControlPolicy
+    Properties:
+      PolicyName: RestrictUnusedRegions
+      Description: Restrict Unused regions
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyUnsupportedRegions
+            Effect: Deny
+            NotAction:
+              - 'cloudfront:*'
+              - 'iam:*'
+              - 'route53:*'
+              - 'support:*'
+            Resource: '*'
+            Condition:
+              StringNotEquals:
+                'aws:RequestedRegion':
+                  - us-west-2
