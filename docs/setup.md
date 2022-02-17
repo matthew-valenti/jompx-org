@@ -279,12 +279,12 @@ Delete node_modules folder.
 ```
 "devDependencies": {
   "@types/jest": "^26.0.10",
-  "@types/node": "10.17.27",
+  "@types/node": "10.17.27", -- Use the latest version already in nx root package.json.
   "jest": "^26.4.2",
   "ts-jest": "^26.2.0",
   "aws-cdk": "2.8.0",
   "ts-node": "^9.0.0",
-  "typescript": "~3.9.7"
+  "typescript": "~3.9.7" -- Use the latest version already in nx root package.json.
 },
 "dependencies": {
   "aws-cdk-lib": "2.8.0",
@@ -396,12 +396,17 @@ https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/d
 Deploying to a different account and Region
 https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/
 
+Run boostrap on each account (that we will deploy to).  
+TODO: Can we automate this? We may be able to do this across all accounts in one command.
+
 npx cdk bootstrap --profile account2-profile --trust ACCOUNT1 --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess aws://ACCOUNT2/us-west-2
 *--trust ACCOUNT1 to allow ACCOUNT1 to deploy into ACCOUNT2.
 
 pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
     env: { account: 'ACCOUNT2', region: 'us-west-2' }
 }));
+
+You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
 ```
 nx login cdk --profile jompx-cicd-test
@@ -415,4 +420,8 @@ nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-test"
 
 npx -p aws-cdk cdk deploy --profile jompx-cicd-test // Does NOT work because prompts for user confirmation i.e. --require-approval. Posted to nx slack support.
 npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test
+
+nx deploy cdk --stage=sandbox1
+nx deploy cdk --stage=test
+nx deploy cdk --stage=prod
 ```

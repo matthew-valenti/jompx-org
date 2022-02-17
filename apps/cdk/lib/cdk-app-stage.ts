@@ -2,11 +2,11 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
 import { LambdaStack } from './lambda-stack';
 
-export class PipelineStage extends cdk.Stage {
-    
+export class CdkAppStage extends cdk.Stage {
+
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
-      super(scope, id, props);
-  
-      const lambdaStack = new LambdaStack(this, 'LambdaStack');      
+        super(scope, id, props);
+
+        const lambdaStack = new LambdaStack(this, 'MyFirstLambdaStack');
     }
 }

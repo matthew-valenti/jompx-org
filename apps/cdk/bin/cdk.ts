@@ -49,5 +49,5 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
   
     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
-    env: app.node.tryGetContext('stage') === 'prod' ? { account: '896371249616', region: 'us-west-2' } : { account: '863054937555', region: 'us-west-2' }
+    env: app.node.tryGetContext('stage') === 'prod' ? { account: '!!!896371249616!!!', region: 'us-west-2' } : { account: '863054937555', region: 'us-west-2' }
   });

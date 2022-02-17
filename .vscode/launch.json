@@ -11,7 +11,7 @@
       ],
       "runtimeArgs": [
         "-r",
-        "./node_modules/ts-node/register/transpile-only"
+        "${workspaceRoot}/node_modules/ts-node/register/transpile-only"
       ],
       "args": [
         "${workspaceFolder}/apps/cdk/bin/cdk.ts"

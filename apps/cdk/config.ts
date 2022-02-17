@@ -24,10 +24,24 @@ export default {
                 }
             }
         },
-        accounts: [
+        environments: [ // An environment is the target AWS account and region into which the stack is intended to be deployed.
             {
                 accountId: '863054937555',
-                accountName: 'cicd-test',
+                region: 'us-west-2',
+                environmentName: 'cicd-test',
+                stage: 'test',
+                bootstrap: true
+            },
+            {
+                accountId: '!!!896371249616!!!',
+                accountName: 'cicd-prod',
+                stage: 'prod',
+                bootstrap: true
+            },
+            {
+                accountId: '066209653567',
+                accountName: 'cicd-prod',
+                stage: 'prod',
                 bootstrap: true
             }
         ]

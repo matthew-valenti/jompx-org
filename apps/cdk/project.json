@@ -45,6 +45,18 @@
         ]
       }
     },
+    "list": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk list",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
     "login": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
