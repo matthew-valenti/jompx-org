@@ -1,7 +1,7 @@
 import { Stack, StackProps, SecretValue } from 'aws-cdk-lib';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
-// Construct does not synth. Reason unknown. Have spent days trying to fix this. Move construct file to local (for now).
+// Construct does not synth when package.json dependency is file. Move construct file to local (local development workaround).
 import { JompxCdkPipeline, IJompxCdkPipelineProps } from './cdk-pipeline-construct';
 // import { JompxCdkPipeline, IJompxCdkPipelineProps } from '@jompx/constructs'; 
 import { CdkAppStage } from './cdk-app-stage';
@@ -22,5 +22,6 @@ export class CdkPipelineStack extends Stack {
 
         const cdkPipeline = new JompxCdkPipeline(this, 'JompxCdkPipeline', jompxCdkPipelineProps);
         const stage = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStage', { ...props, ...{ env: { account: '066209653567', region: 'us-west-2' } } }));
+        stage.addPre(new pipelines.ManualApprovalStep('approval'));
     }
 }
