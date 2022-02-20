@@ -4,7 +4,8 @@
     "typeRoots": [
       "../../node_modules/@types"
     ],
-    "outDir": "tsc.out" // Custom: Move transpiled ts files to dist directory.
+    "outDir": "tsc.out", // Custom: Move transpiled ts files to dist directory.
+    "sourceMap": false // Fix error: option sourceMap cannot be specified with option inlineSourceMap.
   },
   "exclude": [
     "tsc.out",

@@ -206,6 +206,12 @@ npx aws-cdk init app --language typescript
 ```
 - Delete node_modules folder
 - Rename tsconfig.json to tsconfig.cdk.json
+- Edit tsconfig.cdk.json to extend nx tsconfig.base.json (so we can use friendly paths): e.g.
+ ```
+ {
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+ ```
 - Add tsconfig.json that extends from tsconfig.cdk.json
 ```
 {
@@ -222,6 +228,16 @@ npx aws-cdk init app --language typescript
   ]
 }
 
+```
+- Add paths to ./tsconfig.base.json i.e.
+```
+{
+  "compilerOptions": {
+    "paths": {
+      "@cdk/*": ["apps/cdk/*"]
+    }
+
+// We can import using a friendly path: import my-stack.ts from '@cdk/lib/my-stack';
 ```
 - Create project.json. This is a poor man's plugin. But is a good example of the commands that we'll want the plugin to support.
 - Create config.ts file.
@@ -424,4 +440,13 @@ npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test
 nx deploy cdk --stage=sandbox1
 nx deploy cdk --stage=test
 nx deploy cdk --stage=prod
+
+nx synth cdk --args="--quiet=true
+nx synth cdk --args="--quiet=true --context stage=prod"
+```
+
+### CDK Pipeline Stack
+```
+// apps\cdk\lib\cdk-pipeline-stack.ts
+
 ```
