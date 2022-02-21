@@ -29,7 +29,7 @@ export class CdkPipelineStack extends Stack {
         if (stage === 'prod') {
             // Main CDK app stage(s) to prod and test.
             cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
-            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: environment.getEnv('prod') }));
+            // cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: environment.getEnv('prod') })); TODO: Add when prod env exists.
 
             // Common CDK app stage(s) to prod and test.
 
