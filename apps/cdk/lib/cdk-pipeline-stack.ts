@@ -12,13 +12,14 @@ export class CdkPipelineStack extends Stack {
 
         const environment = new Environment(this.node.tryGetContext('@jompx').environments);
         const stage = environment.getByAccountId(props?.env?.account!)?.stage;
+        console.log('stage', stage);
 
         const jompxCdkPipelineProps: IJompxCdkPipelineProps = {
             shellStepInput: pipelines.CodePipelineSource.gitHub(
                 'matthew-valenti/jompx-org',
                 stage === 'prod' ? 'main' : 'pipeline', // TODO: change pipeline branch to: test
                 { authentication: SecretValue.secretsManager('cicd/github/token') }
-            ),
+            )
         };
 
         // Create CDK CodePipeline.
