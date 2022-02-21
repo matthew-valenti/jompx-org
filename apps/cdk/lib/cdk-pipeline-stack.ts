@@ -52,7 +52,7 @@ export class CdkPipelineStack extends Stack {
         // On test branch changes, deploy to test accounts.
         // if (stage === 'test') {
             // Main CDK app stage(s) to test.
-            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { env: { account: '706457422044', region: 'us-west-2' } }));
+            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { env: environment.getEnv('test') }));
 
             // Common CDK app stage(s) to test.
         // }
