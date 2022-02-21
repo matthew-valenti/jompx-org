@@ -38,17 +38,17 @@ export class CdkPipelineStack extends Stack {
         // }
 
         // // On test branch changes, deploy to test accounts.
-        // if (stage === 'test') {
-        //     // Main CDK app stage(s) to test.
-        //     cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
+        if (stage === 'test') {
+            // Main CDK app stage(s) to test.
+            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
 
-        //     // Common CDK app stage(s) to test.
-        // }
+            // Common CDK app stage(s) to test.
+        }
 
         // On test branch changes, deploy to test accounts.
         // if (stage === 'test') {
             // Main CDK app stage(s) to test.
-            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
+            // cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
 
             // Common CDK app stage(s) to test.
         // }
