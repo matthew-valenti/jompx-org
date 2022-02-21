@@ -16,8 +16,7 @@ export class CdkPipelineStack extends Stack {
         const jompxCdkPipelineProps: IJompxCdkPipelineProps = {
             shellStepInput: pipelines.CodePipelineSource.gitHub(
                 'matthew-valenti/jompx-org',
-                // stage === 'prod' ? 'main' : 'pipeline', // TODO: change pipeline branch to: test
-                'pipeline',
+                stage === 'prod' ? 'main' : 'pipeline', // TODO: change pipeline branch to: test
                 { authentication: SecretValue.secretsManager('cicd/github/token') }
             )
         };
@@ -26,16 +25,16 @@ export class CdkPipelineStack extends Stack {
         const cdkPipeline = new JompxCdkPipeline(this, 'JompxCdkPipeline', jompxCdkPipelineProps);
 
         // On main branch changes, deploy to prod accounts (via test accounts).
-        // if (stage === 'prod') {
-        //     // Main CDK app stage(s) to prod and test.
-        //     cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
-        //     // cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: environment.getEnv('prod') })); TODO: Add when prod env exists.
+        if (stage === 'prod') {
+            // Main CDK app stage(s) to prod and test.
+            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
+            // cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: environment.getEnv('prod') })); TODO: Add when prod env exists.
 
-        //     // Common CDK app stage(s) to prod and test.
+            // Common CDK app stage(s) to prod and test.
 
-        //     // Add an optional manual approval step. Manual approval is required in AWS CodePipeline (in CdkAppStageProd stage).
-        //     // pipelineStage.addPre(new pipelines.ManualApprovalStep('approval'));
-        // }
+            // Add an optional manual approval step. Manual approval is required in AWS CodePipeline (in CdkAppStageProd stage).
+            // pipelineStage.addPre(new pipelines.ManualApprovalStep('approval'));
+        }
 
         // // On test branch changes, deploy to test accounts.
         if (stage === 'test') {
