@@ -10,18 +10,6 @@ export const Config: IConfig = {
         // An environment is the target AWS account and region into which a stack will be deployed.
         environments: [
             {
-                accountId: 'abc123',
-                region: 'us-west-2',
-                environmentName: 'prod',
-                stage: 'prod'
-            },
-            {
-                accountId: 'def456',
-                region: 'us-west-2',
-                environmentName: 'test',
-                stage: 'test'
-            },
-            {
                 accountId: '863054937555',
                 region: 'us-west-2',
                 environmentName: 'cicd-test',
@@ -32,6 +20,18 @@ export const Config: IConfig = {
                 region: 'us-west-2',
                 environmentName: 'cicd-prod',
                 stage: 'prod'
+            },
+            {
+                accountId: 'abc123',
+                region: 'us-west-2',
+                environmentName: 'prod',
+                stage: 'prod'
+            },
+            {
+                accountId: '706457422044',
+                region: 'us-west-2',
+                environmentName: 'test',
+                stage: 'test'
             },
             {
                 accountId: '066209653567',

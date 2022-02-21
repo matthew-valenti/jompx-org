@@ -388,6 +388,13 @@ npx cdk bootstrap aws://ACCOUNT-NUMBER/REGION --profile ADMIN-PROFILE ^
     --trust PIPELINE-ACCOUNT-ID ^
     aws://ACCOUNT-ID/REGION
 
+// test
+set CDK_NEW_BOOTSTRAP=1
+npx cdk bootstrap aws://706457422044/us-west-2 --profile jompx-test ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    --trust "863054937555, 896371249616" ^
+    aws://706457422044/us-west-2
+
 // sandbox1
 set CDK_NEW_BOOTSTRAP=1
 npx cdk bootstrap aws://066209653567/us-west-2 --profile jompx-sandbox1 ^
@@ -440,6 +447,7 @@ npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test
 nx deploy cdk --stage=sandbox1
 nx deploy cdk --stage=test
 nx deploy cdk --stage=prod
+nx deploy cdk --to=cicd-test
 
 nx synth cdk --args="--quiet=true
 nx synth cdk --args="--quiet=true --context stage=prod"
