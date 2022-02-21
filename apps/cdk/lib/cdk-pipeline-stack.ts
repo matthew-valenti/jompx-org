@@ -13,10 +13,6 @@ export class CdkPipelineStack extends Stack {
         const environment = new Environment(this.node.tryGetContext('@jompx').environments);
         const stage = environment.getByAccountId(props?.env?.account!)?.stage;
 
-        console.log('props?.env?.account!', 'props?.env?.account!');
-        console.log('environment', environment);
-        console.log('stage', stage);
-
         const jompxCdkPipelineProps: IJompxCdkPipelineProps = {
             shellStepInput: pipelines.CodePipelineSource.gitHub(
                 'matthew-valenti/jompx-org',
@@ -52,7 +48,7 @@ export class CdkPipelineStack extends Stack {
         // On test branch changes, deploy to test accounts.
         // if (stage === 'test') {
             // Main CDK app stage(s) to test.
-            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { env: environment.getEnv('test') }));
+            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
 
             // Common CDK app stage(s) to test.
         // }
