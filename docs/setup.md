@@ -432,14 +432,18 @@ pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
 ```
+// Deploy CdkPipelineStack.
 nx login cdk --profile jompx-cicd-test
 nx synth cdk --args="CdkPipelineStack --profile jompx-cicd-test"
+nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-test"
+nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-prod"
 
 npx aws-cdk synth CdkPipelineStack --profile jompx-cicd-test
 
 // We want to do this but: Error terminal (TTY) is not attached so we are unable to get a confirmation from the user
 nx deploy cdk --profile jompx-cicd-test
 nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-test"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --profile jompx-sandbox1"
 
 npx -p aws-cdk cdk deploy --profile jompx-cicd-test // Does NOT work because prompts for user confirmation i.e. --require-approval. Posted to nx slack support.
 npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test

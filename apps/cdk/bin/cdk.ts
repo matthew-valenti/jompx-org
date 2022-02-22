@@ -51,5 +51,6 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
 
     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
-    env: app.node.tryGetContext('stage') === 'prod' ? environment.getEnv('cicd-prod') : environment.getEnv('cicd-test')
+    env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
+    // env: app.node.tryGetContext('stage') === 'prod' ? environment.getEnv('cicd-prod') : environment.getEnv('cicd-test')
 });
