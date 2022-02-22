@@ -51,7 +51,7 @@ export class CdkPipelineStack extends Stack {
                 //     },
                 //     commands: ['echo STAGE=$STAGE']
                 // })
-                new pipelines.CodeBuildStep('AppStageTest', {
+                new pipelines.CodeBuildStep('AppDeployStageTest', {
                     commands: [],
                     partialBuildSpec: codebuild.BuildSpec.fromObject({
                         version: 0.2,
