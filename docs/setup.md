@@ -451,6 +451,8 @@ nx deploy cdk --to=cicd-test
 
 nx synth cdk --args="--quiet=true
 nx synth cdk --args="--quiet=true --context stage=prod"
+
+nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context to=cicd-test"
 ```
 
 ### CDK Pipeline Stack
