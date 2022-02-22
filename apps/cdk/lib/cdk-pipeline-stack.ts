@@ -61,9 +61,15 @@ export class CdkPipelineStack extends Stack {
                             }
                         },
                         phases: {
+                            install: {
+                                commands: [
+                                    'echo !!!!!!!!!!!!!!!!!!!!!!!!!install!!!!!!!!!!!!!!!!!!!!!!!!!',
+                                    'echo STAGE=$STAGE',
+                                ]
+                            },
                             build: {
                                 commands: [
-                                    'echo !!!!!!!!!!!!!!!!!!!!!!!!!matthew!!!!!!!!!!!!!!!!!!!!!!!!!',
+                                    'echo !!!!!!!!!!!!!!!!!!!!!!!!!build!!!!!!!!!!!!!!!!!!!!!!!!!',
                                     'echo STAGE=$STAGE',
                                 ]
                             },
