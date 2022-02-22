@@ -27,7 +27,8 @@ const app = new cdk.App({
     context: { ...JompxConfig, ...Config }
 });
 
-const environment = new jompx.Environment(app.node.tryGetContext('@jompx').environments, app.node.tryGetContext('to'));
+const environment = new jompx.Environment(app.node.tryGetContext('@jompx').environments);
+// , app.node.tryGetContext('to')
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
