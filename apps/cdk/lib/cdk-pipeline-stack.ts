@@ -44,39 +44,12 @@ export class CdkPipelineStack extends Stack {
             // Main CDK app stage(s) to test.
             const cdkAppStageTest = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
 
-            cdkAppStageTest.addPost(
-                // new pipelines.ShellStep('AppStageTest', {
-                //     env: {
-                //         STAGE: `${stage}`
-                //     },
-                //     commands: ['echo STAGE=$STAGE']
-                // })
-                new pipelines.CodeBuildStep('AppDeployStageTest', {
-                    commands: [],
-                    partialBuildSpec: codebuild.BuildSpec.fromObject({
-                        version: 0.2,
-                        env: {
-                            variables: {
-                                STAGE: `${stage}`
-                            }
-                        },
-                        phases: {
-                            install: {
-                                commands: [
-                                    'echo !!!!!!!!!!!!!!!!!!!!!!!!!install!!!!!!!!!!!!!!!!!!!!!!!!!',
-                                    'echo STAGE=$STAGE',
-                                ]
-                            },
-                            build: {
-                                commands: [
-                                    'echo !!!!!!!!!!!!!!!!!!!!!!!!!build!!!!!!!!!!!!!!!!!!!!!!!!!',
-                                    'echo STAGE=$STAGE',
-                                ]
-                            },
-                        },
-                    }),
-                })
-            );
+            cdkAppStageTest.addPost(new pipelines.ShellStep('AppDeployStageTest', {
+                env: {
+                    STAGE: `${stage}`
+                },
+                commands: ['echo STAGE=$STAGE']
+            }));
 
             // Common CDK app stage(s) to test.
         }
@@ -84,3 +57,41 @@ export class CdkPipelineStack extends Stack {
         // 3. Deploy frontend apps. Wave? But what if CDK fails (which is more likely than app)? Probably need to do sync.
     }
 }
+
+/*
+cdkAppStageTest.addPost(
+    // new pipelines.ShellStep('AppDeployStageTest', {
+    //     env: {
+    //         STAGE: `${stage}`
+    //     },
+    //     commands: ['echo STAGE=$STAGE']
+    // })
+    new pipelines.CodeBuildStep('AppDeployStageTest', {
+        commands: [
+            'echo STAGE=$STAGE'
+        ],
+        // partialBuildSpec: codebuild.BuildSpec.fromObject({
+        //     version: 0.2,
+        //     env: {
+        //         variables: {
+        //             STAGE: `${stage}`
+        //         }
+        //     },
+        //     phases: {
+        //         install: {
+        //             commands: [
+        //                 'echo !!!!!!!!!!!!!!!!!!!!!!!!!install!!!!!!!!!!!!!!!!!!!!!!!!!',
+        //                 'echo STAGE=$STAGE',
+        //             ]
+        //         },
+        //         build: {
+        //             commands: [
+        //                 'echo !!!!!!!!!!!!!!!!!!!!!!!!!build!!!!!!!!!!!!!!!!!!!!!!!!!',
+        //                 'echo STAGE=$STAGE',
+        //             ]
+        //         },
+        //     },
+        // }),
+    })
+);
+*/
