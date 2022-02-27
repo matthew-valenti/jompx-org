@@ -362,9 +362,8 @@ ugh-nightmare can we have a jompx cli command that picks up from config?
 Version can be found in parameter store variable: /cdk-bootstrap/xxxxxxxxx/version
 Maybe this helps -- boostrap all accounts in one script: https://stackoverflow.com/questions/59206845/how-to-provide-multiple-account-credentials-to-cdk-bootstrap
 
- Bootstrap an environment that can provision an AWS CDK pipeline.
- Bootstrap CI/CD test and prod accounts.
-```
+Bootstrap all accounts (that the CDK will deploy to). Include the trust param to give the CICD accounts access to deploy to other accounts.
+ ```
 // https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html
 // Windows run in command prompt (not Powershell).
 set CDK_NEW_BOOTSTRAP=1
@@ -377,16 +376,6 @@ set CDK_NEW_BOOTSTRAP=1
 npx cdk bootstrap aws://863054937555/us-west-2 --profile jompx-cicd-test ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
     aws://863054937555/us-west-2
-```
-
-Bootstrap additional environments into which AWS CDK applications will be deployed by the pipeline
-```
-// Windows run in command prompt (not Powershell).
-set CDK_NEW_BOOTSTRAP=1 
-npx cdk bootstrap aws://ACCOUNT-NUMBER/REGION --profile ADMIN-PROFILE ^
-    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
-    --trust PIPELINE-ACCOUNT-ID ^
-    aws://ACCOUNT-ID/REGION
 
 // test
 set CDK_NEW_BOOTSTRAP=1
@@ -401,6 +390,11 @@ npx cdk bootstrap aws://066209653567/us-west-2 --profile jompx-sandbox1 ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
     --trust "863054937555, 896371249616" ^
     aws://066209653567/us-west-2
+```
+
+For each account, add an SSM parameter accountName.
+```
+aws ssm put-parameter --name "accountName" --value "cicd-test" --type String --profile jompx-cicd-test
 ```
 
 ### CDK Custom Config
@@ -432,13 +426,17 @@ pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
 ```
-// Deploy CdkPipelineStack.
+// Login cicd-test
 nx login cdk --profile jompx-cicd-test
-nx synth cdk --args="CdkPipelineStack --profile jompx-cicd-test"
-nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-test"
-nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-prod"
+// Deploy to cicd-test
+nx synth cdk --args="CdkPipelineStack --context stage=test --profile jompx-cicd-test"
+nx deploy cdk --args="CdkPipelineStack --context stage=test --profile jompx-cicd-test"
 
-npx aws-cdk synth CdkPipelineStack --profile jompx-cicd-test
+// Login cicd-prod
+nx login cdk --profile jompx-cicd-prod
+// Deploy to cicd-prod
+nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
+nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 
 // We want to do this but: Error terminal (TTY) is not attached so we are unable to get a confirmation from the user
 nx deploy cdk --profile jompx-cicd-test
@@ -456,7 +454,10 @@ nx deploy cdk --to=cicd-test
 nx synth cdk --args="--quiet=true
 nx synth cdk --args="--quiet=true --context stage=prod"
 
-nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context to=cicd-test"
+nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-sandbox1"
+nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-cicd-test"
+
+npx aws-cdk synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-sandbox1"
 ```
 
 ### CDK Pipeline Stack

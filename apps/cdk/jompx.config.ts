@@ -1,4 +1,3 @@
-// TODO: Type the config file when it is closer to final.
 import { IConfig } from '@jompx/constructs';
 
 export const Config: IConfig = {
@@ -12,33 +11,78 @@ export const Config: IConfig = {
             {
                 accountId: '863054937555',
                 region: 'us-west-2',
-                environmentName: 'cicd-test',
-                stage: 'test'
+                name: 'cicd-test'
             },
             {
                 accountId: '896371249616',
                 region: 'us-west-2',
-                environmentName: 'cicd-prod',
-                stage: 'prod'
+                name: 'cicd-prod'
             },
             {
                 accountId: 'abc123',
                 region: 'us-west-2',
-                environmentName: 'prod',
-                stage: 'prod'
+                name: 'prod'
             },
             {
                 accountId: '706457422044',
                 region: 'us-west-2',
-                environmentName: 'test',
-                stage: 'test'
+                name: 'test'
             },
             {
                 accountId: '066209653567',
                 region: 'us-west-2',
-                environmentName: 'sandbox1',
-                stage: 'sandbox'
+                name: 'sandbox1'
             }
-        ]
+        ],
+        stages: {
+            prod: {
+                environments: [
+                    {
+                        environmentType: 'cicd',
+                        environmentName: 'cicd-prod'
+                    },
+                    {
+                        environmentType: 'common',
+                        environmentName: 'common-prod'
+                    },
+                    {
+                        environmentType: 'cdk',
+                        environmentName: 'prod'
+                    }
+                ]
+            },
+            uat: {
+                environments: [
+                    {
+                        environmentType: 'cicd',
+                        environmentName: 'cicd-prod'
+                    },
+                    {
+                        environmentType: 'common',
+                        environmentName: 'common-prod'
+                    },
+                    {
+                        environmentType: 'cdk',
+                        environmentName: 'uat'
+                    }
+                ]
+            },
+            test: {
+                environments: [
+                    {
+                        environmentType: 'cicd',
+                        environmentName: 'cicd-test'
+                    },
+                    {
+                        environmentType: 'common',
+                        environmentName: 'common-test'
+                    },
+                    {
+                        environmentType: 'cdk',
+                        environmentName: 'test'
+                    }
+                ]
+            }
+        }
     }
 };

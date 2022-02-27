@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 // import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 // import { CdkStack } from '../lib/cdk-stack';
 import { CdkPipelineStack } from '../lib/cdk-pipeline-stack';
 // import { TestStack } from '../lib/test-stack';
 // import { S3Stack } from '../lib/s3-stack';
 import * as jompx from '@jompx/constructs';
 import { Config as JompxConfig } from '../jompx.config';
+import { Local as JompxLocalConfig } from '../jompx.local';
 import { Config } from '../config';
+import { exitCode } from 'process';
 
 // const yaml = require('js-yaml');
 // const fs   = require('fs');
@@ -22,13 +25,15 @@ import { Config } from '../config';
 // const yamlJson = JSON.stringify(yaml, null, 2);
 // console.log('yamlJson', yamlJson);
 
+// const latestStringToken = ssm.StringParameter.valueForStringParameter(, 'my-plain-parameter-name');
+
 // Add configs to CDK context. Context is available in the CDK app e.g. app.node.tryGetContext('@jompx').organizationName
 const app = new cdk.App({
-    context: { ...JompxConfig, ...Config }
+    context: { ...JompxConfig, ...JompxLocalConfig, ...Config }
 });
 
-const environment = new jompx.Environment(app.node.tryGetContext('@jompx').environments);
-// , app.node.tryGetContext('to')
+// Init Jompx config.
+const jompxConfig = new jompx.Config(app.node);
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -51,6 +56,7 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
 
     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
-    env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
-    // env: app.node.tryGetContext('stage') === 'prod' ? environment.getEnv('cicd-prod') : environment.getEnv('cicd-test')
+    // Deploy stack to prod: nx synth cdk --args="CdkPipelineStack --context env=cicd-prod"
+    env: jompxConfig.getEnv('cicd')
+    // env: app.node.tryGetContext('stage') === 'prod' ? config.getEnv('cicd-prod') : config.getEnv('cicd-test')
 });

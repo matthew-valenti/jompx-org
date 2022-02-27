@@ -4,17 +4,18 @@ import * as pipelines from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 // Construct does not synth when package.json dependency is file. Move construct file to local (local development workaround).
 // import { JompxCdkPipeline, IJompxCdkPipelineProps } from './xxxcdk-pipeline-construct';
-import { Environment, JompxCdkPipeline, IJompxCdkPipelineProps } from '@jompx/constructs';
+import { Config, JompxCdkPipeline, IJompxCdkPipelineProps } from '@jompx/constructs';
 import { CdkAppStage } from './cdk-app-stage';
 
 export class CdkPipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        const environment = new Environment(this.node.tryGetContext('@jompx').environments);
-        const stage = environment.getByAccountId(props?.env?.account!)?.stage;
+        const jompxConfig = new Config(this.node);
+        const stage = jompxConfig.getStage();
 
         const jompxCdkPipelineProps: IJompxCdkPipelineProps = {
+            stage,
             shellStepInput: pipelines.CodePipelineSource.gitHub(
                 'matthew-valenti/jompx-org',
                 stage === 'prod' ? 'main' : 'pipeline', // TODO: change pipeline branch to: test
@@ -29,8 +30,8 @@ export class CdkPipelineStack extends Stack {
         if (stage === 'prod') {
 
             // Main CDK app stage(s) to prod and test.
-            const cdkAppStageTest = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
-            const cdkAppStageProd = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: environment.getEnv('prod') })); // TODO: Add when prod env exists.
+            const cdkAppStageTest = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: jompxConfig.getEnv('cdk', 'test') }));
+            const cdkAppStageProd = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageProd', { ...props, env: jompxConfig.getEnv('cdk', 'prod') })); // TODO: Add when prod env exists.
 
             // Common CDK app stage(s) to prod and test.
 
@@ -42,7 +43,7 @@ export class CdkPipelineStack extends Stack {
         if (stage === 'test') {
 
             // Main CDK app stage(s) to test.
-            const cdkAppStageTest = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: environment.getEnv('test') }));
+            const cdkAppStageTest = cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...props, env: jompxConfig.getEnv('cdk') }));
 
             cdkAppStageTest.addPost(new pipelines.ShellStep('AppDeployStageTest', {
                 env: {
@@ -52,6 +53,11 @@ export class CdkPipelineStack extends Stack {
             }));
 
             // Common CDK app stage(s) to test.
+        }
+
+        if (stage === 'local') {
+            // Main CDK app stage(s) to test.
+            cdkPipeline.pipeline.addStage(new CdkAppStage(this, 'CdkAppStageLocal', { ...props, env: jompxConfig.getEnv('cdk') }));
         }
 
         // 3. Deploy frontend apps. Wave? But what if CDK fails (which is more likely than app)? Probably need to do sync.
