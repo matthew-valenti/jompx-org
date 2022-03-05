@@ -2,7 +2,7 @@ import { IConfig } from '@jompx/constructs';
 
 export const Config: IConfig = {
     '@jompx': {
-        organizationName: 'jompx', // Used to uniquely name resources e.g. S3 bucket name.
+        organizationName: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name.
         gitHub: {
             repo: 'matthew-valenti/jompx-org'
         },
@@ -80,6 +80,22 @@ export const Config: IConfig = {
                     {
                         environmentType: 'cdk',
                         environmentName: 'test'
+                    }
+                ]
+            },
+            sandbox1: {
+                environments: [
+                    {
+                        environmentType: 'cicd',
+                        environmentName: 'cicd-test'
+                    },
+                    {
+                        environmentType: 'common',
+                        environmentName: 'common-test'
+                    },
+                    {
+                        environmentType: 'cdk',
+                        environmentName: 'sandbox1'
                     }
                 ]
             }

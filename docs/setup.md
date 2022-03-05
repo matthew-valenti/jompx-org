@@ -276,6 +276,8 @@ npx aws-cdk init app --language typescript
 ```
 
 ```
+nx run cdk:list
+
 nx build cdk
 // or
 nx run cdk:build
@@ -419,12 +421,22 @@ TODO: Can we automate this? We may be able to do this across all accounts in one
 npx cdk bootstrap --profile account2-profile --trust ACCOUNT1 --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess aws://ACCOUNT2/us-west-2
 *--trust ACCOUNT1 to allow ACCOUNT1 to deploy into ACCOUNT2.
 
+The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from AWS Secrets Manager and run the following CLI command:
+ https://docs.aws.amazon.com/cdk/api/latest/docs/aws-codebuild-readme.html
+ ```
+ aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-cicd-test
+ aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-cicd-prod
+ ```
+
 pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
     env: { account: 'ACCOUNT2', region: 'us-west-2' }
 }));
 
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
+### CDK Pipeline Stack
+```
+// apps\cdk\lib\cdk-pipeline-stack.ts
 ```
 // Login cicd-test
 nx login cdk --profile jompx-cicd-test
@@ -437,31 +449,6 @@ nx login cdk --profile jompx-cicd-prod
 // Deploy to cicd-prod
 nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
-
-// We want to do this but: Error terminal (TTY) is not attached so we are unable to get a confirmation from the user
-nx deploy cdk --profile jompx-cicd-test
-nx deploy cdk --args="CdkPipelineStack --profile jompx-cicd-test"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --profile jompx-sandbox1"
-
-npx -p aws-cdk cdk deploy --profile jompx-cicd-test // Does NOT work because prompts for user confirmation i.e. --require-approval. Posted to nx slack support.
-npx aws-cdk deploy CdkPipelineStack --profile jompx-cicd-test
-
-nx deploy cdk --stage=sandbox1
-nx deploy cdk --stage=test
-nx deploy cdk --stage=prod
-nx deploy cdk --to=cicd-test
-
-nx synth cdk --args="--quiet=true
-nx synth cdk --args="--quiet=true --context stage=prod"
-
-nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-sandbox1"
-nx synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-cicd-test"
-
-npx aws-cdk synth cdk --args="CdkPipelineStack/CdkAppStageTest/MyFirstLambdaStack --context env=sandbox1 --profile jompx-sandbox1"
 ```
 
-### CDK Pipeline Stack
-```
-// apps\cdk\lib\cdk-pipeline-stack.ts
-
-```
+Developer 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
+// import * as ssm from 'aws-cdk-lib/aws-ssm';
 // import { CdkStack } from '../lib/cdk-stack';
 import { CdkPipelineStack } from '../lib/cdk-pipeline-stack';
 // import { TestStack } from '../lib/test-stack';
@@ -9,8 +9,7 @@ import { CdkPipelineStack } from '../lib/cdk-pipeline-stack';
 import * as jompx from '@jompx/constructs';
 import { Config as JompxConfig } from '../jompx.config';
 import { Local as JompxLocalConfig } from '../jompx.local';
-import { Config } from '../config';
-import { exitCode } from 'process';
+import { Config as OrganizationConfig } from '../config';
 
 // const yaml = require('js-yaml');
 // const fs   = require('fs');
@@ -29,11 +28,11 @@ import { exitCode } from 'process';
 
 // Add configs to CDK context. Context is available in the CDK app e.g. app.node.tryGetContext('@jompx').organizationName
 const app = new cdk.App({
-    context: { ...JompxConfig, ...JompxLocalConfig, ...Config }
+    context: { ...JompxConfig, ...JompxLocalConfig, ...OrganizationConfig }
 });
 
 // Init Jompx config.
-const jompxConfig = new jompx.Config(app.node);
+const config = new jompx.Config(app.node);
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -57,6 +56,6 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
     // Deploy stack to prod: nx synth cdk --args="CdkPipelineStack --context env=cicd-prod"
-    env: jompxConfig.getEnv('cicd')
+    env: config.env('cicd')
     // env: app.node.tryGetContext('stage') === 'prod' ? config.getEnv('cicd-prod') : config.getEnv('cicd-test')
 });
