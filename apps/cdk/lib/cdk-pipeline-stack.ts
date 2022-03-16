@@ -45,7 +45,7 @@ export class CdkPipelineStack extends Stack {
                 case (branch === 'test'):
                     pipeline.addStage(new CdkAppStage(this, 'CdkAppStageTest', { ...this.props, env: config.env('main', 'test') }));
                     break;
-                // Deploy to sandbox (including manual CLI deploy to developer sandbox defined in local config)..
+                // Deploy to sandbox (including manual CLI deploy to developer sandbox defined in local config).
                 case (branch.includes(`-sandbox${branchIndex}-`)):
                     pipeline.addStage(new CdkAppStage(this, `CdkAppStageSandbox${branchIndex}`, { ...this.props, env: config.env('main', `sandbox${branchIndex}`) }));
                     break;
