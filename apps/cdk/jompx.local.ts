@@ -2,24 +2,24 @@ import { ILocalConfig } from '@jompx/constructs';
 
 export const Local: ILocalConfig = {
     '@jompx-local': {
-        stage: 'local',
-        stages: {
-            local: {
-                environments: [
-                    {
-                        environmentType: 'cicd',
-                        environmentName: 'cicd-test'
-                    },
-                    {
-                        environmentType: 'common',
-                        environmentName: 'common-test'
-                    },
-                    {
-                        environmentType: 'cdk',
-                        environmentName: 'sandbox1'
-                    }
-                ]
-            }
-        }
+        stage: 'sandbox1',
+        // stages: {
+        //     sandbox1: {
+        //         environments: [
+        //             {
+        //                 type: 'cicd',
+        //                 name: 'cicd-test'
+        //             },
+        //             {
+        //                 type: 'common',
+        //                 name: 'common-test'
+        //             },
+        //             {
+        //                 type: 'main',
+        //                 name: 'sandbox1'
+        //             }
+        //         ]
+        //     }
+        // }
     }
 };

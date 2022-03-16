@@ -15,7 +15,7 @@
         "cwd": "apps/cdk",
         "commands": [
           {
-            "command": "npx aws-cdk synth ",
+            "command": "npx aws-cdk synth",
             "forwardAllArgs": false
           }
         ]
