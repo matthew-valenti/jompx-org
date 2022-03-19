@@ -16,7 +16,7 @@
         "commands": [
           {
             "command": "npx aws-cdk synth",
-            "forwardAllArgs": false
+            "forwardAllArgs": true
           }
         ]
       }

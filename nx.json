@@ -21,8 +21,7 @@
           "build",
           "lint",
           "test",
-          "e2e",
-          "synth"
+          "e2e"
         ],
         "accessToken": "ZDQxZmM1ZDAtMWIzMi00MDI3LTkwMGEtYjMwOGJmNWQ4MDllfHJlYWQtd3JpdGU="
       }
