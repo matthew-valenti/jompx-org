@@ -16,6 +16,7 @@ export class CdkPipelineStack extends Stack {
         this.props = props;
 
         const config = new jompx.Config(this.node);
+        console.log('!!!!!!!!!!!!!!stage!!!!!!!!!!!!!!!!!', config.stage());
 
         const jompxCdkPipelineProps: jompx.ICdkPipelineProps = {
             stage: config.stage(),
@@ -49,10 +50,6 @@ export class CdkPipelineStack extends Stack {
                 case (branch.includes(`-sandbox${branchIndex}-`)):
                     pipeline.addStage(new CdkAppStage(this, `CdkAppStageSandbox${branchIndex}`, { ...this.props, env: config.env('main', `sandbox${branchIndex}`) }));
                     break;
-                // Manual CLI deploy to developer sandbox. Match unique sandbox. e.g. sandbox1-sandbox1
-                // case (branch.includes(`-${config.stage()}-${config.stage()}-`)):
-                //     pipeline.addStage(new CdkAppStage(this, 'CdkAppStageMySandbox', { ...this.props, env: config.env('main', config.stage()) }));
-                //     break;
             }
         });
 
