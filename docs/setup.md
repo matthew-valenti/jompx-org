@@ -428,9 +428,16 @@ The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from
  aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-cicd-prod
  ```
 
-pipeline.addStage(new CdkpipelinesDemoStage(this, 'Prod', {
-    env: { account: 'ACCOUNT2', region: 'us-west-2' }
-}));
+Create a connection to GitHub. This is the new AWS recommended way vs adding a GitHub token to AWS Secrets Manager.  
+https://docs.aws.amazon.com/codepipeline/latest/userguide/connections-github.html
+ ```
+ // aws codestar-connections create-connection --provider-type GitHub --connection-name organization-name
+ aws codestar-connections create-connection --provider-type GitHub --connection-name jompx --profile jompx-cicd-test
+ // e.g. "ConnectionArn": "arn:aws:codestar-connections:us-west-2:863054937555:connection/38e739e3-ed21-4dbc-98f9-b97e40764d5b"
+ ```
+
+ Use the AWS console to complete the connection.
+ https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html
 
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
@@ -451,4 +458,11 @@ nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-
 nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 ```
 
-Developer 
+### Development
+
+```
+// Manually deploy a stack to sandbox1:
+nx login cdk --profile jompx-sandbox1
+nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox1/MyFirstLambdaStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/MyFirstLambdaStack --profile jompx-sandbox1"
+```

@@ -5,7 +5,7 @@ export class TestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        console.log('props!!!!!!!!!!!!!!!!!',this.account, this.region);
+        console.log('props!!!!!!!!!!!!!!!!!!!!',this.account, this.region);
 
         // const config = this.node.tryGetContext('@app');
         // console.log('config!!!!!!!!!!!!!!!!!!', @app);
