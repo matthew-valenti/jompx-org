@@ -33,6 +33,18 @@
         ]
       }
     },
+    "watch": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk watch",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
     "destroy": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

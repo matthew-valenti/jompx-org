@@ -458,11 +458,37 @@ nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-
 nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 ```
 
-### Development
+## Development
+
+Install esbuild for fast bundling of Lambda code.
+```
+npm install --save-dev esbuild@0
+```
 
 ```
 // Manually deploy a stack to sandbox1:
 nx login cdk --profile jompx-sandbox1
-nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox1/MyFirstLambdaStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/MyFirstLambdaStack --profile jompx-sandbox1"
+nx run cdk:list
+
+nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1 --hotswap"
 ```
+
+### CDK Watch & Hotswap
+https://cdkworkshop.com/20-typescript/30-hello-cdk/300-cdk-watch.html
+
+```
+nx watch cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
+```
+
+### AppSync
+- We don't want to use VTL. However, Jompx does use a small amount of VTL.
+- Code First Schema.
+- KISS. 
+- A datasourc is simply a Lambda function that receives event params and returns json.
+- A resolverField is a field whose data will come from an AppSync resolver (same or different Lambda datasource).
+
+### Schema
+
+isRequired means field cannot be null.
