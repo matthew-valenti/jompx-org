@@ -2,14 +2,15 @@
 // import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 // import * as ssm from 'aws-cdk-lib/aws-ssm';
-// import { CdkStack } from '../lib/cdk-stack';
-import { CdkPipelineStack } from '../lib/cdk-pipeline-stack';
-// import { TestStack } from '../lib/test-stack';
-// import { S3Stack } from '../lib/s3-stack';
+// import { CdkStack } from '@cdk/lib/cdk-stack';
+// import { CdkPipelineStack } from '@cdk/lib/stacks/cdk-pipeline-stack';
+import { CdkPipelineStack } from '@cdk/lib/stacks/cdk-pipeline-stack';
+// import { TestStack } from '@cdk/lib/test-stack';
+// import { S3Stack } from '@cdk/lib/s3-stack';
 import * as jompx from '@jompx/constructs';
-import { Config as JompxConfig } from '../jompx.config';
-import { Local as JompxLocalConfig } from '../jompx.local';
-import { Config as OrganizationConfig } from '../config';
+import { Config as JompxConfig } from '@cdk/jompx.config';
+import { Local as JompxLocalConfig } from '@cdk/jompx.local';
+import { Config as OrganizationConfig } from '@cdk/config';
 
 // const yaml = require('js-yaml');
 // const fs   = require('fs');

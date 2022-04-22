@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "CDK",
+      "name": "CDK STANDARD",
       "cwd": "${workspaceFolder}/apps/cdk",
       "skipFiles": [
         "<node_internals>/**"
@@ -12,6 +12,24 @@
       "runtimeArgs": [
         "-r",
         "${workspaceRoot}/node_modules/ts-node/register/transpile-only"
+      ],
+      "args": [
+        "${workspaceFolder}/apps/cdk/bin/cdk.ts"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "CDK PATHS",
+      "cwd": "${workspaceFolder}/apps/cdk",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "runtimeArgs": [
+        "-r",
+        "${workspaceFolder}/node_modules/ts-node/register",
+        "-r",
+        "${workspaceFolder}/node_modules/tsconfig-paths/register"
       ],
       "args": [
         "${workspaceFolder}/apps/cdk/bin/cdk.ts"

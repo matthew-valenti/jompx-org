@@ -1,11 +1,11 @@
 import * as jompx from '@jompx/constructs';
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncMySqlCustomDirective as CustomDirective } from '@jompx/constructs';
-import { AppSyncDatasource } from '../../app-sync.stack';
+import { AppSyncDatasource } from '@cdk/lib/stacks/app-sync.stack';
 
 export class MySqlSchema {
 
-    public types: jompx.ISchemaType = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
+    public types: jompx.ISchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
 
     constructor(
         private datasources: jompx.IDataSource

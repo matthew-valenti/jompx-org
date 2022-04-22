@@ -230,14 +230,33 @@ npx aws-cdk init app --language typescript
 
 ```
 - Add paths to ./tsconfig.base.json i.e.
+- Then we can import using a friendly path: import my-stack.ts from '@cdk/lib/my-stack';
 ```
 {
   "compilerOptions": {
     "paths": {
       "@cdk/*": ["apps/cdk/*"]
     }
+ 
+*Unfortunately tsconfig path is overwritten when extended (in apps folder). Keep all paths in the root for simplicity.
 
-// We can import using a friendly path: import my-stack.ts from '@cdk/lib/my-stack';
+The CDK doesn't currently support tsconfig paths. Make the following additional changes:
+```
+// 1. Install module.
+npm install tsconfig-paths
+
+// 2. In cdk.json add: -r tsconfig-paths/register e.g.
+"app": "npx ts-node -r tsconfig-paths/register --prefer-ts-exts bin/cdk.ts",
+
+// 3. In launch.json replace runtimeArgs with:
+"runtimeArgs": [
+  "-r",
+  "${workspaceFolder}/node_modules/ts-node/register",
+  "-r",
+  "${workspaceFolder}/node_modules/tsconfig-paths/register"
+],
+```
+
 ```
 - Create project.json. This is a poor man's plugin. But is a good example of the commands that we'll want the plugin to support.
 - Create config.ts file.
@@ -492,3 +511,10 @@ nx watch cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile
 ### Schema
 
 isRequired means field cannot be null.
+
+## Errors
+
+Error:
+  Stack:arn... is in UPDATE_ROLLBACK_FAILED state and can not be updated.
+Resolution:
+  In AWS console, go to CloudFormation, select stack and choose Continue update rollback, check resources to skip (if necessary).

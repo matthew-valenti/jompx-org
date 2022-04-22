@@ -8,12 +8,12 @@ import { Construct } from 'constructs';
 // import { PipelineStage } from './pipeline-stage';
 // import { JompxCdkPipeline, IJompxCdkPipelineProps } from '@jompx/constructs';
 
-import { JompxS3 } from '@jompx/constructs';
+// import { JompxS3 } from '@jompx/constructs';
 
 export class S3Stack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    new JompxS3(this, 'JompxS3');
+    // new JompxS3(this, 'JompxS3');
   }
 }

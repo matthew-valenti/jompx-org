@@ -1,6 +1,6 @@
 import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import { Directive, Field, GraphqlType, InputType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
-// import SchemaHelper from './schema-helper';
+// import SchemaHelper from '@cdk/schema-helper';
 
 export default class Schema {
     constructor(
