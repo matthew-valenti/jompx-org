@@ -41,13 +41,15 @@ export class PostSchema extends Construct {
      */
     private mpostBusiness() {
 
+        const mutationName = 'mPostBusiness';
+
         const args = {
             number3: GraphqlType.int({ isRequired: true }),
             number1: GraphqlType.int({ isRequired: true }),
             number2: GraphqlType.int({ isRequired: true })
         };
 
-        const returnType = new ObjectType('MPostBusiness', {
+        const returnType = new ObjectType(mutationName, {
             definition: {
                 number3: GraphqlType.int({ isRequired: true }),
                 number1: GraphqlType.int({ isRequired: true }),
@@ -59,6 +61,6 @@ export class PostSchema extends Construct {
             ]
         });
 
-        this.props.schemaBuilder?.addMutation({ name: 'mpostBusiness', dataSourceName: 'post', args, returnType, methodName: 'business' });
+        this.props.schemaBuilder?.addMutation({ name: mutationName, dataSourceName: 'post', args, returnType, methodName: 'business' });
     }
 }

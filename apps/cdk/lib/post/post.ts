@@ -1,4 +1,6 @@
 import { PostBusiness } from './post.types'
+import { GraphqlQuery } from '@cdk/lib/app-sync/graphql-query';
+import gql from 'graphql-tag';
 
 export class Post {
 
@@ -14,19 +16,43 @@ export class Post {
     //     }
     // }
 
-    public business(number3: number, number1: number, number2: number): PostBusiness {
+    // public business(number3: number, number1: number, number2: number): PostBusiness {
 
-        const result = number1 + number2 + number3;
+    //     const result = number1 + number2 + number3;
 
-        const rv = {
-            number3: number3,
-            number1: number1,
-            number2: number2,
-            result
+    //     const rv = {
+    //         number3: number3,
+    //         number1: number1,
+    //         number2: number2,
+    //         result
+    //     }
+
+    //     console.log('rv', rv);
+    //     return rv;
+    // }
+
+    public business(number1: number): PostBusiness {
+
+        // const fields = gql`fragment fields on MCommentConnection {
+        //     item {
+        //         id
+        //     }
+        // }`;
+
+        // const variables: UpdateMLookupMutationVariables = {
+        //     input: {
+        //     }
+        // };
+
+        // GraphqlQuery.run
+
+        return {
+            number3: 3,
+            number1: 2,
+            number2: 1,
+            result: 6
         }
 
-        console.log('rv', rv);
-        return rv;
     }
 
     // public business2(string2: string, string1: string) {
