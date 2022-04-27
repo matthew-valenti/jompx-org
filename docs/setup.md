@@ -52,11 +52,13 @@ npx create-nx-workspace
 ### 5.5 Upgrade Nx Workspace
 https://nx.dev/using-nx/updating-nx
 ```
-nx migrate latest
+nx migrate latest OR nx migrate 13.10.3
 // Inspect package.json to see if changes make sense. Manually adjust if needed.
 npm install
 // For big projects comment out and reorder items in: migrations.json (or run all for small projects).
-nx migrate --run-migrations
+nx migrate --run-migrations // Runs npm install if needed
+// Test upgrade successful.
+nx --version // If comand does nothing then run npm i again.
 ```
 
 ### 6. Create an AWS Account
@@ -518,3 +520,8 @@ Error:
   Stack:arn... is in UPDATE_ROLLBACK_FAILED state and can not be updated.
 Resolution:
   In AWS console, go to CloudFormation, select stack and choose Continue update rollback, check resources to skip (if necessary).
+
+#Angular
+```
+npm install --save-dev @nxtend/ionic-angular
+```

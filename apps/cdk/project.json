@@ -79,6 +79,18 @@
             "npx cdk-sso-sync {args.profile}"
         ]
       }
+    },
+    "version": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "apps/cdk",
+        "commands": [
+          {
+            "command": "npx aws-cdk version",
+            "forwardAllArgs": true
+          }
+        ]
+      }
     }
   }
 }
