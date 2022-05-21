@@ -11,21 +11,34 @@ export enum AppSyncDatasource {
     cognito = 'cognito'
 }
 
+export interface AppSyncStackProps extends cdk.StackProps {
+    userPool: cdk.aws_cognito.UserPool;
+}
+
 export class AppSyncStack extends cdk.Stack {
 
     public graphqlApi: appsync.GraphqlApi;
     public schemaBuilder: jompx.AppSyncSchemaBuilder;
 
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    constructor(scope: Construct, id: string, props: AppSyncStackProps) {
         super(scope, id, props);
 
         // Create AppSync resource.
-        const appSync = new jompx.AppSync(this, 'AppSync', {});
+        const appSync = new jompx.AppSync(this, 'AppSync', {
+            name: 'api',
+            additionalAuthorizationModes: [
+                {
+                    authorizationType: appsync.AuthorizationType.USER_POOL,
+                    userPoolConfig: { userPool: props.userPool }
+                }
+            ]
+        });
+
         this.graphqlApi = appSync.graphqlApi;
         this.schemaBuilder = appSync.schemaBuilder;
 
         // Add MySQL datasource.
-        const appSyncMySqlDataSource = new jompx.AppSyncMySqlDataSource(this, AppSyncDatasource.mySql, {});
+        const appSyncMySqlDataSource = new jompx.AppSyncMySqlDataSource(this, AppSyncDatasource.mySql, { lambdaFunctionProps: { memorySize: 128 * 2 } });
         this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, appSyncMySqlDataSource.lambdaFunction);
 
         // Add auto build GraphQL endpoints.

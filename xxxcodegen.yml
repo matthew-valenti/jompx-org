@@ -1,0 +1,10 @@
+schema: ./schema.graphql
+# documents: ./schema.graphql
+generates:
+  ./schema.graphql.types.ts:
+    plugins:
+      - typescript
+      # - typescript-operations
+  ./schema.graphql.json:
+    plugins:
+      - introspection

@@ -6,22 +6,25 @@ import * as jompx from '@jompx/constructs';
 import { ssmParameter } from 'aws-parameter-cache';
 import { Post } from './post';
 
-const param = ssmParameter({ name: 'name' });
+const param = ssmParameter({ name: 'foo' });
 
 exports.handler = async (event: jompx.IAppSyncResolverEvent) => {
     console.log('event', event);
+    console.log('process', process);
+    
     let data = null;
 
     const post = new Post();
 
     switch(event?.stash?.operation) {
         default:
-            data = jompx.AppSyncResolver.callMethodFromEvent<Post>(post, event);
+            data = await jompx.AppSyncResolver.callMethodFromEvent<Post>(post, event);
     }
 
     data = {
         output: data
     }
 
+    console.log('post-schema.construct.handler.ts', data);
     return data;
 };

@@ -1,19 +1,10 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import * as changeCase from 'change-case';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import * as graphql from 'graphql';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import type { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-// import get = require('get-value');
-
-// https://www.npmjs.com/package/aws4-axios
+import * as changeCase from 'change-case';
 
 export class GraphqlQuery {
 
-    public static find(typeName: string, fieldsFragment: graphql.DocumentNode): graphql.DocumentNode {
+    public static find(typeName: string, fieldsFragment: DocumentNode): DocumentNode {
 
         const queryName = `${changeCase.camelCase(typeName)}Find`;
 
@@ -30,20 +21,4 @@ export class GraphqlQuery {
             ${fieldsFragment}
         `;
     }
-
-    public static async run(query: graphql.DocumentNode, variables: object) {
-
-        const { data } = await axios({
-            method: 'post',
-            url: 'https://rd7b4x2rbjha7k2ti6z6yjedly.appsync-api.us-west-2.amazonaws.com/graphql',
-            data: {
-                query: graphql.print(query),
-                variables
-            }
-        });
-        console.log('data', data);
-        return data;
-    }
 }
-
-// `${query}`,

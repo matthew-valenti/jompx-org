@@ -1,6 +1,10 @@
+import { AuthorizationType } from '@aws-cdk/aws-appsync-alpha';
 import { PostBusiness } from './post.types'
-import { GraphqlQuery } from '@cdk/lib/app-sync/graphql-query';
+import { GraphqlService } from '@cdk/lib/app-sync/graphql-service';
 import gql from 'graphql-tag';
+import * as gtype from '@root/schema.graphql.types';
+import get = require('get-value');
+import {IAppSyncMethodProps} from '@jompx/constructs';
 
 export class Post {
 
@@ -31,7 +35,29 @@ export class Post {
     //     return rv;
     // }
 
-    public business(number1: number): PostBusiness {
+    public async businessGraphql(number1: string, props: IAppSyncMethodProps): Promise<object> {
+
+        const fields = gql`fragment fields on MPostConnection {
+            edges {
+                node {
+                    id
+                }
+            }
+        }`;
+
+        const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
+
+        }, { authorizationType: AuthorizationType.USER_POOL, authorization: props.cognito?.authorization });
+
+        // const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
+        //     filter: {},
+        //     sort: []
+        // });
+        
+        return get(data, 'edges.0.node');
+    }
+
+    public async business(number1: number): Promise<PostBusiness> {
 
         // const fields = gql`fragment fields on MCommentConnection {
         //     item {
@@ -44,7 +70,7 @@ export class Post {
         //     }
         // };
 
-        // GraphqlQuery.run
+        // GraphqlService.run
 
         return {
             number3: 3,

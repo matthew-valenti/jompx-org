@@ -4,9 +4,16 @@
   "sourceRoot": "apps/cdk",
   "targets": {
     "build": {
-      "executor": "@nrwl/workspace:run-script",
+      "executor": "@jompx/cdk:build",
       "options": {
         "script": "build"
+      }
+    },
+    "graphql-schema": {
+      "executor": "@jompx/cdk:graphql-schema",
+      "cwd": "apps/cdk",
+      "options": {
+        "cdkOutSchemaFilePattern": "apps/cdk/cdk.out/assembly-CdkPipelineStack-CdkAppStageSandbox/*AppSyncStack*.template.json"
       }
     },
     "synth": {

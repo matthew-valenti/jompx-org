@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
+import { Directive, Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncMySqlCustomDirective as CustomDirective } from '@jompx/constructs';
 import { AppSyncDatasource } from '@cdk/lib/stacks/app-sync.stack';
 
@@ -64,6 +64,8 @@ export class MySqlSchema {
                 })
             },
             directives: [
+                Directive.cognito('admin'),
+                Directive.iam(),
                 CustomDirective.datasource(AppSyncDatasource.mySql),
                 CustomDirective.source('post'),
                 CustomDirective.operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'deleteOne', 'deleteMany', 'destroyOne', 'destoryMany'])
@@ -92,6 +94,8 @@ export class MySqlSchema {
                 })
             },
             directives: [
+                Directive.cognito('admin'),
+                Directive.iam(),
                 CustomDirective.datasource(AppSyncDatasource.mySql),
                 CustomDirective.source('comment'),
                 CustomDirective.operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'deleteOne', 'deleteMany', 'destroyOne', 'destoryMany'])

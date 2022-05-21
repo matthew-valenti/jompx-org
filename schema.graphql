@@ -1,0 +1,392 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+directive @datasource(name: String) on OBJECT
+
+directive @source(name: String) on FIELD_DEFINITION | OBJECT
+
+directive @lookup(from: String, localField: String, foreignField: String) on FIELD_DEFINITION
+
+directive @readonly(value: String) on FIELD_DEFINITION
+
+directive @operations(names: [String]) on OBJECT
+
+input MpostBusinessGraphqlInput {
+  number1: Int!
+}
+
+type MpostBusinessGraphqlPayload @aws_iam {
+  id: String!
+}
+
+type MpostBusinessGraphqlOutput @aws_iam {
+  output: MpostBusinessGraphqlPayload
+}
+
+type Mutation {
+  mpostBusinessGraphql(input: MpostBusinessGraphqlInput!): MpostBusinessGraphqlOutput @aws_iam
+}
+
+input SortInput {
+  fieldName: String!
+  direction: Int!
+}
+
+interface MNode {
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPostEdge @aws_iam {
+  node: MPost
+}
+
+type MPostConnection @aws_iam {
+  edges: [MPostEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type Query {
+  mPostFind(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPostConnection @aws_iam
+  mCommentFind(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MCommentConnection @aws_iam
+  mPost1Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost1Connection @aws_iam
+  mPost2Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost2Connection @aws_iam
+  mPost3Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost3Connection @aws_iam
+  mPost4Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost4Connection @aws_iam
+  mPost5Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost5Connection @aws_iam
+  mPost6Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost6Connection @aws_iam
+  mPost7Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost7Connection @aws_iam
+  mPost8Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost8Connection @aws_iam
+  mPost9Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost9Connection @aws_iam
+  mPost10Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost10Connection @aws_iam
+  mPost11Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost11Connection @aws_iam
+  mPost12Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost12Connection @aws_iam
+  mPost13Find(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPost13Connection @aws_iam
+}
+
+type MComment implements MNode @datasource(name: "mySql") @source(name: "comment") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  id: ID! @readonly(value: "true")
+  html: String @source(name: "content")
+  mpostId: ID
+  mpost: MPost @lookup(from: "MPost", localField: "mpostId", foreignField: "id")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MCommentEdge @aws_iam {
+  node: MComment
+}
+
+type MCommentConnection @aws_iam {
+  edges: [MCommentEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost1 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost1Edge @aws_iam {
+  node: MPost1
+}
+
+type MPost1Connection @aws_iam {
+  edges: [MPost1Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost2 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost2Edge @aws_iam {
+  node: MPost2
+}
+
+type MPost2Connection @aws_iam {
+  edges: [MPost2Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost3 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost3Edge @aws_iam {
+  node: MPost3
+}
+
+type MPost3Connection @aws_iam {
+  edges: [MPost3Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost4 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost4Edge @aws_iam {
+  node: MPost4
+}
+
+type MPost4Connection @aws_iam {
+  edges: [MPost4Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost5 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost5Edge @aws_iam {
+  node: MPost5
+}
+
+type MPost5Connection @aws_iam {
+  edges: [MPost5Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost6 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost6Edge @aws_iam {
+  node: MPost6
+}
+
+type MPost6Connection @aws_iam {
+  edges: [MPost6Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost7 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost7Edge @aws_iam {
+  node: MPost7
+}
+
+type MPost7Connection @aws_iam {
+  edges: [MPost7Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost8 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost8Edge @aws_iam {
+  node: MPost8
+}
+
+type MPost8Connection @aws_iam {
+  edges: [MPost8Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost9 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost9Edge @aws_iam {
+  node: MPost9
+}
+
+type MPost9Connection @aws_iam {
+  edges: [MPost9Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost10 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost10Edge @aws_iam {
+  node: MPost10
+}
+
+type MPost10Connection @aws_iam {
+  edges: [MPost10Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost11 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost11Edge @aws_iam {
+  node: MPost11
+}
+
+type MPost11Connection @aws_iam {
+  edges: [MPost11Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost12 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost12Edge @aws_iam {
+  node: MPost12
+}
+
+type MPost12Connection @aws_iam {
+  edges: [MPost12Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type MPost13 implements MNode @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+  date: AWSDateTime
+  title: String @source(name: "title")
+  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+  id: ID! @readonly(value: "true")
+  isDeleted: Boolean! @readonly(value: "true")
+  dateCreated: AWSDateTime! @readonly(value: "true")
+  dateUpdated: AWSDateTime! @aws_iam @readonly(value: "true")
+}
+
+type MPost13Edge @aws_iam {
+  node: MPost13
+}
+
+type MPost13Connection @aws_iam {
+  edges: [MPost13Edge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type PageInfoOffset @aws_iam {
+  skip: Int!
+  limit: Int!
+}
+
+type PageInfoCursor @aws_iam {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+  startCursor: String!
+  endCursor: String!
+}
+
+scalar AWSDate
+
+scalar AWSTime
+
+scalar AWSDateTime
+
+scalar AWSTimestamp
+
+scalar AWSEmail
+
+scalar AWSJSON
+
+scalar AWSURL
+
+scalar AWSPhone
+
+scalar AWSIPAddress
+
+directive @aws_iam on FIELD_DEFINITION | OBJECT

@@ -351,6 +351,16 @@ Change apps\cdk\tsconfig.json
 ]
 ```
 
+Update jest config to run tests in lib folder: apps\cdk\jest.config.js. We will put test files side-by-side with source files.
+```
+// from:
+roots: ['<rootDir>/test'],
+// to:
+roots: ['<rootDir>/lib'],
+
+// TODO: Jest VSCode debug only works if we point it to CDK: "cwd": "${workspaceFolder}/apps/cdk",
+```
+
 ### Workaround for Using SSO with CDK
 https://www.npmjs.com/package/cdk-sso-sync
 After sso login with aws sso login --profile <YOUR PROFILE NAME> just run cdk-sso-sync <YOUR PROFILE NAME> to be able to use CDK with the same profile (cdk deploy --profile <YOUR PROFILE NAME>)
@@ -479,6 +489,16 @@ nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-
 nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 ```
 
+### Upgrade CDK
+Version change often.
+```
+// In package.json bump versions:
+aws-cdk
+aws-cdk-lib
+@aws-cdk/aws-appsync-alpha
+constructs ???
+```
+
 ## Development
 
 Install esbuild for fast bundling of Lambda code.
@@ -491,19 +511,29 @@ npm install --save-dev esbuild@0
 nx login cdk --profile jompx-sandbox1
 nx run cdk:list
 
-nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1 --hotswap"
+nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1 --hotswap"
+nx destroy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
+
+nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1 --hotswap"
+nx destroy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
 ```
 
 ### CDK Watch & Hotswap
 https://cdkworkshop.com/20-typescript/30-hello-cdk/300-cdk-watch.html
 
 ```
-nx watch cdk --args="CdkPipelineStack/CdkAppStageSandbox1/AppSyncStack --profile jompx-sandbox1"
+nx watch cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
 ```
 
-### AppSync
+## Cognito
+Create a Cognito user for yourself in AWS console.
+Assign a group?
+
+## AppSync
 - We don't want to use VTL. However, Jompx does use a small amount of VTL.
 - Code First Schema.
 - KISS. 
@@ -525,3 +555,45 @@ Resolution:
 ```
 npm install --save-dev @nxtend/ionic-angular
 ```
+
+## GraphQL Code Generator
+
+```
+npm install graphql
+npm install -D @graphql-codegen/cli
+<!-- npm install @graphql-codegen/typescript-operations -->
+npm install @graphql-codegen/typescript
+npx graphql-codegen --version
+
+aws appsync get-introspection-schema --api-id sbs46htyprdyljweegoxeokhp4 --format JSON --include-directives matthew.json --profile jompx-sandbox1
+https://github.com/aws/aws-sdk-js-v3/blob/main/clients/client-appsync/src/commands/GetIntrospectionSchemaCommand.ts
+
+https://github.com/gjtorikian/graphql-docs
+GraphiQL app
+```
+
+## AppSync Security
+
+IAM is enabled by default.
+IAM directive must be applied to all object types, mutations, and queries. Not input types.
+AppSync Business construct Lambdas have appsync permissions.
+
+Note that AppSync does not support unauthorized access. A request with no Authorization header is automatically denied.
+
+A mutation Lambda has a policy statement allowing the Lambda to call actions: appsync:GraphQL
+So I think aws4-axios uses the Lambda process.env AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
+So the Lambda acts as an IAM user with permissions to call GraphQL.
+The @iam directive is not needed when we only have AppSync IAM permissions.
+By default then, with IAM AppSync permissions turned on, a call using Insomnia will result in UnauthorizedException
+
+## Unit Testing
+```
+cdk apps/cdk
+npm run test graphql-query.test.ts
+```
+
+## Thoughts:
+Explain constructs and levels where Jompx is very high level constructs.
+AWS good: Large number of cloud and serverless resources covering most use cases.
+bad: Steep learning curve and difficult to create a secure and low cognitive solution for rapid development.
+Cost level in doco: green, orange, red.

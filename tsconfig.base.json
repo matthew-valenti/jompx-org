@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@root/*": ["./*"],
       "@cdk/*": ["apps/cdk/*"]
     }
   },
