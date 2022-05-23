@@ -52,10 +52,5 @@ export class AppSyncStack extends cdk.Stack {
             graphqlApi: this.graphqlApi,
             schemaBuilder: this.schemaBuilder
         });
-
-        new ssm.StringParameter(this, 'AppSyncGraphqlUrl', {
-            parameterName: '/appSync/graphqlUrl',
-            stringValue: this.graphqlApi.graphqlUrl
-        });
     }
 }

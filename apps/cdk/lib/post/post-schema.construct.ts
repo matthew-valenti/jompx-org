@@ -35,7 +35,7 @@ export class PostSchema extends Construct {
             memorySize: 128 * 2,
             description: `AppSync post handler.`,
             environment: {
-                graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync2/graphqlUrl')
+                graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
             }
         });
 

@@ -14,6 +14,7 @@
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-operations": "^2.3.5",
     "@jompx/constructs": "file:../constructs",
+    "@jompx/graphql": "file:../jompx/dist/packages/graphql",
     "aws-cdk-lib": "2.24.1",
     "aws-parameter-cache": "^2.0.15",
     "aws4-axios": "^2.4.9",

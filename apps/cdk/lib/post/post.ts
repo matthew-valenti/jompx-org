@@ -1,10 +1,11 @@
 import { AuthorizationType } from '@aws-cdk/aws-appsync-alpha';
 import { PostBusiness } from './post.types'
 import { GraphqlService } from '@cdk/lib/app-sync/graphql-service';
+// import { AxiosGraphqlService as GraphqlService } from '@jompx/graphql';
 import gql from 'graphql-tag';
 import * as gtype from '@root/schema.graphql.types';
 import get = require('get-value');
-import {IAppSyncMethodProps} from '@jompx/constructs';
+import { IAppSyncMethodProps } from '@jompx/constructs';
 
 export class Post {
 
@@ -46,14 +47,13 @@ export class Post {
         }`;
 
         const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
-
         }, { authorizationType: AuthorizationType.USER_POOL, authorization: props.cognito?.authorization });
 
         // const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
         //     filter: {},
         //     sort: []
         // });
-        
+
         return get(data, 'edges.0.node');
     }
 
