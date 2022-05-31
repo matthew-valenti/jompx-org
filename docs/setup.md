@@ -38,15 +38,14 @@ Why Monorepo? Atomic changes, Shared code, single set of dependencies.
 ### Create GitHub Personal Access Token
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 Scopes: repo, admin:repo_hook
-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
 
-Add the token to AWS Secrets Manager:
+Manually ddd the token to AWS Secrets Manager:
 Type: Other type of secret
 Value: xxx
 Secret Name: /cicd/github/token
 *Keep all other defaults.
 
-Add to secrets manager (for each account):
+Programatically add to secrets manager (for each account):
 ```
 aws secretsmanager create-secret --name "/cicd/github/token" --secret-string "REPLACE_WITH_MY_TOKEN" --profile jompx-sandbox1
 ```
