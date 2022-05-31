@@ -10,6 +10,9 @@ nodejs
 npm
 npm install -g npx
 
+### Company Name
+Decide on company name and domain name.
+
 ### 1. Password Manager
 Considering using a password manager to securely store all your credentials. e.g. https://bitwarden.com/
 
@@ -35,7 +38,25 @@ Why Monorepo? Atomic changes, Shared code, single set of dependencies.
 ### Create GitHub Personal Access Token
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 Scopes: repo, admin:repo_hook
-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
+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
+
+Add the token to AWS Secrets Manager:
+Type: Other type of secret
+Value: xxx
+Secret Name: /cicd/github/token
+*Keep all other defaults.
+
+Add to secrets manager (for each account):
+```
+aws secretsmanager create-secret --name "/cicd/github/token" --secret-string "REPLACE_WITH_MY_TOKEN" --profile jompx-sandbox1
+```
+**Keep naming consistent with ParameterStore i.e. start with / and use paths.
+
+The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from AWS Secrets Manager and run the following CLI command:
+ https://docs.aws.amazon.com/cdk/api/latest/docs/aws-codebuild-readme.html
+ ```
+ aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-sandbox1
+ ```
 
 ### 5. Create Nx Workspace
 https://nx.dev/l/r/getting-started/nx-setup
@@ -86,6 +107,8 @@ Change User portal URL. Can change one time only??? Lame.
 Bookmark the start url. Use this to switch between AWS accounts: https://x-xxxxxxxxxx.awsapps.com/start
 
 ### 12. Create Admin User in SSO
+This user will have elevated permissions. Use only for management tasks.
+
 Create administrator group.
 group name = administrator
 
@@ -96,9 +119,9 @@ user email = admin@
 https://docs.aws.amazon.com/singlesignon/latest/userguide/how-to-register-device.html
 Under users, select the admin user and the MFA devices tab and register an MFA device.
 
-Give the admin user admin access to all AWS accounts in the organization.
+Give the admin group access to all AWS accounts in the organization:
 Create a new AdministratorAccess permission set with policy AdministratorAccess.
-In AWS accounts, select all accounts and click "Assign Users". Select the admin user, select the AdministratorAccess permission set.
+In AWS accounts, select all accounts and click "Assign Users". Select the groups tab and choose administrator, select the AdministratorAccess permission set.
 
 For each permission set, you can specify a session duration to control the length of time that a user can be signed in to an AWS account.
 https://docs.aws.amazon.com/singlesignon/latest/userguide/howtosessionduration.html
@@ -118,9 +141,53 @@ region=us-west-2
 output=json
 ```
 
+### 12b. Create Developer Users/Groups in SSO
+
+Developer users and groups can be setup with permissions to whatever is appropriate for your company.
+
+Here's an example setup:
+Senior Developers to have admin access to all accounts including production. This allows senior developers to manaage/troubleshoot across all accounts.
+Developers to have admin access to their own sandbox account only and view only access across all other accounts. This allows developers experimenet with all AWS services in their own sandbox and have visibility into test and production accounts including the CI/CD process.
+
+Predefined permission sets: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html
+
+Create predefined permission set:
+ViewOnlyAccess
+*Set session duration e.g. 12 hours max.
+
+Create groups:
+senior-developer
+developer
+
+Create a user for each developer and add each developer to the appripriate group above e.g.
+user name = matthew
+user email = matthew@jompx.com
+*Use a naming convention suitable for your company.
+**Add as much or as little user information as needed.
+
+Developer should register an MFA device. TODO: Document steps.
+
+Set account permissions for each group above:
+1. Select accounts (to give access to).
+2. Click assign users or groups.
+3. Select the group
+4. Select the permission set (AdministratorAccess or ViewOnlyAccess)
+
+On developer computer update aws/.config to include a sandbox entry (and other accounts as needed) e.g.
+```
+[profile jompx-sandbox1]
+sso_start_url = https://d-xxxxxxxxfa.awsapps.com/start
+sso_region = us-west-2
+sso_account_id = xxxxxxxxxxxx
+sso_role_name = AdministratorAccess
+region=us-west-2
+output=json
+```
+
 ### 13 Login as Admin User Using SSO
 https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#sso-using-profile
-aws sso login --profile jompx-management
+// Do we need this (and manually run credentials update): aws sso login --profile jompx-management
+nx login cdk --profile jompx-management
 
 ### 15. Create Organization YAML
 ```
@@ -153,11 +220,13 @@ As you change your yaml and want to deploy additional organization choices
 ```
 npx aws-organization-formation update organization.yml --profile jompx-management
 npx aws-organization-formation create-change-set organization.yml --profile jompx-management
-npx aws-organization-formation execute-change-set 9286bc64-36ce-4a14-ac06-977aed736d3d --profile jompx-management
+npx aws-organization-formation execute-change-set 5e403303-9049-4953-be6a-fbcae37e9278 --profile jompx-management
 ```
 
 ### 16. Add SCP to Restrict Regions
 For additional security against attacks and human error restrict your AWS accounts to certain regions only.
+Do not restrict global services: cloudfront, iam, route53, support.
+e.g. https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_deny-requested-region.html
 
 Add a YAML entry:
 ```
@@ -183,8 +252,44 @@ Add a YAML entry:
                   - us-west-2
 ```
 Set:
-NotAction
-RequestedRegion
+NotAction > RequestedRegion
+
+### 17. Create Route53 Hosted Zones
+
+https://theburningmonk.com/2021/05/how-to-manage-route53-hosted-zones-in-a-multi-account-environment/
+
+Create Route53 hosted zones so we can access apps across accounts/domains e.g. admin.jompx.com, admin.sandbox1.jompx.com
+Create a Route53 public hosted zone in AWS prod account for domain name. E.g. for domain name = jompx.com
+Create a Route53 public hosted zone in any AWS account with a subdomain tag.  E.g. for subdomain name = sandbox1.jompx.com
+
+Why? Centralized DNS and associated resources make it hard for developers to do experiement/development on DNS related resources.
+e.g. As a developer I want to experiment with CloudFront caching. If DNS and CloudFront resources for my sandbox AWS account are on the prod AWS account -- I need prod access and risk breaking prod.
+
+Org formation example template: https://github.com/org-formation/org-formation-cli/blob/master/examples/templates/subdomains.yml
+
+Create apps\org-formation\subdomains.yml
+
+- Set default region param DefaultOrganizationBindingRegion e.g. us-west-2
+- Add subdomain tags to organization.yml. Do NOT add tags to prod account (which will use the domain NOT a subdomain).
+- TODO: TTL Set low (e.g. 300) until confirmed good then set to high value (e.g. 86400 1 day) to reduce latency and cost: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-basic.html#rrsets-values-basic-ttl
+
+Creates a CloudFormation stack. If creating multiple domains then use unique stack names e.g. HostedZoneMyDomain1, HostedZoneMyDomain2
+```
+npx org-formation print-stacks subdomains.yml --stack-name HostedZone --parameters domainName=jompx.com --profile jompx-management
+npx org-formation update-stacks subdomains.yml --stack-name HostedZone --parameters domainName=jompx.com --profile jompx-management
+```
+
+### 18. Update Your Domain Nameservers
+
+If your domain name is hosted with a third party (not AWS) then update your domain name servers.
+Go to AWS prod account > Hosted zones > mydomain.com
+Expand the Hosted zone details box to view your four name servers.
+Update your third party name servers.
+https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/GetInfoAboutHostedZone.html
+e.g. NameCheap instructions https://www.namecheap.com/support/knowledgebase/article.aspx/10371/2208/how-do-i-link-my-domain-to-amazon-web-services/
+
+### Install AWS CLI
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 ### 18. Install AWS CDK
 
@@ -452,13 +557,6 @@ TODO: Can we automate this? We may be able to do this across all accounts in one
 npx cdk bootstrap --profile account2-profile --trust ACCOUNT1 --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess aws://ACCOUNT2/us-west-2
 *--trust ACCOUNT1 to allow ACCOUNT1 to deploy into ACCOUNT2.
 
-The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from AWS Secrets Manager and run the following CLI command:
- https://docs.aws.amazon.com/cdk/api/latest/docs/aws-codebuild-readme.html
- ```
- aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-cicd-test
- aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-cicd-prod
- ```
-
 Create a connection to GitHub. This is the new AWS recommended way vs adding a GitHub token to AWS Secrets Manager.  
 https://docs.aws.amazon.com/codepipeline/latest/userguide/connections-github.html
  ```
@@ -472,9 +570,15 @@ https://docs.aws.amazon.com/codepipeline/latest/userguide/connections-github.htm
 
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
+- Fail fast
+- Feature switches
+- Unit testing
+- E2E testing
+- hotfix vs feature same process/cadence
+- sandbox testing
+- test pass thru
+
 ### CDK Pipeline Stack
-```
-// apps\cdk\lib\cdk-pipeline-stack.ts
 ```
 // Login cicd-test
 nx login cdk --profile jompx-cicd-test
@@ -493,10 +597,10 @@ nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd
 Version change often.
 ```
 // In package.json bump versions:
-aws-cdk
 aws-cdk-lib
+constructs
 @aws-cdk/aws-appsync-alpha
-constructs ???
+aws-cdk
 ```
 
 ## Development
@@ -511,15 +615,17 @@ npm install --save-dev esbuild@0
 nx login cdk --profile jompx-sandbox1
 nx run cdk:list
 
+nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1 --hotswap"
+
 nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
 nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
 nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1 --hotswap"
-nx destroy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
 
 nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
 nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
 nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1 --hotswap"
-nx destroy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
 ```
 
 ### CDK Watch & Hotswap
@@ -550,11 +656,6 @@ Error:
   Stack:arn... is in UPDATE_ROLLBACK_FAILED state and can not be updated.
 Resolution:
   In AWS console, go to CloudFormation, select stack and choose Continue update rollback, check resources to skip (if necessary).
-
-#Angular
-```
-npm install --save-dev @nxtend/ionic-angular
-```
 
 ## GraphQL Code Generator
 
@@ -592,8 +693,45 @@ cdk apps/cdk
 npm run test graphql-query.test.ts
 ```
 
+# Ionic/Angular
+https://nxtend.dev/docs/ionic-angular/getting-started/
+https://ionicframework.com/blog/ionic-angular-monorepos-with-nx/
+```
+npm install --save-dev @nxtend/ionic-angular
+
+// Create app.
+nx generate @nxtend/ionic-angular:application --name admin --template sidemenu
+```
+
+Root files changed:
+```
+.gitignore
+.vscode/extensions.json
+nx.json
+package-lock.json
+package.json
+workspace.json
+```
+
+Root files new:
+```
+.eslintrc.json
+jest.config.js
+jest.preset.js
+```
+
+Nx Commands:
+```
+nx build admin
+nx lint admin
+nx serve admin
+nx test admin
+nx e2e admin-e2e
+```
+
 ## Thoughts:
 Explain constructs and levels where Jompx is very high level constructs.
 AWS good: Large number of cloud and serverless resources covering most use cases.
 bad: Steep learning curve and difficult to create a secure and low cognitive solution for rapid development.
 Cost level in doco: green, orange, red.
+What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that means something special to the CDK so we use stage instead.

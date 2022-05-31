@@ -1,14 +1,14 @@
-import { Stack, StackProps, SecretValue } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import { CdkAppStage } from './cdk-app-stage';
 import get = require('get-value');
 
-export class CdkPipelineStack extends Stack {
+export class CdkPipelineStack extends cdk.Stack {
 
-    public props: StackProps | undefined;
+    public props: cdk.StackProps | undefined;
 
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
         this.props = props;
 

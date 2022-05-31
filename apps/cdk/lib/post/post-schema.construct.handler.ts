@@ -3,10 +3,10 @@
 // https://github.com/middyjs/middy
 
 import * as jompx from '@jompx/constructs';
-import { ssmParameter } from 'aws-parameter-cache';
+// import { ssmParameter } from 'aws-parameter-cache'; TODO: Do we want to use this?
 import { Post } from './post';
 
-const param = ssmParameter({ name: 'foo' });
+// const param = ssmParameter({ name: 'foo' });
 
 exports.handler = async (event: jompx.IAppSyncResolverEvent) => {
     console.log('event', event);

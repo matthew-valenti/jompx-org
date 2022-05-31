@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09-OC'
+
+# Include file that contains Organization Section.
+# The Organization Section describes Accounts, Organizational Units, etc.
+Organization: !Include ./organization.yml
+
+# Any Binding that does not explicitly specify a region will default to this.
+# Value can be either string or list
+DefaultOrganizationBindingRegion: us-west-2
+
+# Matthew Notes:
+# Create stack Subdomain in each account.
+# A Route53 public hosted zone domain created in prod account.
+# A Route53 public hosted zone subdomain created in accounts with subdomain tag (in organization.yml).
+# Removed the SSM params in original template and changed root binding account to prod (instead of management).
+
+# Matthew TODO:
+# Cannot make region a param. Org-formation expects region to be a literal string and doesn't appear to support !Ref like account.
+# Can we wrap org-formation CLI in nx? Do we even want to since it will generally be run once only.
+
+Parameters:
+
+  domainName:
+    Type: String
+
+# Section contains a named set of Bindings.
+# Bindings determine what resources are deployed where
+# These bindings can be !Ref'd from the Resources in the resource section
+OrganizationBindings:
+
+  # binding for HostedZone, HostedZoneIdParam, HostedZoneNameParam
+  HostedZoneBinding:
+    AccountsWithTag: subdomain
+
+  # binding for RootHostedZone, ParentNsRecord
+  RootHostedZoneBinding:
+    Account: !Ref ProdAccount
+
+Resources:
+
+  #=========================================#
+  # Zone
+  #=========================================#
+
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    OrganizationBinding: !Ref HostedZoneBinding
+    Properties:
+      HostedZoneConfig:
+        Comment: Domain Hosted Zone
+      Name: !Sub '${AWSAccount.Tags.subdomain}.${domainName}.'
+
+  #=========================================#
+  # Parent Record
+  #=========================================#
+
+  RootHostedZone:
+    Type: AWS::Route53::HostedZone
+    OrganizationBinding: !Ref RootHostedZoneBinding
+    Properties:
+      HostedZoneConfig:
+        Comment: Root domain
+      Name: !Ref domainName
+
+  # be aware that changing the logicalName for a AWS::Route53::RecordSet resource
+  # might result in an error. workaround is to remove the resource and then add it.
+  ParentNsRecord:
+    DependsOn: RootHostedZone
+    Type: AWS::Route53::RecordSet
+    OrganizationBinding: !Ref RootHostedZoneBinding
+    ForeachAccount: !Ref HostedZoneBinding
+    Properties:
+      Type: NS
+      HostedZoneName: !Sub '${domainName}.'
+      Name: !Sub '${CurrentAccount.Tags.subdomain}.${domainName}.'
+      TTL: 300
+      ResourceRecords: !GetAtt CurrentAccount.Resources.HostedZone.NameServers
+

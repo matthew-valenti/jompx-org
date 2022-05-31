@@ -1,7 +1,9 @@
 {
   "version": 2,
   "projects": {
-    "org-formation": "apps/org-formation",
-    "cdk": "apps/cdk"
+    "admin": "apps/admin",
+    "admin-e2e": "apps/admin-e2e",
+    "cdk": "apps/cdk",
+    "org-formation": "apps/org-formation"
   }
 }

@@ -16,7 +16,7 @@ export const Config: IConfig = {
                 name: 'cicd-prod'
             },
             {
-                accountId: 'abc123',
+                accountId: '281660020318',
                 region: 'us-west-2',
                 name: 'prod'
             },

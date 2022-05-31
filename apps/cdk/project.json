@@ -4,13 +4,13 @@
   "sourceRoot": "apps/cdk",
   "targets": {
     "build": {
-      "executor": "@jompx/cdk:build",
+      "executor": "@jompx/jcdk:build",
       "options": {
         "script": "build"
       }
     },
     "graphql-schema": {
-      "executor": "@jompx/cdk:graphql-schema",
+      "executor": "@jompx/jcdk:graphql-schema",
       "cwd": "apps/cdk",
       "options": {
         "cdkOutSchemaFilePattern": "apps/cdk/cdk.out/assembly-CdkPipelineStack-CdkAppStageSandbox/*AppSyncStack*.template.json"
@@ -82,8 +82,8 @@
         "cwd": "apps/cdk",
         "parallel": false,
         "commands": [
-            "aws sso login --profile {args.profile}",
-            "npx cdk-sso-sync {args.profile}"
+          "aws sso login --profile {args.profile}",
+          "npx cdk-sso-sync {args.profile}"
         ]
       }
     },

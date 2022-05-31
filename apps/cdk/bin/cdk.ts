@@ -60,3 +60,4 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
     env: config.env('cicd')
     // env: app.node.tryGetContext('stage') === 'prod' ? config.getEnv('cicd-prod') : config.getEnv('cicd-test')
 });
+

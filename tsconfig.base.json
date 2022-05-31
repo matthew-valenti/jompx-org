@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@root/*": ["./*"],
-      "@cdk/*": ["apps/cdk/*"]
+      "@cdk/*": ["apps/cdk/*"],
+      "@root/*": ["./*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

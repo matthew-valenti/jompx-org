@@ -65,6 +65,15 @@ Organization:
     Type: OC::ORG::OrganizationalUnit
     Properties:
       OrganizationalUnitName: Prod
+      Accounts:
+        - !Ref ProdAccount
+
+  ProdAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: prod
+      AccountId: '281660020318'
+      RootEmail: prod@jompx.com
 
   TestOU:
     Type: OC::ORG::OrganizationalUnit
@@ -93,6 +102,8 @@ Organization:
       AccountName: sandbox1
       AccountId: '066209653567'
       RootEmail: sandbox1@jompx.com
+      Tags:
+        subdomain: sandbox1
 
   RestrictUnusedRegionsSCP:
     Type: OC::ORG::ServiceControlPolicy
