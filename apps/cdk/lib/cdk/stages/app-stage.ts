@@ -1,10 +1,10 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
-import { AppSyncStack } from './app-sync.stack';
-import { CognitoStack } from './cognito';
-import { HostingStack } from './hosting-stack';
+import { AppSyncStack } from '@cdk/lib/cdk/stacks/app-sync.stack';
+import { CognitoStack } from '@cdk/lib/cdk/stacks/cognito';
+import { HostingStack } from '@cdk/lib/cdk/stacks/hosting-stack';
 
-export class CdkAppStage extends cdk.Stage {
+export class AppStage extends cdk.Stage {
 
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);

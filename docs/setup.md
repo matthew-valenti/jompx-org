@@ -55,6 +55,8 @@ The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from
  https://docs.aws.amazon.com/cdk/api/latest/docs/aws-codebuild-readme.html
  ```
  aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-sandbox1
+ aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token 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 --profile jompx-cicd-test
+
  ```
 
 ### 5. Create Nx Workspace
@@ -217,15 +219,16 @@ Organization:
 
 As you change your yaml and want to deploy additional organization choices
 ```
-npx aws-organization-formation update organization.yml --profile jompx-management
-npx aws-organization-formation create-change-set organization.yml --profile jompx-management
-npx aws-organization-formation execute-change-set 5e403303-9049-4953-be6a-fbcae37e9278 --profile jompx-management
+npx org-formation update organization.yml --profile jompx-management
+npx org-formation create-change-set organization.yml --profile jompx-management
+npx org-formation execute-change-set fbcf712f-ceba-4323-b92d-73ec0e139e81 --profile jompx-management
 ```
 
 ### 16. Add SCP to Restrict Regions
 For additional security against attacks and human error restrict your AWS accounts to certain regions only.
 Do not restrict global services: cloudfront, iam, route53, support.
 e.g. https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_deny-requested-region.html
+There are some resources that can only be created in us-east-1 so we'll allow that region too.
 
 Add a YAML entry:
 ```
@@ -248,6 +251,7 @@ Add a YAML entry:
             Condition:
               StringNotEquals:
                 'aws:RequestedRegion':
+                  - us-east-1
                   - us-west-2
 ```
 Set:
@@ -270,7 +274,7 @@ Create apps\org-formation\subdomains.yml
 
 - Set default region param DefaultOrganizationBindingRegion e.g. us-west-2
 - Add subdomain tags to organization.yml. Do NOT add tags to prod account (which will use the domain NOT a subdomain).
-- TODO: TTL Set low (e.g. 300) until confirmed good then set to high value (e.g. 86400 1 day) to reduce latency and cost: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-basic.html#rrsets-values-basic-ttl
+- TODO: TTL Set low (e.g. 300) until confirmed good then set to high value (e.g. AWS recommends 172800 2 days) to reduce latency and cost: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-basic.html#rrsets-values-basic-ttl
 
 Creates a CloudFormation stack. If creating multiple domains then use unique stack names e.g. HostedZoneMyDomain1, HostedZoneMyDomain2
 ```
@@ -286,6 +290,21 @@ Expand the Hosted zone details box to view your four name servers.
 Update your third party name servers.
 https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/GetInfoAboutHostedZone.html
 e.g. NameCheap instructions https://www.namecheap.com/support/knowledgebase/article.aspx/10371/2208/how-do-i-link-my-domain-to-amazon-web-services/
+
+### Create Email DNS Records
+
+Setup Route53 email DNS and check email health: https://mxtoolbox.com/emailhealth
+
+e.g. for namecheap:
+https://www.namecheap.com/support/knowledgebase/article.aspx/1340/2176/namecheap-private-email-records-for-domains-with-thirdparty-dns/
+
+DCKIM Record Lookup:
+https://mxtoolbox.com/dkim.aspx
+Use domain name = jompx.com:default (and leave selector empty).
+
+DMARK
+https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/
+https://mxtoolbox.com/dmarc/details/what-is-a-dmarc-record
 
 ### Install AWS CLI
 https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
@@ -514,6 +533,13 @@ npx cdk bootstrap aws://863054937555/us-west-2 --profile jompx-cicd-test ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
     aws://863054937555/us-west-2
 
+// prod
+set CDK_NEW_BOOTSTRAP=1
+npx cdk bootstrap aws://281660020318/us-west-2 --profile jompx-prod ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    --trust "863054937555, 896371249616" ^
+    aws://281660020318/us-west-2
+
 // test
 set CDK_NEW_BOOTSTRAP=1
 npx cdk bootstrap aws://706457422044/us-west-2 --profile jompx-test ^
@@ -612,19 +638,33 @@ npm install --save-dev esbuild@0
 ```
 // Manually deploy a stack to sandbox1:
 nx login cdk --profile jompx-sandbox1
-nx run cdk:list
+nx run cdk:list // Set local config stage = prod or test or sandbox1
 
-nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/HostingStack --profile jompx-sandbox1 --hotswap"
+---
 
-nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/CognitoStack --profile jompx-sandbox1 --hotswap"
+// For temporary testing only (in test env). Delete stack after use.
+nx synth cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test"
+nx deploy cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test"
 
-nx synth cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/CdkAppStageSandbox/AppSyncStack --profile jompx-sandbox1 --hotswap"
+// Deploy DNS to prod only.
+nx synth cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod"
+nx deploy cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod"
+
+---
+
+nx synth cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1 --hotswap"
+
+nx synth cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1 --hotswap"
+
+nx synth cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1"
+nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --hotswap"
+
+nx run cdk:graphql-schema
 ```
 
 ### CDK Watch & Hotswap
@@ -734,3 +774,10 @@ AWS good: Large number of cloud and serverless resources covering most use cases
 bad: Steep learning curve and difficult to create a secure and low cognitive solution for rapid development.
 Cost level in doco: green, orange, red.
 What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that means something special to the CDK so we use stage instead.
+Explain ID type and use across all keys/primary keys. Caution: does ID work for custom mutations inputs?
+
+I THINK WE WANT TO USE THIS ON THE CLIENT?
+Interesting graphQL query generator with autocomplete etc.
+Do we want native GraphQL which kind of a bummer or something like this which is custom?
+Can it keep up with GraphQL changes?
+https://github.com/babyfish-ct/graphql-ts-client

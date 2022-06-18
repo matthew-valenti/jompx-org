@@ -3,6 +3,12 @@ import { IConfig } from '@jompx/constructs';
 export const Config: IConfig = {
     '@jompx': {
         organizationName: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name.
+        apps: [
+            {
+                name: 'admin',
+                rootDomainName: 'jompx.com'
+            }
+        ],
         // An environment is the target AWS account and region into which a stack will be deployed.
         environments: [
             {
@@ -32,57 +38,162 @@ export const Config: IConfig = {
             }
         ],
         stages: {
+            // In prod stage, when main branch is updated, a set of deployment types wlil be deployed to environments.
             prod: {
                 branch: 'main',
-                environments: [
+                deployments: [
                     {
                         type: 'cicd',
-                        name: 'cicd-prod',
+                        environmentName: 'cicd-prod',
                     },
                     {
                         type: 'common',
-                        name: 'common-prod'
+                        environmentName: 'common-prod'
                     },
                     {
-                        type: 'main',
-                        name: 'prod'
+                        type: 'dns',
+                        environmentName: 'prod'
+                    },
+                    {
+                        type: 'app',
+                        environmentName: 'prod'
                     }
                 ]
             },
             test: {
                 branch: 'test',
-                environments: [
+                deployments: [
                     {
                         type: 'cicd',
-                        name: 'cicd-test'
+                        environmentName: 'cicd-test'
                     },
                     {
                         type: 'common',
-                        name: 'common-test'
+                        environmentName: 'common-test'
                     },
                     {
-                        type: 'main',
-                        name: 'test'
+                        type: 'dns',
+                        environmentName: 'test'
+                    },
+                    {
+                        type: 'app',
+                        environmentName: 'test'
                     }
                 ]
             },
             sandbox1: {
-                branch: '(-sandbox1-)',
-                environments: [
+                branch: '(sandbox1)',
+                deployments: [
                     {
                         type: 'cicd',
-                        name: 'cicd-test'
+                        environmentName: 'cicd-test'
                     },
                     {
                         type: 'common',
-                        name: 'common-test'
+                        environmentName: 'common-test'
                     },
                     {
-                        type: 'main',
-                        name: 'sandbox1'
+                        type: 'app',
+                        environmentName: 'sandbox1'
                     }
                 ]
             }
         }
     }
 };
+
+
+// export const Config: IConfig = {
+//     '@jompx': {
+//         organizationName: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name.
+//         // An environment is the target AWS account and region into which a stack will be deployed.
+//         environments: [
+//             {
+//                 accountId: '863054937555',
+//                 region: 'us-west-2',
+//                 name: 'cicd-test'
+//             },
+//             {
+//                 accountId: '896371249616',
+//                 region: 'us-west-2',
+//                 name: 'cicd-prod'
+//             },
+//             {
+//                 accountId: '281660020318',
+//                 region: 'us-west-2',
+//                 name: 'prod'
+//             },
+//             {
+//                 accountId: '706457422044',
+//                 region: 'us-west-2',
+//                 name: 'test'
+//             },
+//             {
+//                 accountId: '066209653567',
+//                 region: 'us-west-2',
+//                 name: 'sandbox1'
+//             }
+//         ],
+//         stages: {
+//             prod: {
+//                 branch: 'main',
+//                 environments: [
+//                     {
+//                         type: 'cicd',
+//                         name: 'cicd-prod',
+//                     },
+//                     {
+//                         type: 'network',
+//                         name: 'prod'
+//                     },
+//                     {
+//                         type: 'common',
+//                         name: 'common-prod'
+//                     },
+//                     {
+//                         type: 'app',
+//                         name: 'prod'
+//                     }
+//                 ]
+//             },
+//             test: {
+//                 branch: 'test',
+//                 environments: [
+//                     {
+//                         type: 'cicd',
+//                         name: 'cicd-test'
+//                     },
+//                     {
+//                         type: 'network',
+//                         name: 'test'
+//                     },
+//                     {
+//                         type: 'common',
+//                         name: 'common-test'
+//                     },
+//                     {
+//                         type: 'app',
+//                         name: 'test'
+//                     }
+//                 ]
+//             },
+//             sandbox1: {
+//                 branch: '(-sandbox1-)',
+//                 environments: [
+//                     {
+//                         type: 'cicd',
+//                         name: 'cicd-test'
+//                     },
+//                     {
+//                         type: 'common',
+//                         name: 'common-test'
+//                     },
+//                     {
+//                         type: 'app',
+//                         name: 'sandbox1'
+//                     }
+//                 ]
+//             }
+//         }
+//     }
+// };

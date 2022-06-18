@@ -33,6 +33,7 @@
     "get-value": "^3.0.1",
     "graphql": "^16.4.0",
     "graphql-tag": "^2.12.6",
+    "mongodb-language-model": "^2.3.0",
     "pluralize": "^8.0.0",
     "rxjs": "~7.4.0",
     "set-value": "^4.1.0",

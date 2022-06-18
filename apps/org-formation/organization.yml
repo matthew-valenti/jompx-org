@@ -88,6 +88,8 @@ Organization:
       AccountName: test
       AccountId: '706457422044'
       RootEmail: test@jompx.com
+      Tags:
+        subdomain: test
 
   SandboxOU:
     Type: OC::ORG::OrganizationalUnit
@@ -125,3 +127,4 @@ Organization:
               StringNotEquals:
                 'aws:RequestedRegion':
                   - us-west-2
+                  - us-east-1

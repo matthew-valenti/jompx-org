@@ -34,9 +34,9 @@ export class PostSchema extends Construct {
             ...AppSyncLambdaDefaultProps,
             memorySize: 128 * 2,
             description: `AppSync post handler.`,
-            environment: {
-                graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
-            }
+            // environment: {
+            //     graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl2')
+            // }
         });
 
         // TODO: Lock down permissions.

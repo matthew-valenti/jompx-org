@@ -3,8 +3,8 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 
-// Build.
-import { MySqlSchema } from '@cdk/lib/app-sync/schema/mysql.schema';
+// Business.
+import { PostSchema } from '@cdk/lib/post/post-schema.construct';
 
 export interface AppSyncBuildProps extends cdk.StackProps {
     graphqlApi: appsync.GraphqlApi;
@@ -17,13 +17,7 @@ export class AppSyncBusiness extends Construct {
         super(scope, id);
 
         if (props?.schemaBuilder) {
-
-            // Add MySQL schema.
-            const mySqlSchema = new MySqlSchema(props.schemaBuilder.dataSources);
-            props.schemaBuilder.addSchemaTypes(mySqlSchema.types);
-
-            // Auto build GraphQL endpoints from schema.
-            props.schemaBuilder.create();
+            new PostSchema(this, 'PostSchema', { schemaBuilder: props.schemaBuilder });
         }
     }
 }

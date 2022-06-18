@@ -2,5 +2,13 @@
   "hosted-zone:account=066209653567:domainName=sandbox1.jompx.com:region=us-west-2": {
     "Id": "/hostedzone/Z06035372OJFVTAZDCYKO",
     "Name": "sandbox1.jompx.com."
+  },
+  "hosted-zone:account=706457422044:domainName=test.jompx.com:region=us-west-2": {
+    "Id": "/hostedzone/Z029231125A436J764S20",
+    "Name": "test.jompx.com."
+  },
+  "hosted-zone:account=281660020318:domainName=jompx.com:region=us-west-2": {
+    "Id": "/hostedzone/Z0604602H8JAYNDH9QVU",
+    "Name": "jompx.com."
   }
 }

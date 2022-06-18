@@ -1,101 +1,146 @@
 schema {
   query: Query
-  mutation: Mutation
 }
 
-directive @datasource(name: String) on OBJECT
-
-directive @source(name: String) on FIELD_DEFINITION | OBJECT
-
-directive @lookup(from: String, localField: String, foreignField: String) on FIELD_DEFINITION
-
-directive @readonly(value: String) on FIELD_DEFINITION
-
-directive @operations(names: [String]) on OBJECT
-
-input MpostBusinessGraphqlInput {
-  number1: Int!
+enum AuthStrategy {
+  private
+  public
+  owners
+  groups
+  custom
 }
 
-type MpostBusinessGraphqlPayload @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  id: String!
+enum AuthProvider {
+  apiKey
+  iam
+  oidc
+  userPools
+  function
 }
 
-type MpostBusinessGraphqlOutput @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  output: MpostBusinessGraphqlPayload
+enum AuthOperation {
+  find
+  findOne
+  insertOne
+  insertMany
+  updateOne
+  updateMany
+  upsertOne
+  upsertMany
+  deleteOne
+  deleteMany
 }
 
-type Mutation {
-  mpostBusinessGraphql(input: MpostBusinessGraphqlInput!): MpostBusinessGraphqlOutput @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
+input AuthRule {
+  allow: AuthStrategy!
+  provider: AuthProvider!
+  ownerField: String
+  identityClaim: String
+  groupsField: String
+  groupClaim: String
+  groups: [String]
+  operations: [AuthOperation]
 }
 
-input SortInput {
-  fieldName: String!
-  direction: Int!
-}
-
-interface MNode {
+interface MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
   id: ID! @readonly(value: "true")
-  isDeleted: Boolean! @readonly(value: "true")
-  dateCreated: AWSDateTime! @readonly(value: "true")
-  dateUpdated: AWSDateTime! @readonly(value: "true")
+  createdAt: AWSDateTime! @readonly(value: "true")
+  createdBy: AWSDateTime! @readonly(value: "true")
+  updatedAt: AWSDateTime! @readonly(value: "true")
+  updatedBy: AWSDateTime! @readonly(value: "true")
 }
 
-type MPost implements MNode @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_iam @datasource(name: "mySql") @source(name: "post") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
-  date: AWSDateTime
-  title: String @source(name: "title")
-  mcomments: [MComment] @lookup(from: "MComment", localField: "id", foreignField: "mpostId")
+type MMovie implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "pilot") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+  name: String!
+  exampleBoolean: Boolean
+  exampleFloat: Float
+  exampleInt: Int
+  exampleDate: AWSDate
+  exampleDateTime: AWSDateTime
+  exampleEmail: AWSEmail
+  exampleIpAddress: AWSIPAddress
+  exampleJson: AWSJSON
+  examplePhone: AWSPhone
+  exampleTime: AWSTime
+  exampleTimestamp: AWSTimestamp
+  exampleUrl: AWSURL
+  exampleSourceField: String @source(name: "sourceField")
+  mMovieActors: [MMovieActor]! @lookup(from: "MMovieActor", localField: "id", foreignField: "movieId")
   id: ID! @readonly(value: "true")
-  isDeleted: Boolean! @readonly(value: "true")
-  dateCreated: AWSDateTime! @readonly(value: "true")
-  dateUpdated: AWSDateTime! @readonly(value: "true")
+  createdAt: AWSDateTime! @readonly(value: "true")
+  createdBy: AWSDateTime! @readonly(value: "true")
+  updatedAt: AWSDateTime! @readonly(value: "true")
+  updatedBy: AWSDateTime! @readonly(value: "true")
 }
 
-type MPostEdge @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  node: MPost
+type MMovieEdge {
+  node: MMovie
 }
 
-type MPostConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  edges: [MPostEdge]
+type MMovieConnection {
+  edges: [MMovieEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
 
 type Query {
-  mPostFind(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MPostConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
-  mCommentFind(filter: AWSJSON, sort: [SortInput], skip: Int, limit: Int): MCommentConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
+  mMovieFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MMovieConnection
+  mMovieActorFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MMovieActorConnection
+  mActorFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MActorConnection
 }
 
-type MComment implements MNode @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_iam @datasource(name: "mySql") @source(name: "comment") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany") {
+type MMovieActor implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "movieActor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+  movieId: ID!
+  actorId: ID!
+  mMovie: MMovie! @lookup(from: "MMovie", localField: "movieId", foreignField: "id")
+  mActor: MMovie! @lookup(from: "MActor", localField: "actorId", foreignField: "id")
   id: ID! @readonly(value: "true")
-  html: String @source(name: "content")
-  mpostId: ID
-  mpost: MPost @lookup(from: "MPost", localField: "mpostId", foreignField: "id")
-  isDeleted: Boolean! @readonly(value: "true")
-  dateCreated: AWSDateTime! @readonly(value: "true")
-  dateUpdated: AWSDateTime! @readonly(value: "true")
+  createdAt: AWSDateTime! @readonly(value: "true")
+  createdBy: AWSDateTime! @readonly(value: "true")
+  updatedAt: AWSDateTime! @readonly(value: "true")
+  updatedBy: AWSDateTime! @readonly(value: "true")
 }
 
-type MCommentEdge @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  node: MComment
+type MMovieActorEdge {
+  node: MMovieActor
 }
 
-type MCommentConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  edges: [MCommentEdge]
+type MMovieActorConnection {
+  edges: [MMovieActorEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
 
-type PageInfoOffset @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
-  skip: Int!
-  limit: Int!
+type MActor implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "comment") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+  name: String!
+  mMovieActors: [MMovieActor] @lookup(from: "MMovieActor", localField: "id", foreignField: "actorId")
+  id: ID! @readonly(value: "true")
+  createdAt: AWSDateTime! @readonly(value: "true")
+  createdBy: AWSDateTime! @readonly(value: "true")
+  updatedAt: AWSDateTime! @readonly(value: "true")
+  updatedBy: AWSDateTime! @readonly(value: "true")
 }
 
-type PageInfoCursor @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+type MActorEdge {
+  node: MActor
+}
+
+type MActorConnection {
+  edges: [MActorEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+
+type PageInfoCursor @aws_iam @aws_cognito_user_pools {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
   startCursor: String!
   endCursor: String!
+}
+
+type PageInfoOffset @aws_iam @aws_cognito_user_pools {
+  skip: Int!
+  limit: Int!
 }
 
 scalar AWSDate
@@ -119,3 +164,17 @@ scalar AWSIPAddress
 directive @aws_iam on FIELD_DEFINITION | OBJECT
 
 directive @aws_cognito_user_pools(cognito_groups: String) on FIELD_DEFINITION | OBJECT
+
+directive @auth(rules: [AuthRule!]!) on OBJECT | INTERFACE | FIELD_DEFINITION
+
+directive @datasource(name: String) on FIELD_DEFINITION | OBJECT
+
+directive @lookup(from: String!, localField: String!, foreignField: String!) on FIELD_DEFINITION
+
+directive @operations(names: [String!]!) on OBJECT
+
+directive @pagination(type: String) on OBJECT
+
+directive @readonly(value: String) on FIELD_DEFINITION
+
+directive @source(name: String) on FIELD_DEFINITION | OBJECT

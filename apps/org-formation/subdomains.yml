@@ -18,10 +18,16 @@ DefaultOrganizationBindingRegion: us-west-2
 # Cannot make region a param. Org-formation expects region to be a literal string and doesn't appear to support !Ref like account.
 # Can we wrap org-formation CLI in nx? Do we even want to since it will generally be run once only.
 
+# TTL: 300 = 5 mins, 3600 = 1 hour, 86400 = 1 day
+
 Parameters:
 
   domainName:
     Type: String
+
+  ttl:
+    Type: Number
+    Default: 3600
 
 # Section contains a named set of Bindings.
 # Bindings determine what resources are deployed where
@@ -73,6 +79,6 @@ Resources:
       Type: NS
       HostedZoneName: !Sub '${domainName}.'
       Name: !Sub '${CurrentAccount.Tags.subdomain}.${domainName}.'
-      TTL: 300
+      TTL: !Ref ttl
       ResourceRecords: !GetAtt CurrentAccount.Resources.HostedZone.NameServers
 

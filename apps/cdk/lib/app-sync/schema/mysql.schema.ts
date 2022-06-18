@@ -1,7 +1,7 @@
 import * as jompx from '@jompx/constructs';
-import { Directive, Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
-import { AppSyncMySqlCustomDirective as CustomDirective } from '@jompx/constructs';
-import { AppSyncDatasource } from '@cdk/lib/stacks/app-sync.stack';
+import { auth, datasource, lookup, operations, readonly, source } from '@jompx/constructs'; // Custom directives.
+import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
+import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
 
 export class MySqlSchema {
 
@@ -18,178 +18,137 @@ export class MySqlSchema {
                 id: new Field({
                     returnType: GraphqlType.id({ isRequired: true }),
                     directives: [
-                        CustomDirective.readonly(true)
+                        readonly(true)
                     ]
                 }),
-                isDeleted: new Field({
-                    returnType: GraphqlType.boolean({ isRequired: true }),
-                    directives: [
-                        CustomDirective.readonly(true)
-                    ]
-                }),
-                dateCreated: new Field({
+                createdAt: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true }),
                     directives: [
-                        CustomDirective.readonly(true)
+                        readonly(true)
                     ]
                 }),
-                dateUpdated: new Field({
+                createdBy: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true }),
                     directives: [
-                        CustomDirective.readonly(true)
+                        readonly(true)
+                    ]
+                }),
+                updatedAt: new Field({
+                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
+                    directives: [
+                        readonly(true)
+                    ]
+                }),
+                updatedBy: new Field({
+                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
+                    directives: [
+                        readonly(true)
                     ]
                 })
-            }
+            },
+            directives: [
+                auth([
+                    { allow: 'private', provider: 'iam' }
+                ])
+            ]
         });
         this.types.interfaceTypes.MNode = MNode;
 
-        // Object types.
-
-        const MPost = new ObjectType('MPost', {
+        const MMovie = new ObjectType('MMovie', {
             interfaceTypes: [MNode],
             definition: {
-                date: GraphqlType.awsDateTime(),
-                title: new Field({
+                name: GraphqlType.string({ isRequired: true }),
+                exampleBoolean: GraphqlType.boolean(),
+                exampleFloat: GraphqlType.float(),
+                exampleInt: GraphqlType.int(),
+                exampleDate: GraphqlType.awsDate(),
+                exampleDateTime: GraphqlType.awsDateTime(),
+                exampleEmail: GraphqlType.awsEmail(),
+                exampleIpAddress: GraphqlType.awsIpAddress(),
+                exampleJson: GraphqlType.awsJson(),
+                examplePhone: GraphqlType.awsPhone(),
+                exampleTime: GraphqlType.awsTime(),
+                exampleTimestamp: GraphqlType.awsTimestamp(),
+                exampleUrl: GraphqlType.awsUrl(),
+                exampleSourceField: new Field({
                     returnType: GraphqlType.string(),
                     directives: [
-                        CustomDirective.source('title')
+                        source('sourceField')
                     ]
                 }),
-                mcomments: new ResolvableField({
-                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MComment', isList: true }),
+                mMovieActors: new ResolvableField({
+                    // A movie must have actors.
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
                     dataSource: this.datasources[AppSyncDatasource.mySql],
                     directives: [
-                        CustomDirective.lookup({ from: 'MComment', localField: 'id', foreignField: 'mpostId' })
+                        lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 })
             },
             directives: [
-                Directive.cognito('admin'),
-                Directive.iam(),
-                CustomDirective.datasource(AppSyncDatasource.mySql),
-                CustomDirective.source('post'),
-                CustomDirective.operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'deleteOne', 'deleteMany', 'destroyOne', 'destoryMany'])
-                // CustomDirective.permissions(['read', 'create', 'update', 'delete'])
+                auth([
+                    { allow: 'private', provider: 'iam' }
+                ]),
+                datasource(AppSyncDatasource.mySql),
+                source('pilot'),
+                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MPost = MPost;
+        this.types.objectTypes.MMovie = MMovie;
 
-        const MComment = new ObjectType('MComment', {
+        const MMovieActor = new ObjectType('MMovieActor', {
             interfaceTypes: [MNode],
             definition: {
-                id: GraphqlType.id({ isRequired: true }),
-                html: new Field({
-                    returnType: GraphqlType.string(),
-                    directives: [
-                        CustomDirective.source('content')
-                    ]
-                }),
-                mpostId: GraphqlType.id(),
-                mpost: new ResolvableField({
-                    returnType: MPost.attribute(),
+                movieId: GraphqlType.id({ isRequired: true }),
+                actorId: GraphqlType.id({ isRequired: true }),
+                mMovie: new ResolvableField({
+                    returnType: MMovie.attribute({ isRequired: true }),
                     dataSource: this.datasources[AppSyncDatasource.mySql],
                     directives: [
-                        CustomDirective.lookup({ from: 'MPost', localField: 'mpostId', foreignField: 'id' })
+                        lookup({ from: 'MMovie', localField: 'movieId', foreignField: 'id' })
+                    ]
+                }),
+                mActor: new ResolvableField({
+                    returnType: MMovie.attribute({ isRequired: true }),
+                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    directives: [
+                        lookup({ from: 'MActor', localField: 'actorId', foreignField: 'id' })
                     ]
                 })
             },
             directives: [
-                Directive.cognito('admin'),
-                Directive.iam(),
-                CustomDirective.datasource(AppSyncDatasource.mySql),
-                CustomDirective.source('comment'),
-                CustomDirective.operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'deleteOne', 'deleteMany', 'destroyOne', 'destoryMany'])
-                // CustomDirective.permissions(['read', 'create', 'update', 'delete'])
+                auth([
+                    { allow: 'private', provider: 'iam' }
+                ]),
+                datasource(AppSyncDatasource.mySql),
+                source('movieActor'),
+                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MComment = MComment;
+        this.types.objectTypes.MMovieActor = MMovieActor;
 
-        // const SAccount = new ObjectType('SAccount', {
-        //     definition: {
-        //         accountId: GraphqlType.id({ isRequired: true }),
-        //         accountName: GraphqlType.string()
-        //     },
-        //     directives: [
-        //         Directive.custom('@datasource(name: "mysql")'),
-        //         Directive.custom('@key(fields: "id")')
-        //     ]
-        // });
-        // types.set('SAccount', SAccount);
-
-        // const CUser = new ObjectType('CUser', {
-        //     definition: {
-        //         email: GraphqlType.string({ isRequired: true }),
-        //         phone: GraphqlType.string(),
-        //     },
-        //     directives: [
-        //         Directive.custom('@datasource(name: "mysql")'),
-        //         Directive.custom('@key(fields: "id")')
-        //     ]
-        // });
-        // types.set('CUser', CUser);
-
-        // const MUser = new ObjectType('MUser', {
-        //     interfaceTypes: [MNode],
-        //     definition: {
-        //         email: GraphqlType.id({ isRequired: true }),
-        //         firstName: GraphqlType.string(),
-        //         lastName: GraphqlType.string(),
-        //         sAccount: new ResolvableField({
-        //             returnType: SAccount.attribute({ isList: false }),
-        //             dataSource: datasources.get('mysql')
-        //         }),
-        //         CUser: new ResolvableField({
-        //             returnType: CUser.attribute({ isList: false }),
-        //             dataSource: datasources.get('mysql')
-        //         }),
-        //         user: new Field({ returnType: CUser.attribute(), directives: [Directive.custom('@relation(local: "userId", foreign: "_id")')] }),
-        //     },
-        //     directives: [
-        //         Directive.custom('@datasource(name: "mysql")'),
-        //         Directive.custom('@key(fields: "id")'),
-        //         Directive.custom('@method(names: "get,create,update,delete")')
-        //     ]
-        // });
-        // types.set('MUser', MUser);
-
-        // api.addQuery('getMUser', new ResolvableField({
-        //     returnType: MUser.attribute(),
-        //     dataSource: datasources.get('mysql'),
-        //     pipelineConfig: [], // TODO: Add authorization Lambda function here.
-        //     // Use the request mapping to inject stash variables (for use in Lambda function).
-        //     // In theory, we could use a Lambda function instead of VTL but this should be much faster than invoking another Lambda.
-        //     // Caution: payload should mimic Lambda resolver (no VTL). This syntax could change in the future.
-        // }));
-
-        // api.addMutation('myCustomMutation', new ResolvableField({
-        //     returnType: GraphqlType.awsJson(),
-        //     args: { myVar1: GraphqlType.id({ isRequired: true }), myVar2: GraphqlType.id({ isRequired: true }) },
-        //     dataSource: datasources.get('mysql'),
-        //     pipelineConfig: [], // Add authentication Lambda function here.
-        // }));
-
-        // Auto generate method schema.
-        // const schemaHelper = new SchemaHelper(api, datasources, types);
-        // types.forEach((type) => {
-        //     schemaHelper.addType(type);
-        // });
+        const MActor = new ObjectType('MActor', {
+            interfaceTypes: [MNode],
+            definition: {
+                name: GraphqlType.string({ isRequired: true }),
+                // An actor can have 0 or more movies.
+                mMovieActors: new ResolvableField({
+                    returnType: MMovieActor.attribute({ isList: true }),
+                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    directives: [
+                        lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'actorId' })
+                    ]
+                })
+            },
+            directives: [
+                auth([
+                    { allow: 'private', provider: 'iam' }
+                ]),
+                datasource(AppSyncDatasource.mySql),
+                source('comment'),
+                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+            ]
+        });
+        this.types.objectTypes.MActor = MActor;
     }
 }
-
-// User.addField({ fieldName: 'userSecurityRoles', field: new Field({ returnType: UserSecurityRole.attribute({ isList: true }), directives: [Directive.custom('@relation(local: "_id", foreign: "userId")')] }) });
-// SecurityRole.addField({ fieldName: 'userSecurityRoles', field: new Field({ returnType: UserSecurityRole.attribute({ isList: true }), directives: [Directive.custom('@relation(local: "_id", foreign: "securityRoleId")')] }) });
-
-// https://stackoverflow.com/questions/41515679/can-you-make-a-graphql-type-both-an-input-and-output-type
-// const UserType = `
-//     name: String!,
-//     surname: String!
-// `;
-
-// const schema = graphql.buildSchema(`
-//     type User {
-//         ${UserType}
-//     }
-//     input InputUser {
-//         ${UserType}
-//     }
-// `)

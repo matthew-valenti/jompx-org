@@ -1,69 +1,33 @@
 [
-    "MPost",
+    null,
     {
-        "MpostBusinessGraphqlInput": {
-            "name": "MpostBusinessGraphqlInput",
+        "AuthStrategy": {
+            "name": "AuthStrategy",
             "directives": []
         }
     },
-    "MpostBusinessGraphqlInput",
+    "AuthStrategy",
     {
-        "Int": {
-            "name": "Int",
+        "AuthProvider": {
+            "name": "AuthProvider",
             "directives": []
         }
     },
-    "Int",
+    "AuthProvider",
     {
-        "MpostBusinessGraphqlPayload": {
-            "name": "MpostBusinessGraphqlPayload",
-            "directives": [
-                {
-                    "name": "aws_iam",
-                    "arguments": []
-                },
-                {
-                    "name": "aws_cognito_user_pools",
-                    "arguments": [
-                        {
-                            "kind": "Argument",
-                            "name": {
-                                "kind": "Name",
-                                "value": "cognito_groups",
-                                "loc": {
-                                    "start": 550,
-                                    "end": 564
-                                }
-                            },
-                            "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 567,
-                                            "end": 574
-                                        }
-                                    }
-                                ],
-                                "loc": {
-                                    "start": 566,
-                                    "end": 575
-                                }
-                            },
-                            "loc": {
-                                "start": 550,
-                                "end": 575
-                            }
-                        }
-                    ]
-                }
-            ]
+        "AuthOperation": {
+            "name": "AuthOperation",
+            "directives": []
         }
     },
-    "MpostBusinessGraphqlPayload",
+    "AuthOperation",
+    {
+        "AuthRule": {
+            "name": "AuthRule",
+            "directives": []
+        }
+    },
+    "AuthRule",
     {
         "String": {
             "name": "String",
@@ -72,73 +36,39 @@
     },
     "String",
     {
-        "MpostBusinessGraphqlOutput": {
-            "name": "MpostBusinessGraphqlOutput",
+        "MNode": {
+            "name": "MNode",
             "directives": [
                 {
-                    "name": "aws_iam",
-                    "arguments": []
-                },
-                {
-                    "name": "aws_cognito_user_pools",
+                    "name": "auth",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "rules",
                                 "loc": {
-                                    "start": 660,
-                                    "end": 674
+                                    "start": 528,
+                                    "end": 533
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 677,
-                                            "end": 684
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]",
+                                "block": false,
                                 "loc": {
-                                    "start": 676,
-                                    "end": 685
+                                    "start": 535,
+                                    "end": 583
                                 }
                             },
                             "loc": {
-                                "start": 660,
-                                "end": 685
+                                "start": 528,
+                                "end": 583
                             }
                         }
                     ]
                 }
             ]
-        }
-    },
-    "MpostBusinessGraphqlOutput",
-    {
-        "Mutation": {
-            "name": "Mutation",
-            "directives": []
-        }
-    },
-    "Mutation",
-    {
-        "SortInput": {
-            "name": "SortInput",
-            "directives": []
-        }
-    },
-    "SortInput",
-    {
-        "MNode": {
-            "name": "MNode",
-            "directives": []
         }
     },
     "MNode",
@@ -150,57 +80,37 @@
     },
     "ID",
     {
-        "Boolean": {
-            "name": "Boolean",
-            "directives": []
-        }
-    },
-    "Boolean",
-    {
-        "MPost": {
-            "name": "MPost",
+        "MMovie": {
+            "name": "MMovie",
             "directives": [
                 {
-                    "name": "aws_cognito_user_pools",
+                    "name": "auth",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "rules",
                                 "loc": {
-                                    "start": 1222,
-                                    "end": 1236
+                                    "start": 873,
+                                    "end": 878
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 1239,
-                                            "end": 1246
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]",
+                                "block": false,
                                 "loc": {
-                                    "start": 1238,
-                                    "end": 1247
+                                    "start": 880,
+                                    "end": 928
                                 }
                             },
                             "loc": {
-                                "start": 1222,
-                                "end": 1247
+                                "start": 873,
+                                "end": 928
                             }
                         }
                     ]
-                },
-                {
-                    "name": "aws_iam",
-                    "arguments": []
                 },
                 {
                     "name": "datasource",
@@ -211,8 +121,8 @@
                                 "kind": "Name",
                                 "value": "name",
                                 "loc": {
-                                    "start": 1270,
-                                    "end": 1274
+                                    "start": 942,
+                                    "end": 946
                                 }
                             },
                             "value": {
@@ -220,13 +130,13 @@
                                 "value": "mySql",
                                 "block": false,
                                 "loc": {
-                                    "start": 1276,
-                                    "end": 1283
+                                    "start": 948,
+                                    "end": 955
                                 }
                             },
                             "loc": {
-                                "start": 1270,
-                                "end": 1283
+                                "start": 942,
+                                "end": 955
                             }
                         }
                     ]
@@ -240,22 +150,22 @@
                                 "kind": "Name",
                                 "value": "name",
                                 "loc": {
-                                    "start": 1293,
-                                    "end": 1297
+                                    "start": 965,
+                                    "end": 969
                                 }
                             },
                             "value": {
                                 "kind": "StringValue",
-                                "value": "post",
+                                "value": "pilot",
                                 "block": false,
                                 "loc": {
-                                    "start": 1299,
-                                    "end": 1305
+                                    "start": 971,
+                                    "end": 978
                                 }
                             },
                             "loc": {
-                                "start": 1293,
-                                "end": 1305
+                                "start": 965,
+                                "end": 978
                             }
                         }
                     ]
@@ -269,22 +179,22 @@
                                 "kind": "Name",
                                 "value": "names",
                                 "loc": {
-                                    "start": 1319,
-                                    "end": 1324
+                                    "start": 992,
+                                    "end": 997
                                 }
                             },
                             "value": {
                                 "kind": "StringValue",
-                                "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany",
+                                "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany",
                                 "block": false,
                                 "loc": {
-                                    "start": 1326,
-                                    "end": 1426
+                                    "start": 999,
+                                    "end": 1097
                                 }
                             },
                             "loc": {
-                                "start": 1319,
-                                "end": 1426
+                                "start": 992,
+                                "end": 1097
                             }
                         }
                     ]
@@ -292,107 +202,42 @@
             ]
         }
     },
-    "MPost",
+    "MMovie",
     {
-        "MPostEdge": {
-            "name": "MPostEdge",
-            "directives": [
-                {
-                    "name": "aws_iam",
-                    "arguments": []
-                },
-                {
-                    "name": "aws_cognito_user_pools",
-                    "arguments": [
-                        {
-                            "kind": "Argument",
-                            "name": {
-                                "kind": "Name",
-                                "value": "cognito_groups",
-                                "loc": {
-                                    "start": 1832,
-                                    "end": 1846
-                                }
-                            },
-                            "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 1849,
-                                            "end": 1856
-                                        }
-                                    }
-                                ],
-                                "loc": {
-                                    "start": 1848,
-                                    "end": 1857
-                                }
-                            },
-                            "loc": {
-                                "start": 1832,
-                                "end": 1857
-                            }
-                        }
-                    ]
-                }
-            ]
+        "Boolean": {
+            "name": "Boolean",
+            "directives": []
         }
     },
-    "MPostEdge",
+    "Boolean",
     {
-        "MPostConnection": {
-            "name": "MPostConnection",
-            "directives": [
-                {
-                    "name": "aws_iam",
-                    "arguments": []
-                },
-                {
-                    "name": "aws_cognito_user_pools",
-                    "arguments": [
-                        {
-                            "kind": "Argument",
-                            "name": {
-                                "kind": "Name",
-                                "value": "cognito_groups",
-                                "loc": {
-                                    "start": 1931,
-                                    "end": 1945
-                                }
-                            },
-                            "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 1948,
-                                            "end": 1955
-                                        }
-                                    }
-                                ],
-                                "loc": {
-                                    "start": 1947,
-                                    "end": 1956
-                                }
-                            },
-                            "loc": {
-                                "start": 1931,
-                                "end": 1956
-                            }
-                        }
-                    ]
-                }
-            ]
+        "Float": {
+            "name": "Float",
+            "directives": []
         }
     },
-    "MPostConnection",
+    "Float",
+    {
+        "Int": {
+            "name": "Int",
+            "directives": []
+        }
+    },
+    "Int",
+    {
+        "MMovieEdge": {
+            "name": "MMovieEdge",
+            "directives": []
+        }
+    },
+    "MMovieEdge",
+    {
+        "MMovieConnection": {
+            "name": "MMovieConnection",
+            "directives": []
+        }
+    },
+    "MMovieConnection",
     {
         "Query": {
             "name": "Query",
@@ -401,50 +246,37 @@
     },
     "Query",
     {
-        "MComment": {
-            "name": "MComment",
+        "MMovieActor": {
+            "name": "MMovieActor",
             "directives": [
                 {
-                    "name": "aws_cognito_user_pools",
+                    "name": "auth",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "rules",
                                 "loc": {
-                                    "start": 2399,
-                                    "end": 2413
+                                    "start": 2285,
+                                    "end": 2290
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 2416,
-                                            "end": 2423
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]",
+                                "block": false,
                                 "loc": {
-                                    "start": 2415,
-                                    "end": 2424
+                                    "start": 2292,
+                                    "end": 2340
                                 }
                             },
                             "loc": {
-                                "start": 2399,
-                                "end": 2424
+                                "start": 2285,
+                                "end": 2340
                             }
                         }
                     ]
-                },
-                {
-                    "name": "aws_iam",
-                    "arguments": []
                 },
                 {
                     "name": "datasource",
@@ -455,8 +287,8 @@
                                 "kind": "Name",
                                 "value": "name",
                                 "loc": {
-                                    "start": 2447,
-                                    "end": 2451
+                                    "start": 2354,
+                                    "end": 2358
                                 }
                             },
                             "value": {
@@ -464,13 +296,13 @@
                                 "value": "mySql",
                                 "block": false,
                                 "loc": {
-                                    "start": 2453,
-                                    "end": 2460
+                                    "start": 2360,
+                                    "end": 2367
                                 }
                             },
                             "loc": {
-                                "start": 2447,
-                                "end": 2460
+                                "start": 2354,
+                                "end": 2367
                             }
                         }
                     ]
@@ -484,22 +316,22 @@
                                 "kind": "Name",
                                 "value": "name",
                                 "loc": {
-                                    "start": 2470,
-                                    "end": 2474
+                                    "start": 2377,
+                                    "end": 2381
                                 }
                             },
                             "value": {
                                 "kind": "StringValue",
-                                "value": "comment",
+                                "value": "movieActor",
                                 "block": false,
                                 "loc": {
-                                    "start": 2476,
-                                    "end": 2485
+                                    "start": 2383,
+                                    "end": 2395
                                 }
                             },
                             "loc": {
-                                "start": 2470,
-                                "end": 2485
+                                "start": 2377,
+                                "end": 2395
                             }
                         }
                     ]
@@ -513,22 +345,22 @@
                                 "kind": "Name",
                                 "value": "names",
                                 "loc": {
-                                    "start": 2499,
-                                    "end": 2504
+                                    "start": 2409,
+                                    "end": 2414
                                 }
                             },
                             "value": {
                                 "kind": "StringValue",
-                                "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,deleteOne,deleteMany,destroyOne,destoryMany",
+                                "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany",
                                 "block": false,
                                 "loc": {
-                                    "start": 2506,
-                                    "end": 2606
+                                    "start": 2416,
+                                    "end": 2514
                                 }
                             },
                             "loc": {
-                                "start": 2499,
-                                "end": 2606
+                                "start": 2409,
+                                "end": 2514
                             }
                         }
                     ]
@@ -536,149 +368,137 @@
             ]
         }
     },
-    "MComment",
+    "MMovieActor",
     {
-        "MCommentEdge": {
-            "name": "MCommentEdge",
+        "MMovieActorEdge": {
+            "name": "MMovieActorEdge",
+            "directives": []
+        }
+    },
+    "MMovieActorEdge",
+    {
+        "MMovieActorConnection": {
+            "name": "MMovieActorConnection",
+            "directives": []
+        }
+    },
+    "MMovieActorConnection",
+    {
+        "MActor": {
+            "name": "MActor",
             "directives": [
                 {
-                    "name": "aws_iam",
-                    "arguments": []
-                },
-                {
-                    "name": "aws_cognito_user_pools",
+                    "name": "auth",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "rules",
                                 "loc": {
-                                    "start": 2998,
-                                    "end": 3012
+                                    "start": 3157,
+                                    "end": 3162
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 3015,
-                                            "end": 3022
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]",
+                                "block": false,
                                 "loc": {
-                                    "start": 3014,
-                                    "end": 3023
+                                    "start": 3164,
+                                    "end": 3212
                                 }
                             },
                             "loc": {
-                                "start": 2998,
-                                "end": 3023
+                                "start": 3157,
+                                "end": 3212
                             }
                         }
                     ]
-                }
-            ]
-        }
-    },
-    "MCommentEdge",
-    {
-        "MCommentConnection": {
-            "name": "MCommentConnection",
-            "directives": [
-                {
-                    "name": "aws_iam",
-                    "arguments": []
                 },
                 {
-                    "name": "aws_cognito_user_pools",
+                    "name": "datasource",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "name",
                                 "loc": {
-                                    "start": 3103,
-                                    "end": 3117
+                                    "start": 3226,
+                                    "end": 3230
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 3120,
-                                            "end": 3127
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "mySql",
+                                "block": false,
                                 "loc": {
-                                    "start": 3119,
-                                    "end": 3128
+                                    "start": 3232,
+                                    "end": 3239
                                 }
                             },
                             "loc": {
-                                "start": 3103,
-                                "end": 3128
+                                "start": 3226,
+                                "end": 3239
                             }
                         }
                     ]
-                }
-            ]
-        }
-    },
-    "MCommentConnection",
-    {
-        "PageInfoOffset": {
-            "name": "PageInfoOffset",
-            "directives": [
-                {
-                    "name": "aws_iam",
-                    "arguments": []
                 },
                 {
-                    "name": "aws_cognito_user_pools",
+                    "name": "source",
                     "arguments": [
                         {
                             "kind": "Argument",
                             "name": {
                                 "kind": "Name",
-                                "value": "cognito_groups",
+                                "value": "name",
                                 "loc": {
-                                    "start": 3257,
-                                    "end": 3271
+                                    "start": 3249,
+                                    "end": 3253
                                 }
                             },
                             "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 3274,
-                                            "end": 3281
-                                        }
-                                    }
-                                ],
+                                "kind": "StringValue",
+                                "value": "comment",
+                                "block": false,
                                 "loc": {
-                                    "start": 3273,
-                                    "end": 3282
+                                    "start": 3255,
+                                    "end": 3264
                                 }
                             },
                             "loc": {
-                                "start": 3257,
-                                "end": 3282
+                                "start": 3249,
+                                "end": 3264
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "operations",
+                    "arguments": [
+                        {
+                            "kind": "Argument",
+                            "name": {
+                                "kind": "Name",
+                                "value": "names",
+                                "loc": {
+                                    "start": 3278,
+                                    "end": 3283
+                                }
+                            },
+                            "value": {
+                                "kind": "StringValue",
+                                "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany",
+                                "block": false,
+                                "loc": {
+                                    "start": 3285,
+                                    "end": 3383
+                                }
+                            },
+                            "loc": {
+                                "start": 3278,
+                                "end": 3383
                             }
                         }
                     ]
@@ -686,7 +506,21 @@
             ]
         }
     },
-    "PageInfoOffset",
+    "MActor",
+    {
+        "MActorEdge": {
+            "name": "MActorEdge",
+            "directives": []
+        }
+    },
+    "MActorEdge",
+    {
+        "MActorConnection": {
+            "name": "MActorConnection",
+            "directives": []
+        }
+    },
+    "MActorConnection",
     {
         "PageInfoCursor": {
             "name": "PageInfoCursor",
@@ -697,46 +531,28 @@
                 },
                 {
                     "name": "aws_cognito_user_pools",
-                    "arguments": [
-                        {
-                            "kind": "Argument",
-                            "name": {
-                                "kind": "Name",
-                                "value": "cognito_groups",
-                                "loc": {
-                                    "start": 3368,
-                                    "end": 3382
-                                }
-                            },
-                            "value": {
-                                "kind": "ListValue",
-                                "values": [
-                                    {
-                                        "kind": "StringValue",
-                                        "value": "admin",
-                                        "block": false,
-                                        "loc": {
-                                            "start": 3385,
-                                            "end": 3392
-                                        }
-                                    }
-                                ],
-                                "loc": {
-                                    "start": 3384,
-                                    "end": 3393
-                                }
-                            },
-                            "loc": {
-                                "start": 3368,
-                                "end": 3393
-                            }
-                        }
-                    ]
+                    "arguments": []
                 }
             ]
         }
     },
     "PageInfoCursor",
+    {
+        "PageInfoOffset": {
+            "name": "PageInfoOffset",
+            "directives": [
+                {
+                    "name": "aws_iam",
+                    "arguments": []
+                },
+                {
+                    "name": "aws_cognito_user_pools",
+                    "arguments": []
+                }
+            ]
+        }
+    },
+    "PageInfoOffset",
     {
         "AWSDate": {
             "name": "AWSDate",
