@@ -47,9 +47,9 @@ export class AppSyncStack extends cdk.Stack {
         });
 
         // Add business GraphQL endpoints.
-        // new AppSyncBusiness(this, 'AppSyncBusiness', {
-        //     graphqlApi: this.graphqlApi,
-        //     schemaBuilder: this.schemaBuilder
-        // });
+        new AppSyncBusiness(this, 'AppSyncBusiness', {
+            graphqlApi: this.graphqlApi,
+            schemaBuilder: this.schemaBuilder
+        });
     }
 }

@@ -1,0 +1,5 @@
+query findTest($limit: Int) {
+    mMovieFind(limit: $limit) {
+        id
+    }
+}

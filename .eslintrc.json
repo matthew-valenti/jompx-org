@@ -30,6 +30,31 @@
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nrwl/nx/javascript"],
       "rules": {}
+    },
+    {
+      "files": ["*.tsx", "*.ts", "*.jsx", "*.js"],
+      "processor": "@graphql-eslint/graphql"
+    },
+    {
+      "files": ["*.graphql"],
+      "parser": "@graphql-eslint/eslint-plugin",
+      "plugins": ["@graphql-eslint"],
+      // Enable rules as required. All rules are off by default: https://github.com/dotansimha/graphql-eslint/blob/master/docs/README.md
+      "rules": {
+        "@graphql-eslint/avoid-duplicate-fields": 1,
+        "@graphql-eslint/fields-on-correct-type": 1,
+        "@graphql-eslint/fragments-on-composite-type": 1,
+        "@graphql-eslint/known-argument-names": 1,
+        "@graphql-eslint/known-directives": 1,
+        "@graphql-eslint/known-fragment-names": 1,
+        "@graphql-eslint/known-type-names": 1,
+        "@graphql-eslint/no-undefined-variables": 1,
+        "@graphql-eslint/no-unused-variables": 1,
+        "@graphql-eslint/provided-required-arguments": 1,
+        "@graphql-eslint/unique-argument-names": 1,
+        "@graphql-eslint/value-literals-of-correct-type": 1,
+        "@graphql-eslint/variables-in-allowed-position": 1
+      }
     }
   ]
 }

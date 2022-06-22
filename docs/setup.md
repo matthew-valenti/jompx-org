@@ -768,6 +768,59 @@ nx test admin
 nx e2e admin-e2e
 ```
 
+## Install/Setup GraphQL Code Generator
+This must sit within the project so that we can watch for new queries and fragments and update types accordingly.
+Note that the graphql-schema executor also runs generate types. Maybe by having the cli install on the project side the executor can use that instead of API.
+Or maybe the executor should just provide a local schema file on synth & deploy. But we also want to make sure all types are up to date too. So how do we do this?
+```
+npm install graphql
+npm install @graphql-codegen/cli
+```
+
+# ESLint
+https://github.com/B2o5T/graphql-eslint
+```
+npm install --save-dev @graphql-eslint/eslint-plugin
+```
+
+Add to ./.eslintrc.json and adjust rules as needed.
+```
+{
+  "files": ["*.graphql"],
+  "parser": "@graphql-eslint/eslint-plugin",
+  "plugins": ["@graphql-eslint"],
+  // Enable rules as required. All rules are off by default: https://github.com/dotansimha/graphql-eslint/blob/master/docs/README.md
+  "rules": {
+    "@graphql-eslint/avoid-duplicate-fields": 1,
+    "@graphql-eslint/fields-on-correct-type": 1,
+    "@graphql-eslint/fragments-on-composite-type": 1,
+    "@graphql-eslint/known-argument-names": 1,
+    "@graphql-eslint/known-directives": 1,
+    "@graphql-eslint/known-fragment-names": 1,
+    "@graphql-eslint/known-type-names": 1,
+    "@graphql-eslint/no-undefined-variables": 1,
+    "@graphql-eslint/no-unused-variables": 1,
+    "@graphql-eslint/provided-required-arguments": 1,
+    "@graphql-eslint/unique-argument-names": 1,
+    "@graphql-eslint/value-literals-of-correct-type": 1,
+    "@graphql-eslint/variables-in-allowed-position": 1
+  }
+}
+```
+
+Create file ./.graphqlrc.yml with contents:
+```
+# https://www.graphql-config.com/docs/user/user-introduction
+schema: "schema.graphql"
+```
+
+Run lint across all apps:
+```
+nx run-many --all --target=lint
+```
+
+??? Come back to lint. Nx has setup instructions: https://nx.dev/guides/eslint
+
 ## Thoughts:
 Explain constructs and levels where Jompx is very high level constructs.
 AWS good: Large number of cloud and serverless resources covering most use cases.
@@ -777,7 +830,7 @@ What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that me
 Explain ID type and use across all keys/primary keys. Caution: does ID work for custom mutations inputs?
 
 I THINK WE WANT TO USE THIS ON THE CLIENT?
-Interesting graphQL query generator with autocomplete etc.
+Interesting graphQL query generator with autocomplete etc. called TypeScript-DSL i.e. syntax highlighting.
 Do we want native GraphQL which kind of a bummer or something like this which is custom?
 Can it keep up with GraphQL changes?
 https://github.com/babyfish-ct/graphql-ts-client

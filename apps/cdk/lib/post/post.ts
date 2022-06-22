@@ -37,7 +37,7 @@ export class Post {
 
     public async businessGraphql(number1: string, props: IAppSyncMethodProps): Promise<object> {
 
-        const fields = gql`fragment fields on MPostConnection {
+        const fields = gql`fragment fields on MMovieConnection {
             edges {
                 node {
                     id
@@ -45,7 +45,7 @@ export class Post {
             }
         }`;
 
-        const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
+        const data = await GraphqlService.find<gtype.QueryMMovieFindArgs, gtype.MMovieConnection>('MPost', fields, {
         }, { authorizationType: AuthorizationType.USER_POOL, authorization: props.cognito?.authorization });
 
         // const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {

@@ -4,7 +4,7 @@ import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 
 // Business.
-import { PostSchema } from '@cdk/lib/post/post-schema.construct';
+import { PostSchema } from '@cdk/lib/post/post.construct';
 
 export interface AppSyncBuildProps extends cdk.StackProps {
     graphqlApi: appsync.GraphqlApi;

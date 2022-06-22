@@ -48,9 +48,10 @@ export class PostSchema extends Construct {
         this.props.schemaBuilder.addDataSource('post', lambdaFunction);
     }
 
+    // input + output then add.
     private mpostBusinessGraphql() {
 
-        const mutationName = 'mpostBusinessGraphql';
+        const mutationName = 'mPostBusinessGraphql';
 
         const args = {
             number1: GraphqlType.int({ isRequired: true })
