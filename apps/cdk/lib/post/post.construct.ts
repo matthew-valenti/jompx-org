@@ -3,7 +3,7 @@ import * as lambdanjs from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { AppSyncLambdaDefaultProps } from '@jompx/constructs';
 import { Construct } from 'constructs';
-import { GraphqlType, InputType, ObjectType } from '@aws-cdk/aws-appsync-alpha';
+import { GraphqlType, InputType, ObjectType, Field } from '@aws-cdk/aws-appsync-alpha';
 import * as jompx from '@jompx/constructs';
 
 export interface PostSchemaProps {
@@ -23,8 +23,8 @@ export class PostSchema extends Construct {
         this.props = props;
 
         this.addDataSource(); // Or skip and specify an existing datasource name.
-        this.mpostBusiness();
-        this.mpostBusinessGraphql();
+        this.findExample();
+        this.queryExample();
     }
 
     private addDataSource() {
@@ -34,9 +34,9 @@ export class PostSchema extends Construct {
             ...AppSyncLambdaDefaultProps,
             memorySize: 128 * 2,
             description: `AppSync post handler.`,
-            // environment: {
-            //     graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl2')
-            // }
+            environment: {
+                graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
+            }
         });
 
         // TODO: Lock down permissions.
@@ -45,48 +45,53 @@ export class PostSchema extends Construct {
             resources: ['*']
         }));
 
-        this.props.schemaBuilder.addDataSource('post', lambdaFunction);
-    }
-
-    // input + output then add.
-    private mpostBusinessGraphql() {
-
-        const mutationName = 'mPostBusinessGraphql';
-
-        const args = {
-            number1: GraphqlType.int({ isRequired: true })
-        };
-
-        const returnType = new ObjectType(mutationName, {
-            definition: {
-                id: GraphqlType.string({ isRequired: true })
-            },
-            directives: [
-                // CustomDirective.permissions(['read', 'create', 'update', 'delete'])
-            ]
-        });
-
-        this.props.schemaBuilder?.addMutation({ name: mutationName, dataSourceName: 'post', args, returnType, methodName: 'businessGraphql' });
+        this.props.schemaBuilder.addDataSource('mPost', lambdaFunction);
     }
 
     /**
-     * 1. Define inputs args.
-     * 2. Define return type and include directives (e.g. security).
-     * 3. Call create operation.
+     * Set name.
+     * Define input.
+     * Define output.
+     * Define auth.
+     * Call add.
      */
-    private mpostBusiness() {
+    private findExample() {
 
-        const args: jompx.AppSyncIFields = {
-            number3: GraphqlType.int({ isRequired: true }),
-            number1: GraphqlType.int({ isRequired: true }),
-            number2: GraphqlType.int({ isRequired: true }),
-        }
+        const mutationName = 'mPostFindExample';
 
-        const returnType: jompx.AppSyncIFields = {
-            number3: GraphqlType.int({ isRequired: true }),
+        const input = {
+            number1: GraphqlType.int({ isRequired: true })
+        };
+
+        const output = {
+            id: new Field({
+                returnType: GraphqlType.id(),
+                directives: [
+                    jompx.auth([{ allow: 'owner', provider: 'iam' }]) // TODO: Implement field level security.
+                ]
+            }),
+        };
+
+        const auth = jompx.auth([
+            { allow: 'private', provider: 'iam' }
+        ]);
+
+        this.props.schemaBuilder.addMutation({ name: mutationName, dataSourceName: 'mPost', input, output, auth, methodName: this.findExample.name });
+    }
+
+    private queryExample() {
+
+        const mutationName = 'mPostQueryExample';
+
+        const input = {
             number1: GraphqlType.int({ isRequired: true }),
-            number2: GraphqlType.int({ isRequired: true }),
-            result: GraphqlType.int({ isRequired: true }),
+            test: {
+                number1: GraphqlType.int({ isRequired: true }),
+            }
+        };
+
+        const output = {
+            id: GraphqlType.id(),
             test: {
                 result1: GraphqlType.int({ isRequired: true }),
                 result2: GraphqlType.int({ isRequired: true }),
@@ -95,8 +100,12 @@ export class PostSchema extends Construct {
                     result2: GraphqlType.int({ isRequired: true })
                 }
             }
-        }
+        };
 
-        // this.props.schemaBuilder?.addMutation({ name: 'mPostBusiness', dataSourceName: 'post', args, returnType, methodName: 'business' });
+        const auth = jompx.auth([
+            { allow: 'private', provider: 'iam' }
+        ]);
+
+        this.props.schemaBuilder.addMutation({ name: mutationName, dataSourceName: 'mPost', input, output, auth, methodName: this.queryExample.name });
     }
 }

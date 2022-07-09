@@ -8,7 +8,7 @@ import { IAppSyncMethodProps } from '@jompx/constructs';
 
 export class Post {
 
-    // public mpostBusiness(args: { number3: number, number1: number, number2: number }): PostBusiness {
+    // public simpleExample(args: { number3: number, number1: number, number2: number }): PostBusiness {
 
     //     const result = args.number1 + args.number2
 
@@ -35,9 +35,11 @@ export class Post {
     //     return rv;
     // }
 
-    public async businessGraphql(number1: string, props: IAppSyncMethodProps): Promise<object> {
+    public async findExample(input: gtype.MPostFindExampleInput, props: IAppSyncMethodProps): Promise<gtype.MPostFindExampleOutput> { // TODO: Should our methods return a type?
 
-        const fields = gql`fragment fields on MMovieConnection {
+        // 1. Define fragment. Must use codegen to create type e.g. FindExampleMMovieConnectionFragmentDoc
+        // The fragment name must be unique because we're typing the output fields.
+        gql`fragment FindExampleMMovieConnection on MMovieConnection {
             edges {
                 node {
                     id
@@ -45,42 +47,80 @@ export class Post {
             }
         }`;
 
-        const data = await GraphqlService.find<gtype.QueryMMovieFindArgs, gtype.MMovieConnection>('MPost', fields, {
-        }, { authorizationType: AuthorizationType.USER_POOL, authorization: props.cognito?.authorization });
+        // 2. Call find.
+        const data = await GraphqlService.find(gtype.FindExampleMMovieConnectionFragmentDoc, {
+            limit: 1
+        }, {
+            // authorizationType: AuthorizationType.USER_POOL,
+            // authorization: props.cognito?.authorization
+            authorizationType: AuthorizationType.IAM
+        });
+
+        // 3. Return output.
+        return {
+            id: data?.edges?.at(0)?.node?.id // input.number1.toString()
+        };
+    }
+
+    public async queryExample(input: gtype.MPostQueryExampleInput, props: IAppSyncMethodProps): Promise<gtype.MPostQueryExampleOutput> {
+
+        // Define query. Must use codegen to create type e.g. MMovieFindDocument
+        gql`
+            query mMovieFind($limit: Int) {
+                mMovieFind(limit: $limit) {
+                    edges {
+                        node {
+                            id
+                        }
+                    }
+                }
+            }
+        `;
+
+        // const data = await GraphqlService.find<gtype.QueryMMovieFindArgs, gtype.MMovieConnection>('MPost', fields, {
+        // }, { authorizationType: AuthorizationType.USER_POOL, authorization: props.cognito?.authorization });
+
+        // Call the query method (used for any queries). Both variables and return data are typesafe.
+        // Use {} for no variables.
+        const data = await GraphqlService.query(gtype.MMovieFindDocument, {
+            limit: 1
+        }, {
+            // authorizationType: AuthorizationType.USER_POOL,
+            // authorization: props.cognito?.authorization
+            authorizationType: AuthorizationType.IAM
+        });
+
+        // const data = await GraphqlService.query<gtype.MMovieFindQuery, gtype.MMovieFindQueryVariables>(gtype.MMovieFindDocument, {
+        //     limit: 1
+        // }, {
+        //     authorizationType: AuthorizationType.USER_POOL,
+        //     authorization: props.cognito?.authorization
+        // });
+
+        // 
+        // const data2 = await GraphqlService.query(gtype.MMovieFindDocument, {
+        //     limit: 1
+        // }, {
+        //     authorizationType: AuthorizationType.USER_POOL,
+        //     authorization: props.cognito?.authorization
+        // });
 
         // const data = await GraphqlService.find<gtype.QueryMPostFindArgs, gtype.MPostConnection>('MPost', fields, {
         //     filter: {},
         //     sort: []
         // });
 
-        return get(data, 'edges.0.node');
-    }
-
-    public async business(number1: number): Promise<PostBusiness> {
-
-        // const fields = gql`fragment fields on MCommentConnection {
-        //     item {
-        //         id
-        //     }
-        // }`;
-
-        // const variables: UpdateMLookupMutationVariables = {
-        //     input: {
-        //     }
-        // };
-
-        // GraphqlService.run
-
+        console.log('businessCallGraphqlFind data', data);
         return {
-            number3: 3,
-            number1: 2,
-            number2: 1,
-            result: 6
+            id: data?.mMovieFind?.edges?.at(0)?.node?.id, // input.number1.toString()
+            test: {
+                result1: 1,
+                result2: 2,
+                test: {
+                    result1: 1,
+                    result2: 2,
+                }
+            }
         }
-
     }
-
-    // public business2(string2: string, string1: string) {
-    //     return 'abc';
-    // }
 }

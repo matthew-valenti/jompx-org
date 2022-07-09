@@ -665,6 +665,7 @@ nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-san
 nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --hotswap"
 
 nx run cdk:graphql-schema
+npm run codegen
 ```
 
 ### CDK Watch & Hotswap
@@ -774,8 +775,38 @@ Note that the graphql-schema executor also runs generate types. Maybe by having 
 Or maybe the executor should just provide a local schema file on synth & deploy. But we also want to make sure all types are up to date too. So how do we do this?
 ```
 npm install graphql
-npm install @graphql-codegen/cli
+npm install -D @graphql-codegen/cli
+npm install -D @graphql-codegen/introspection
+npm install -D @graphql-codegen/typescript
+npm install -D @graphql-codegen/typescript-operations
+npm install -D @graphql-codegen/typed-document-node
 ```
+
+Create file ./codegen.yml
+```
+schema: "./schema.graphql"
+documents: "**/*.graphql"
+generates:
+  ./schema.graphql.types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+  ./schema.graphql.json:
+    plugins:
+      - introspection
+```
+
+In package.json scripts:
+```
+"codegen": "graphql-codegen",
+"codegen-watch": "graphql-codegen --watch 'apps/**/!(*.d).{ts,tsx,graphql}'"
+```
+
+Run:
+  npm run codegen
+  npm run codegen
+
 
 # ESLint
 https://github.com/B2o5T/graphql-eslint
@@ -828,9 +859,26 @@ bad: Steep learning curve and difficult to create a secure and low cognitive sol
 Cost level in doco: green, orange, red.
 What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that means something special to the CDK so we use stage instead.
 Explain ID type and use across all keys/primary keys. Caution: does ID work for custom mutations inputs?
+Look at the Shopify docs. They do a good job!
+
+https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Why don't I like this? What am I missing.
+It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.
+Schema first always! Which unfortunately means CDK synth.
 
 I THINK WE WANT TO USE THIS ON THE CLIENT?
 Interesting graphQL query generator with autocomplete etc. called TypeScript-DSL i.e. syntax highlighting.
 Do we want native GraphQL which kind of a bummer or something like this which is custom?
 Can it keep up with GraphQL changes?
 https://github.com/babyfish-ct/graphql-ts-client
+
+Aggregate query would be nice e.g.
+aggregate {
+    count
+    sum {
+      field
+      ..
+    }
+    avg {
+      field
+      ..
+    }

@@ -1,5 +1,5 @@
-query findTest($limit: Int) {
-    mMovieFind(limit: $limit) {
+mutation mPostFindExample($input: MPostFindExampleInput!) {
+    mPostFindExample(input: $input) {
         id
     }
 }

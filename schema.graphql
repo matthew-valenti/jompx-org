@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 enum AuthStrategy {
@@ -84,9 +85,9 @@ type MMovieConnection {
 }
 
 type Query {
-  mMovieFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MMovieConnection
-  mMovieActorFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MMovieActorConnection
-  mActorFind(filter: AWSJSON, sort: AWSJSON, skip: Int, limit: Int): MActorConnection
+  mMovieFind(filter: String, sort: String, skip: Int, limit: Int): MMovieConnection
+  mMovieActorFind(filter: String, sort: String, skip: Int, limit: Int): MMovieActorConnection
+  mActorFind(filter: String, sort: String, skip: Int, limit: Int): MActorConnection
 }
 
 type MMovieActor implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "movieActor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
@@ -141,6 +142,44 @@ type PageInfoCursor @aws_iam @aws_cognito_user_pools {
 type PageInfoOffset @aws_iam @aws_cognito_user_pools {
   skip: Int!
   limit: Int!
+}
+
+input MPostFindExampleInput {
+  number1: Int!
+}
+
+type MPostFindExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
+  id: ID @auth(rules: "[{\"allow\":\"owner\",\"provider\":\"iam\"}]")
+}
+
+type Mutation {
+  mPostFindExample(input: MPostFindExampleInput!): MPostFindExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
+  mPostQueryExample(input: MPostQueryExampleInput!): MPostQueryExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
+}
+
+input MPostQueryExampleTestInput {
+  number1: Int!
+}
+
+input MPostQueryExampleInput {
+  number1: Int!
+  test: MPostQueryExampleTestInput
+}
+
+type MPostQueryExampleTestTestOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
+  result1: Int!
+  result2: Int!
+}
+
+type MPostQueryExampleTestOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
+  result1: Int!
+  result2: Int!
+  test: MPostQueryExampleTestTestOutput
+}
+
+type MPostQueryExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
+  id: ID
+  test: MPostQueryExampleTestOutput
 }
 
 scalar AWSDate

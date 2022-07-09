@@ -11,8 +11,8 @@ const parse = require('mongodb-language-model');
 describe('Parser', () => {
     test('parser', () => {
 
-        const ast = parse('{"foo": "bar"}');
-        console.log('!!!!!!!!!!!!!!!!!!!!!', ast);
+        // const ast = parse('{"foo": "bar"}');
+        // console.log('!!!!!!!!!!!!!!!!!!!!!', ast);
         // assert.deepEqual(ast, {
         //     'pos': 'expression',
         //     'clauses': [

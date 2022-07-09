@@ -37,8 +37,10 @@ export class AppSyncStack extends cdk.Stack {
         this.schemaBuilder = appSync.schemaBuilder;
 
         // Add MySQL datasource.
-        const appSyncMySqlDataSource = new jompx.AppSyncMySqlDataSource(this, AppSyncDatasource.mySql, { lambdaFunctionProps: { memorySize: 128 * 2 } });
-        this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, appSyncMySqlDataSource.lambdaFunction);
+        const jompxMySqlDataSource = new jompx.AppSyncMySqlDataSource(this, AppSyncDatasource.mySql, {
+            lambdaFunctionProps: { memorySize: 128 * 2 }
+        });
+        this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
 
         // Add auto build GraphQL endpoints.
         new AppSyncBuild(this, 'AppSyncBuild', {
