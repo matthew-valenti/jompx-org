@@ -2,6 +2,7 @@ import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
 import * as jompx from '@jompx/constructs';
+import * as jmysql from '@jompx/mysql-datasource';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 
@@ -37,10 +38,10 @@ export class AppSyncStack extends cdk.Stack {
         this.schemaBuilder = appSync.schemaBuilder;
 
         // Add MySQL datasource.
-        const jompxMySqlDataSource = new jompx.AppSyncMySqlDataSource(this, AppSyncDatasource.mySql, {
+        const jompxMySqlDataSource = new jmysql.AppSyncMySqlDataSourceConstruct(this, AppSyncDatasource.mySql, { // TODO: Not thrilled about having the name construct here!!??
             lambdaFunctionProps: { memorySize: 128 * 2 }
         });
-        this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
+        // this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
 
         // Add auto build GraphQL endpoints.
         new AppSyncBuild(this, 'AppSyncBuild', {
