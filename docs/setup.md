@@ -74,8 +74,10 @@ npx create-nx-workspace
 ### 5.5 Upgrade Nx Workspace
 https://nx.dev/using-nx/updating-nx
 ```
-nx migrate latest OR nx migrate 13.10.3
+// https://stackoverflow.com/questions/68710271/can-i-update-my-monorepo-nx-workspace-without-upgrading-angular-version
+nx migrate latest OR nx migrate 13.10.3 OR nx migrate latest --to="@nrwl/angular@13.10.6" (to upgrade/keep Angular version)
 // Inspect package.json to see if changes make sense. Manually adjust if needed.
+// Run multiple times can help "could not resolve dependency" issues. Or consider --force but use with care.
 npm install
 // For big projects comment out and reorder items in: migrations.json (or run all for small projects).
 nx migrate --run-migrations // Runs npm install if needed
