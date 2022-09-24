@@ -3,7 +3,12 @@ import { auth, datasource, lookup, operations, readonly, source } from '@jompx/c
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
 
-export class MySqlSchema {
+/**
+ * Use GraphqlType for simple fields.
+ * Use Field if additional attributes are required e.g. directives.
+ * Use ResolvableField if the field exists in another type or datasource.
+  */
+export class DynamoDbSchema {
 
     public types: jompx.ISchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
 
@@ -13,54 +18,52 @@ export class MySqlSchema {
 
         // Interface types.
 
-        const MNode = new InterfaceType('MNode', {
+        const DNode = new InterfaceType('DNode', {
             definition: {
                 id: new Field({
-                    returnType: GraphqlType.id({ isRequired: true }),
-                    directives: [
-                        readonly(true)
-                    ]
+                    returnType: GraphqlType.id({ isRequired: true })
                 }),
                 createdAt: new Field({
-                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
-                    directives: [
-                        readonly(true)
-                    ]
+                    returnType: GraphqlType.awsDateTime({ isRequired: true })
                 }),
                 createdBy: new Field({
-                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
-                    directives: [
-                        readonly(true)
-                    ]
+                    returnType: GraphqlType.awsDateTime({ isRequired: true })
                 }),
                 updatedAt: new Field({
-                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
-                    directives: [
-                        readonly(true)
-                    ]
+                    returnType: GraphqlType.awsDateTime({ isRequired: true })
                 }),
                 updatedBy: new Field({
-                    returnType: GraphqlType.awsDateTime({ isRequired: true }),
-                    directives: [
-                        readonly(true)
-                    ]
+                    returnType: GraphqlType.awsDateTime({ isRequired: true })
                 })
             },
             // Auth doesn't seem to do anything. Delete.
             // directives: [
-            //     // auth([
-            //     //     { allow: 'private', provider: 'iam' }
-            //     // ])
+            //     auth([
+            //         { allow: 'private', provider: 'iam' },
+            //         // { allow: 'private', provider: 'userPool', groups: ['admin'] }
+            //     ]),
+            //     // Directive.cognito(),
+            //     // Directive.iam()
             // ]
         });
-        this.types.interfaceTypes.MNode = MNode;
+        this.types.interfaceTypes['DNode'] = DNode;
 
-        const MMovie = new ObjectType('MMovie', {
-            interfaceTypes: [MNode],
+        const DMovie = new ObjectType('DMovie', {
+            interfaceTypes: [DNode],
             definition: {
-                name: GraphqlType.string({ isRequired: true }),
+                // name: GraphqlType.string({ isRequired: true }),
+                dMovie: new Field({
+                    returnType: GraphqlType.string({ isRequired: true }),
+                    directives: [
+                        auth([
+                            { allow: 'private', provider: 'iam' },
+                            // { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                        ]),
+                    ]
+                }),
                 boolean: GraphqlType.boolean(),
                 float: GraphqlType.float(),
+                decimal: GraphqlType.float(),
                 int: GraphqlType.int(),
                 date: GraphqlType.awsDate(),
                 dateTime: GraphqlType.awsDateTime(),
@@ -77,12 +80,12 @@ export class MySqlSchema {
                         source('sourceField')
                     ]
                 }),
-                mMovieActors: new ResolvableField({
+                dMovieActors: new ResolvableField({
                     // A movie must have actors.
-                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type.
+                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
                     directives: [
-                        lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
+                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 })
             },
@@ -91,68 +94,68 @@ export class MySqlSchema {
                     { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource(AppSyncDatasource.dynamoDb),
                 source('movie'),
                 operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MMovie = MMovie;
+        this.types.objectTypes['DMovie'] = DMovie;
 
-        const MMovieActor = new ObjectType('MMovieActor', {
-            interfaceTypes: [MNode],
+        const DMovieActor = new ObjectType('DMovieActor', {
+            interfaceTypes: [DNode],
             definition: {
                 movieId: GraphqlType.id({ isRequired: true }),
                 actorId: GraphqlType.id({ isRequired: true }),
-                mMovie: new ResolvableField({
-                    returnType: MMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                dMovie: new ResolvableField({
+                    returnType: DMovie.attribute({ isRequired: true }),
+                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
                     directives: [
-                        lookup({ from: 'MMovie', localField: 'movieId', foreignField: 'id' })
+                        lookup({ from: 'DMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
-                mActor: new ResolvableField({
-                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MActor', isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                dActor: new ResolvableField({
+                    returnType: DMovie.attribute({ isRequired: true }),
+                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
                     directives: [
-                        lookup({ from: 'MActor', localField: 'actorId', foreignField: 'id' })
+                        lookup({ from: 'DActor', localField: 'actorId', foreignField: 'id' })
                     ]
                 })
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
+                    // { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource(AppSyncDatasource.dynamoDb),
                 source('movieActor'),
                 operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MMovieActor = MMovieActor;
+        this.types.objectTypes['DMovieActor'] = DMovieActor;
 
-        const MActor = new ObjectType('MActor', {
-            interfaceTypes: [MNode],
+        const DActor = new ObjectType('DActor', {
+            interfaceTypes: [DNode],
             definition: {
                 name: GraphqlType.string({ isRequired: true }),
                 // An actor can have 0 or more movies.
-                mMovieActors: new ResolvableField({
-                    returnType: MMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                dMovieActors: new ResolvableField({
+                    returnType: DMovieActor.attribute({ isList: true }),
+                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
                     directives: [
-                        lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'actorId' })
+                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
                 })
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
+                    // { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource(AppSyncDatasource.dynamoDb),
                 source('actor'),
                 operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MActor = MActor;
+        this.types.objectTypes['DActor'] = DActor;
     }
 }

@@ -1,36 +1,43 @@
+import * as path from 'path';
 import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
-import * as jompx from '@jompx/constructs';
+import * as jconstructs from '@jompx/constructs';
 import * as jmysql from '@jompx/mysql-datasource';
+import * as jdynamodb from '@jompx/dynamodb-datasource';
+import { DynamoDbStack } from './dynamo-db.stack';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 
 export enum AppSyncDatasource {
-    mySql = 'mySql',
-    cognito = 'cognito'
+    cognito = 'cognito',
+    dynamoDb = 'dynamoDb',
+    mySql = 'mySql'
 }
 
 export interface AppSyncStackProps extends cdk.StackProps {
     userPool: cdk.aws_cognito.UserPool;
+    dataSourceStack: {
+        dynamoDbStack: DynamoDbStack
+    }
 }
 
 export class AppSyncStack extends cdk.Stack {
 
     public graphqlApi: appsync.GraphqlApi;
-    public schemaBuilder: jompx.AppSyncSchemaBuilder;
+    public schemaBuilder: jconstructs.AppSyncSchemaBuilder;
 
     constructor(scope: Construct, id: string, props: AppSyncStackProps) {
         super(scope, id, props);
 
         // Create AppSync resource.
-        const appSync = new jompx.AppSync(this, 'AppSync', {
+        const appSync = new jconstructs.AppSync(this, 'AppSync', {
             name: 'api',
             additionalAuthorizationModes: [
                 {
                     authorizationType: appsync.AuthorizationType.USER_POOL,
                     userPoolConfig: { userPool: props.userPool }
-                }
+                },
             ]
         });
 
@@ -39,9 +46,28 @@ export class AppSyncStack extends cdk.Stack {
 
         // Add MySQL datasource.
         const jompxMySqlDataSource = new jmysql.AppSyncMySqlDataSourceConstruct(this, AppSyncDatasource.mySql, { // TODO: Not thrilled about having the name construct here!!??
+            graphqlSchema: {
+                filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+                directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+            },
             lambdaFunctionProps: { memorySize: 128 * 2 }
         });
-        // this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
+        this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
+
+        // Add DynamoDb datasource.
+        const jompxDynamoDbDataSource = new jdynamodb.AppSyncDynamoDbDataSourceConstruct(this, AppSyncDatasource.dynamoDb, { // TODO: Not thrilled about having the name construct here!!??
+            graphqlSchema: {
+                filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+                directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+            },
+            lambdaFunctionProps: { memorySize: 128 * 2 }
+        });
+        this.schemaBuilder.addDataSource(AppSyncDatasource.dynamoDb, jompxDynamoDbDataSource.lambdaFunction);
+
+        // Security: Grant the DynamoDb Lambda datasource read/write access to all DynamoDb tables.
+        props.dataSourceStack.dynamoDbStack.tables.forEach(table => {
+            table.grantReadWriteData(jompxDynamoDbDataSource.lambdaFunction);
+        });
 
         // Add auto build GraphQL endpoints.
         new AppSyncBuild(this, 'AppSyncBuild', {
@@ -49,7 +75,7 @@ export class AppSyncStack extends cdk.Stack {
             schemaBuilder: this.schemaBuilder
         });
 
-        // Add business GraphQL endpoints.
+        // // Add business GraphQL endpoints.
         new AppSyncBusiness(this, 'AppSyncBusiness', {
             graphqlApi: this.graphqlApi,
             schemaBuilder: this.schemaBuilder

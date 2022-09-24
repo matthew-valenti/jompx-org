@@ -641,32 +641,41 @@ npm install --save-dev esbuild@0
 // Manually deploy a stack to sandbox1:
 nx login cdk --profile jompx-sandbox1
 nx run cdk:list // Set local config stage = prod or test or sandbox1
+Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
 
 ---
 
-// For temporary testing only (in test env). Delete stack after use.
-nx synth cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test"
-nx deploy cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test"
+// Important: For temporary testing only (in test env). Delete stack after use.
+nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
+nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
 
 // Deploy DNS to prod only.
-nx synth cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod"
-nx deploy cdk --args="CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod"
+nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
+nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 
 ---
 
-nx synth cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1 --hotswap"
+nx synth cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1 --hotswap
 
-nx synth cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1 --hotswap"
+nx synth cdk CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/CognitoStack --profile jompx-sandbox1 --hotswap
 
-nx synth cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1"
-nx deploy cdk --args="CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --hotswap"
+nx synth cdk CdkPipelineStack/AppStage/DynamoDbStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/DynamoDbStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AppStage/DynamoDbStack --profile jompx-sandbox1 --hotswap
 
+nx synth cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet
+nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet
+nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --requireApproval never
+nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --hotswap
+
+// TODO: Auto mate this on synth and deploy (otherwise schema files are out of date).
+// Create files: schema.graphql & schema.graphql.directive.json
 nx run cdk:graphql-schema
+// Create files: schema.graphql.json & schema.graphql.types.ts
 npm run codegen
 ```
 
@@ -856,12 +865,16 @@ nx run-many --all --target=lint
 
 ## Thoughts:
 Explain constructs and levels where Jompx is very high level constructs.
+Do not create dependent stacks on the AppSync stack. It's good practice to be able to destroy and re-create the AppSync stack if necessary (without having to destroy every stack that 
+happens to call a GraphQL endpoint).
+Clear separation between AWS and Jompx including errors.
 AWS good: Large number of cloud and serverless resources covering most use cases.
 bad: Steep learning curve and difficult to create a secure and low cognitive solution for rapid development.
 Cost level in doco: green, orange, red.
 What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that means something special to the CDK so we use stage instead.
 Explain ID type and use across all keys/primary keys. Caution: does ID work for custom mutations inputs?
 Look at the Shopify docs. They do a good job!
+TODO: Nx interactive commands not working: https://github.com/nrwl/nx/issues/8269
 
 https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Why don't I like this? What am I missing.
 It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.

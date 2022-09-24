@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as lambdanjs from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
-import { AppSyncLambdaDefaultProps } from '@jompx/constructs';
 import { Construct } from 'constructs';
 import { GraphqlType, InputType, ObjectType, Field } from '@aws-cdk/aws-appsync-alpha';
 import * as jompx from '@jompx/constructs';
@@ -31,11 +30,12 @@ export class PostSchema extends Construct {
 
         // TODO: Implement Aspect and auto pass variables to all business Lambdas. https://docs.aws.amazon.com/cdk/v2/guide/aspects.html
         const lambdaFunction = new lambdanjs.NodejsFunction(this, 'handler', {
-            ...AppSyncLambdaDefaultProps,
+            ...jompx.DatasourceLambdaDefaultProps,
             memorySize: 128 * 2,
-            description: `AppSync post handler.`,
+            description: `AppSync resolver for post.`,
             environment: {
-                graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
+                // TODO: This fails one first time deploy because /appSync/graphqlUrl does not exist in SSM yet. Try catch does not work. Unable to find solution?
+                // graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
             }
         });
 
@@ -43,6 +43,7 @@ export class PostSchema extends Construct {
         lambdaFunction.addToRolePolicy(new cdk.aws_iam.PolicyStatement({
             actions: ['appsync:GraphQL'],
             resources: ['*']
+            // TODO: resources: ['arn:${Partition}:appsync:${Region}:${Account}:apis/${GraphQLAPIId}/*']
         }));
 
         this.props.schemaBuilder.addDataSource('mPost', lambdaFunction);

@@ -9,5 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.49"
   }
 }

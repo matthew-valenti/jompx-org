@@ -1,0 +1,1675 @@
+[
+    {
+        "name": "AuthStrategy",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AuthProvider",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AuthOperation",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AuthRule",
+        "directives": [],
+        "fields": [
+            {
+                "name": "allow",
+                "directives": []
+            },
+            {
+                "name": "provider",
+                "directives": []
+            },
+            {
+                "name": "ownersField",
+                "directives": []
+            },
+            {
+                "name": "ownerClaim",
+                "directives": []
+            },
+            {
+                "name": "groupsField",
+                "directives": []
+            },
+            {
+                "name": "groupClaim",
+                "directives": []
+            },
+            {
+                "name": "groups",
+                "directives": []
+            },
+            {
+                "name": "operations",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "String",
+        "fields": []
+    },
+    {
+        "name": "MNode",
+        "directives": [],
+        "fields": [
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "ID",
+        "fields": []
+    },
+    {
+        "name": "DNode",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MMovie",
+        "directives": [
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "mySql"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "movie"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "boolean",
+                "directives": []
+            },
+            {
+                "name": "float",
+                "directives": []
+            },
+            {
+                "name": "int",
+                "directives": []
+            },
+            {
+                "name": "date",
+                "directives": []
+            },
+            {
+                "name": "dateTime",
+                "directives": []
+            },
+            {
+                "name": "email",
+                "directives": []
+            },
+            {
+                "name": "ipAddress",
+                "directives": []
+            },
+            {
+                "name": "json",
+                "directives": []
+            },
+            {
+                "name": "phone",
+                "directives": []
+            },
+            {
+                "name": "time",
+                "directives": []
+            },
+            {
+                "name": "timestamp",
+                "directives": []
+            },
+            {
+                "name": "url",
+                "directives": []
+            },
+            {
+                "name": "sourceField",
+                "directives": [
+                    {
+                        "name": "source",
+                        "arguments": [
+                            {
+                                "name": "name",
+                                "value": "sourceField"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mMovieActors",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "MMovieActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "id"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "movieId"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Boolean",
+        "fields": []
+    },
+    {
+        "name": "Float",
+        "fields": []
+    },
+    {
+        "name": "Int",
+        "fields": []
+    },
+    {
+        "name": "MMovieEdge",
+        "directives": [],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MMovieConnection",
+        "directives": [],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "Query",
+        "directives": [],
+        "fields": [
+            {
+                "name": "mMovieFind",
+                "directives": []
+            },
+            {
+                "name": "mMovieFindOne",
+                "directives": []
+            },
+            {
+                "name": "mMovieActorFind",
+                "directives": []
+            },
+            {
+                "name": "mMovieActorFindOne",
+                "directives": []
+            },
+            {
+                "name": "mActorFind",
+                "directives": []
+            },
+            {
+                "name": "mActorFindOne",
+                "directives": []
+            },
+            {
+                "name": "dMovieFind",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieFindOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieActorFind",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieActorFindOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dActorFind",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dActorFindOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MMovieActor",
+        "directives": [
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "mySql"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "movieActor"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "movieId",
+                "directives": []
+            },
+            {
+                "name": "actorId",
+                "directives": []
+            },
+            {
+                "name": "mMovie",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "MMovie"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "movieId"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "id"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mActor",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "MActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "actorId"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "id"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MMovieActorEdge",
+        "directives": [],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MMovieActorConnection",
+        "directives": [],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MActor",
+        "directives": [
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "mySql"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "actor"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "mMovieActors",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "MMovieActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "id"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "actorId"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedAt",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "updatedBy",
+                "directives": [
+                    {
+                        "name": "readonly",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MActorEdge",
+        "directives": [],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MActorConnection",
+        "directives": [],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovie",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                    }
+                ]
+            },
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "dynamoDb"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "movie"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "boolean",
+                "directives": []
+            },
+            {
+                "name": "float",
+                "directives": []
+            },
+            {
+                "name": "decimal",
+                "directives": []
+            },
+            {
+                "name": "int",
+                "directives": []
+            },
+            {
+                "name": "date",
+                "directives": []
+            },
+            {
+                "name": "dateTime",
+                "directives": []
+            },
+            {
+                "name": "email",
+                "directives": []
+            },
+            {
+                "name": "ipAddress",
+                "directives": []
+            },
+            {
+                "name": "json",
+                "directives": []
+            },
+            {
+                "name": "phone",
+                "directives": []
+            },
+            {
+                "name": "time",
+                "directives": []
+            },
+            {
+                "name": "timestamp",
+                "directives": []
+            },
+            {
+                "name": "url",
+                "directives": []
+            },
+            {
+                "name": "sourceField",
+                "directives": [
+                    {
+                        "name": "source",
+                        "arguments": [
+                            {
+                                "name": "name",
+                                "value": "sourceField"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieActors",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "DMovieActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "id"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "movieId"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieEdge",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieConnection",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieActor",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                    }
+                ]
+            },
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "dynamoDb"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "movieActor"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "movieId",
+                "directives": []
+            },
+            {
+                "name": "actorId",
+                "directives": []
+            },
+            {
+                "name": "dMovie",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "DMovie"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "movieId"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "id"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dActor",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "DActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "actorId"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "id"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieActorEdge",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieActorConnection",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DActor",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                    }
+                ]
+            },
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "dynamoDb"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "name",
+                        "value": "actor"
+                    }
+                ]
+            },
+            {
+                "name": "operations",
+                "arguments": [
+                    {
+                        "name": "names",
+                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                    }
+                ]
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "dMovieActors",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "value": "DMovieActor"
+                            },
+                            {
+                                "name": "localField",
+                                "value": "id"
+                            },
+                            {
+                                "name": "foreignField",
+                                "value": "actorId"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DActorEdge",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DActorConnection",
+        "directives": [
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "PageInfoCursor",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            }
+        ],
+        "fields": [
+            {
+                "name": "hasPreviousPage",
+                "directives": []
+            },
+            {
+                "name": "hasNextPage",
+                "directives": []
+            },
+            {
+                "name": "startCursor",
+                "directives": []
+            },
+            {
+                "name": "endCursor",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "PageInfoOffset",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            }
+        ],
+        "fields": [
+            {
+                "name": "skip",
+                "directives": []
+            },
+            {
+                "name": "limit",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostFindExampleInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "number1",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostFindExampleOutput",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "auth",
+                        "arguments": [
+                            {
+                                "name": "rules",
+                                "value": "[{\"allow\":\"owner\",\"provider\":\"iam\"}]"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Mutation",
+        "directives": [],
+        "fields": [
+            {
+                "name": "mPostFindExample",
+                "directives": [
+                    {
+                        "name": "auth",
+                        "arguments": [
+                            {
+                                "name": "rules",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mPostQueryExample",
+                "directives": [
+                    {
+                        "name": "auth",
+                        "arguments": [
+                            {
+                                "name": "rules",
+                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MPostQueryExampleTestInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "number1",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostQueryExampleInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "number1",
+                "directives": []
+            },
+            {
+                "name": "test",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostQueryExampleTestTestOutput",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "result1",
+                "directives": []
+            },
+            {
+                "name": "result2",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostQueryExampleTestOutput",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "result1",
+                "directives": []
+            },
+            {
+                "name": "result2",
+                "directives": []
+            },
+            {
+                "name": "test",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MPostQueryExampleOutput",
+        "directives": [
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "rules",
+                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "test",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "AWSDate",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSTime",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSDateTime",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSTimestamp",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSEmail",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSJSON",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSURL",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSPhone",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "AWSIPAddress",
+        "directives": [],
+        "fields": []
+    },
+    {
+        "name": "__Schema",
+        "fields": []
+    },
+    {
+        "name": "__Type",
+        "fields": []
+    },
+    {
+        "name": "__TypeKind",
+        "fields": []
+    },
+    {
+        "name": "__Field",
+        "fields": []
+    },
+    {
+        "name": "__InputValue",
+        "fields": []
+    },
+    {
+        "name": "__EnumValue",
+        "fields": []
+    },
+    {
+        "name": "__Directive",
+        "fields": []
+    },
+    {
+        "name": "__DirectiveLocation",
+        "fields": []
+    }
+]

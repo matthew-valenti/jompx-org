@@ -40,7 +40,7 @@ export enum AuthProvider {
   Function = 'function',
   Iam = 'iam',
   Oidc = 'oidc',
-  UserPools = 'userPools'
+  UserPool = 'userPool'
 }
 
 export type AuthRule = {
@@ -48,9 +48,9 @@ export type AuthRule = {
   groupClaim?: InputMaybe<Scalars['String']>;
   groups?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   groupsField?: InputMaybe<Scalars['String']>;
-  identityClaim?: InputMaybe<Scalars['String']>;
   operations?: InputMaybe<Array<InputMaybe<AuthOperation>>>;
-  ownerField?: InputMaybe<Scalars['String']>;
+  ownerClaim?: InputMaybe<Scalars['String']>;
+  ownersField?: InputMaybe<Scalars['String']>;
   provider: AuthProvider;
 };
 
@@ -61,6 +61,99 @@ export enum AuthStrategy {
   Private = 'private',
   Public = 'public'
 }
+
+export type DActor = DNode & {
+  __typename?: 'DActor';
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  dMovieActors?: Maybe<Array<Maybe<DMovieActor>>>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+};
+
+export type DActorConnection = {
+  __typename?: 'DActorConnection';
+  edges?: Maybe<Array<Maybe<DActorEdge>>>;
+  pageInfo: PageInfoOffset;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type DActorEdge = {
+  __typename?: 'DActorEdge';
+  node?: Maybe<DActor>;
+};
+
+export type DMovie = DNode & {
+  __typename?: 'DMovie';
+  boolean?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  dMovieActors: Array<Maybe<DMovieActor>>;
+  date?: Maybe<Scalars['AWSDate']>;
+  dateTime?: Maybe<Scalars['AWSDateTime']>;
+  decimal?: Maybe<Scalars['Float']>;
+  email?: Maybe<Scalars['AWSEmail']>;
+  float?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  int?: Maybe<Scalars['Int']>;
+  ipAddress?: Maybe<Scalars['AWSIPAddress']>;
+  json?: Maybe<Scalars['AWSJSON']>;
+  name: Scalars['String'];
+  phone?: Maybe<Scalars['AWSPhone']>;
+  sourceField?: Maybe<Scalars['String']>;
+  time?: Maybe<Scalars['AWSTime']>;
+  timestamp?: Maybe<Scalars['AWSTimestamp']>;
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+  url?: Maybe<Scalars['AWSURL']>;
+};
+
+export type DMovieActor = DNode & {
+  __typename?: 'DMovieActor';
+  actorId: Scalars['ID'];
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  dActor: DMovie;
+  dMovie: DMovie;
+  id: Scalars['ID'];
+  movieId: Scalars['ID'];
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+};
+
+export type DMovieActorConnection = {
+  __typename?: 'DMovieActorConnection';
+  edges?: Maybe<Array<Maybe<DMovieActorEdge>>>;
+  pageInfo: PageInfoOffset;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type DMovieActorEdge = {
+  __typename?: 'DMovieActorEdge';
+  node?: Maybe<DMovieActor>;
+};
+
+export type DMovieConnection = {
+  __typename?: 'DMovieConnection';
+  edges?: Maybe<Array<Maybe<DMovieEdge>>>;
+  pageInfo: PageInfoOffset;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type DMovieEdge = {
+  __typename?: 'DMovieEdge';
+  node?: Maybe<DMovie>;
+};
+
+export type DNode = {
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  id: Scalars['ID'];
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+};
 
 export type MActor = MNode & {
   __typename?: 'MActor';
@@ -87,26 +180,26 @@ export type MActorEdge = {
 
 export type MMovie = MNode & {
   __typename?: 'MMovie';
+  boolean?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
-  exampleBoolean?: Maybe<Scalars['Boolean']>;
-  exampleDate?: Maybe<Scalars['AWSDate']>;
-  exampleDateTime?: Maybe<Scalars['AWSDateTime']>;
-  exampleEmail?: Maybe<Scalars['AWSEmail']>;
-  exampleFloat?: Maybe<Scalars['Float']>;
-  exampleInt?: Maybe<Scalars['Int']>;
-  exampleIpAddress?: Maybe<Scalars['AWSIPAddress']>;
-  exampleJson?: Maybe<Scalars['AWSJSON']>;
-  examplePhone?: Maybe<Scalars['AWSPhone']>;
-  exampleSourceField?: Maybe<Scalars['String']>;
-  exampleTime?: Maybe<Scalars['AWSTime']>;
-  exampleTimestamp?: Maybe<Scalars['AWSTimestamp']>;
-  exampleUrl?: Maybe<Scalars['AWSURL']>;
+  date?: Maybe<Scalars['AWSDate']>;
+  dateTime?: Maybe<Scalars['AWSDateTime']>;
+  email?: Maybe<Scalars['AWSEmail']>;
+  float?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
+  int?: Maybe<Scalars['Int']>;
+  ipAddress?: Maybe<Scalars['AWSIPAddress']>;
+  json?: Maybe<Scalars['AWSJSON']>;
   mMovieActors: Array<Maybe<MMovieActor>>;
   name: Scalars['String'];
+  phone?: Maybe<Scalars['AWSPhone']>;
+  sourceField?: Maybe<Scalars['String']>;
+  time?: Maybe<Scalars['AWSTime']>;
+  timestamp?: Maybe<Scalars['AWSTimestamp']>;
   updatedAt: Scalars['AWSDateTime'];
   updatedBy: Scalars['AWSDateTime'];
+  url?: Maybe<Scalars['AWSURL']>;
 };
 
 export type MMovieActor = MNode & {
@@ -115,7 +208,7 @@ export type MMovieActor = MNode & {
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
   id: Scalars['ID'];
-  mActor: MMovie;
+  mActor: MActor;
   mMovie: MMovie;
   movieId: Scalars['ID'];
   updatedAt: Scalars['AWSDateTime'];
@@ -223,33 +316,96 @@ export type PageInfoOffset = {
 
 export type Query = {
   __typename?: 'Query';
+  dActorFind?: Maybe<DActorConnection>;
+  dActorFindOne?: Maybe<DActor>;
+  dMovieActorFind?: Maybe<DMovieActorConnection>;
+  dMovieActorFindOne?: Maybe<DMovieActor>;
+  dMovieFind?: Maybe<DMovieConnection>;
+  dMovieFindOne?: Maybe<DMovie>;
   mActorFind?: Maybe<MActorConnection>;
+  mActorFindOne?: Maybe<MActor>;
   mMovieActorFind?: Maybe<MMovieActorConnection>;
+  mMovieActorFindOne?: Maybe<MMovieActor>;
   mMovieFind?: Maybe<MMovieConnection>;
+  mMovieFindOne?: Maybe<MMovie>;
+};
+
+
+export type QueryDActorFindArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDMovieActorFindArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDMovieActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDMovieFindArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDMovieFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 
 export type QueryMActorFindArgs = {
-  filter?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<Scalars['AWSJSON']>;
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryMActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 
 export type QueryMMovieActorFindArgs = {
-  filter?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<Scalars['AWSJSON']>;
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryMMovieActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 
 export type QueryMMovieFindArgs = {
-  filter?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<Scalars['AWSJSON']>;
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryMMovieFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 export type MPostFindExampleMutationVariables = Exact<{

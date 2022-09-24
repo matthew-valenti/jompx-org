@@ -17,7 +17,7 @@
       }
     },
     "synth": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [
@@ -29,19 +29,19 @@
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [
           {
-            "command": "npx aws-cdk deploy --require-approval=never",
+            "command": "npx aws-cdk deploy",
             "forwardAllArgs": true
           }
         ]
       }
     },
     "watch": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [
@@ -53,7 +53,7 @@
       }
     },
     "destroy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [
@@ -65,7 +65,7 @@
       }
     },
     "list": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [
@@ -77,18 +77,19 @@
       }
     },
     "login": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "parallel": false,
         "commands": [
           "aws sso login --profile {args.profile}",
           "npx cdk-sso-sync {args.profile}"
-        ]
+        ],
+        "forwardAllArgs": false
       }
     },
     "version": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/cdk",
         "commands": [

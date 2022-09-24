@@ -2,7 +2,6 @@ schema {
   query: Query
   mutation: Mutation
 }
-
 enum AuthStrategy {
   private
   public
@@ -10,15 +9,13 @@ enum AuthStrategy {
   groups
   custom
 }
-
 enum AuthProvider {
   apiKey
   iam
   oidc
-  userPools
+  userPool
   function
 }
-
 enum AuthOperation {
   find
   findOne
@@ -31,189 +28,278 @@ enum AuthOperation {
   deleteOne
   deleteMany
 }
-
 input AuthRule {
   allow: AuthStrategy!
   provider: AuthProvider!
-  ownerField: String
-  identityClaim: String
+  ownersField: String
+  ownerClaim: String
   groupsField: String
   groupClaim: String
   groups: [String]
   operations: [AuthOperation]
 }
-
-interface MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
-  id: ID! @readonly(value: "true")
-  createdAt: AWSDateTime! @readonly(value: "true")
-  createdBy: AWSDateTime! @readonly(value: "true")
-  updatedAt: AWSDateTime! @readonly(value: "true")
-  updatedBy: AWSDateTime! @readonly(value: "true")
+interface MNode {
+  id: ID!
+  @readonly(value: "true")
+  createdAt: AWSDateTime!
+  @readonly(value: "true")
+  createdBy: AWSDateTime!
+  @readonly(value: "true")
+  updatedAt: AWSDateTime!
+  @readonly(value: "true")
+  updatedBy: AWSDateTime!
+  @readonly(value: "true")
 }
-
-type MMovie implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "pilot") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+interface DNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @aws_iam {
+  id: ID!
+  createdAt: AWSDateTime!
+  createdBy: AWSDateTime!
+  updatedAt: AWSDateTime!
+  updatedBy: AWSDateTime!
+}
+type MMovie implements MNode @datasource(name: "mySql") @source(name: "movie") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
   name: String!
-  exampleBoolean: Boolean
-  exampleFloat: Float
-  exampleInt: Int
-  exampleDate: AWSDate
-  exampleDateTime: AWSDateTime
-  exampleEmail: AWSEmail
-  exampleIpAddress: AWSIPAddress
-  exampleJson: AWSJSON
-  examplePhone: AWSPhone
-  exampleTime: AWSTime
-  exampleTimestamp: AWSTimestamp
-  exampleUrl: AWSURL
-  exampleSourceField: String @source(name: "sourceField")
-  mMovieActors: [MMovieActor]! @lookup(from: "MMovieActor", localField: "id", foreignField: "movieId")
-  id: ID! @readonly(value: "true")
-  createdAt: AWSDateTime! @readonly(value: "true")
-  createdBy: AWSDateTime! @readonly(value: "true")
-  updatedAt: AWSDateTime! @readonly(value: "true")
-  updatedBy: AWSDateTime! @readonly(value: "true")
+  boolean: Boolean
+  float: Float
+  int: Int
+  date: AWSDate
+  dateTime: AWSDateTime
+  email: AWSEmail
+  ipAddress: AWSIPAddress
+  json: AWSJSON
+  phone: AWSPhone
+  time: AWSTime
+  timestamp: AWSTimestamp
+  url: AWSURL
+  sourceField: String
+  @source(name: "sourceField")
+  mMovieActors: [MMovieActor]!
+  @lookup(from: "MMovieActor", localField: "id", foreignField: "movieId")
+  id: ID!
+  @readonly(value: "true")
+  createdAt: AWSDateTime!
+  @readonly(value: "true")
+  createdBy: AWSDateTime!
+  @readonly(value: "true")
+  updatedAt: AWSDateTime!
+  @readonly(value: "true")
+  updatedBy: AWSDateTime!
+  @readonly(value: "true")
 }
-
 type MMovieEdge {
   node: MMovie
 }
-
 type MMovieConnection {
   edges: [MMovieEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
-
 type Query {
-  mMovieFind(filter: String, sort: String, skip: Int, limit: Int): MMovieConnection
-  mMovieActorFind(filter: String, sort: String, skip: Int, limit: Int): MMovieActorConnection
-  mActorFind(filter: String, sort: String, skip: Int, limit: Int): MActorConnection
+  mMovieFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): MMovieConnection
+ 
+  mMovieFindOne(filter: AWSJSON): MMovie
+ 
+  mMovieActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): MMovieActorConnection
+ 
+  mMovieActorFindOne(filter: AWSJSON): MMovieActor
+ 
+  mActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): MActorConnection
+ 
+  mActorFindOne(filter: AWSJSON): MActor
+ 
+  dMovieFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DMovieConnection
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
+  dMovieFindOne(filter: AWSJSON): DMovie
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
+  dMovieActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DMovieActorConnection
+  @aws_cognito_user_pools(cognito_groups: ["admin"])
+  dMovieActorFindOne(filter: AWSJSON): DMovieActor
+  @aws_cognito_user_pools(cognito_groups: ["admin"])
+  dActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DActorConnection
+  @aws_cognito_user_pools(cognito_groups: ["admin"])
+  dActorFindOne(filter: AWSJSON): DActor
+  @aws_cognito_user_pools(cognito_groups: ["admin"])
 }
-
-type MMovieActor implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "movieActor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+type MMovieActor implements MNode @datasource(name: "mySql") @source(name: "movieActor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
   movieId: ID!
   actorId: ID!
-  mMovie: MMovie! @lookup(from: "MMovie", localField: "movieId", foreignField: "id")
-  mActor: MMovie! @lookup(from: "MActor", localField: "actorId", foreignField: "id")
-  id: ID! @readonly(value: "true")
-  createdAt: AWSDateTime! @readonly(value: "true")
-  createdBy: AWSDateTime! @readonly(value: "true")
-  updatedAt: AWSDateTime! @readonly(value: "true")
-  updatedBy: AWSDateTime! @readonly(value: "true")
+  mMovie: MMovie!
+  @lookup(from: "MMovie", localField: "movieId", foreignField: "id")
+  mActor: MActor!
+  @lookup(from: "MActor", localField: "actorId", foreignField: "id")
+  id: ID!
+  @readonly(value: "true")
+  createdAt: AWSDateTime!
+  @readonly(value: "true")
+  createdBy: AWSDateTime!
+  @readonly(value: "true")
+  updatedAt: AWSDateTime!
+  @readonly(value: "true")
+  updatedBy: AWSDateTime!
+  @readonly(value: "true")
 }
-
 type MMovieActorEdge {
   node: MMovieActor
 }
-
 type MMovieActorConnection {
   edges: [MMovieActorEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
-
-type MActor implements MNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") @datasource(name: "mySql") @source(name: "comment") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
+type MActor implements MNode @datasource(name: "mySql") @source(name: "actor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") {
   name: String!
-  mMovieActors: [MMovieActor] @lookup(from: "MMovieActor", localField: "id", foreignField: "actorId")
-  id: ID! @readonly(value: "true")
-  createdAt: AWSDateTime! @readonly(value: "true")
-  createdBy: AWSDateTime! @readonly(value: "true")
-  updatedAt: AWSDateTime! @readonly(value: "true")
-  updatedBy: AWSDateTime! @readonly(value: "true")
+  mMovieActors: [MMovieActor]
+  @lookup(from: "MMovieActor", localField: "id", foreignField: "actorId")
+  id: ID!
+  @readonly(value: "true")
+  createdAt: AWSDateTime!
+  @readonly(value: "true")
+  createdBy: AWSDateTime!
+  @readonly(value: "true")
+  updatedAt: AWSDateTime!
+  @readonly(value: "true")
+  updatedBy: AWSDateTime!
+  @readonly(value: "true")
 }
-
 type MActorEdge {
   node: MActor
 }
-
 type MActorConnection {
   edges: [MActorEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
-
-type PageInfoCursor @aws_iam @aws_cognito_user_pools {
+type DMovie implements DNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]") @datasource(name: "dynamoDb") @source(name: "movie") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  name: String!
+  boolean: Boolean
+  float: Float
+  decimal: Float
+  int: Int
+  date: AWSDate
+  dateTime: AWSDateTime
+  email: AWSEmail
+  ipAddress: AWSIPAddress
+  json: AWSJSON
+  phone: AWSPhone
+  time: AWSTime
+  timestamp: AWSTimestamp
+  url: AWSURL
+  sourceField: String
+  @source(name: "sourceField")
+  dMovieActors: [DMovieActor]!
+  @lookup(from: "DMovieActor", localField: "id", foreignField: "movieId")
+  id: ID!
+  createdAt: AWSDateTime!
+  createdBy: AWSDateTime!
+  updatedAt: AWSDateTime!
+  updatedBy: AWSDateTime!
+}
+type DMovieEdge @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  node: DMovie
+}
+type DMovieConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  edges: [DMovieEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+type DMovieActor implements DNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]") @datasource(name: "dynamoDb") @source(name: "movieActor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  movieId: ID!
+  actorId: ID!
+  dMovie: DMovie!
+  @lookup(from: "DMovie", localField: "movieId", foreignField: "id")
+  dActor: DMovie!
+  @lookup(from: "DActor", localField: "actorId", foreignField: "id")
+  id: ID!
+  createdAt: AWSDateTime!
+  createdBy: AWSDateTime!
+  updatedAt: AWSDateTime!
+  updatedBy: AWSDateTime!
+}
+type DMovieActorEdge @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  node: DMovieActor
+}
+type DMovieActorConnection @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  edges: [DMovieActorEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+type DActor implements DNode @auth(rules: "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]") @datasource(name: "dynamoDb") @source(name: "actor") @operations(names: "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany") @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  name: String!
+  dMovieActors: [DMovieActor]
+  @lookup(from: "DMovieActor", localField: "id", foreignField: "actorId")
+  id: ID!
+  createdAt: AWSDateTime!
+  createdBy: AWSDateTime!
+  updatedAt: AWSDateTime!
+  updatedBy: AWSDateTime!
+}
+type DActorEdge @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  node: DActor
+}
+type DActorConnection @aws_cognito_user_pools(cognito_groups: ["admin"]) {
+  edges: [DActorEdge]
+  pageInfo: PageInfoOffset!
+  totalCount: Int
+}
+type PageInfoCursor @aws_iam {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
   startCursor: String!
   endCursor: String!
 }
-
-type PageInfoOffset @aws_iam @aws_cognito_user_pools {
+type PageInfoOffset @aws_iam {
   skip: Int!
   limit: Int!
 }
-
 input MPostFindExampleInput {
   number1: Int!
 }
-
 type MPostFindExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
-  id: ID @auth(rules: "[{\"allow\":\"owner\",\"provider\":\"iam\"}]")
+  id: ID
+  @auth(rules: "[{\"allow\":\"owner\",\"provider\":\"iam\"}]")
 }
-
 type Mutation {
-  mPostFindExample(input: MPostFindExampleInput!): MPostFindExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
-  mPostQueryExample(input: MPostQueryExampleInput!): MPostQueryExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
+  mPostFindExample(input: MPostFindExampleInput!): MPostFindExampleOutput
+  @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
+  mPostQueryExample(input: MPostQueryExampleInput!): MPostQueryExampleOutput
+  @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]")
 }
-
 input MPostQueryExampleTestInput {
   number1: Int!
 }
-
 input MPostQueryExampleInput {
   number1: Int!
   test: MPostQueryExampleTestInput
 }
-
 type MPostQueryExampleTestTestOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
   result1: Int!
   result2: Int!
 }
-
 type MPostQueryExampleTestOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
   result1: Int!
   result2: Int!
   test: MPostQueryExampleTestTestOutput
 }
-
 type MPostQueryExampleOutput @auth(rules: "[{\"allow\":\"private\",\"provider\":\"iam\"}]") {
   id: ID
   test: MPostQueryExampleTestOutput
 }
-
 scalar AWSDate
-
 scalar AWSTime
-
 scalar AWSDateTime
-
 scalar AWSTimestamp
-
 scalar AWSEmail
-
 scalar AWSJSON
-
 scalar AWSURL
-
 scalar AWSPhone
-
 scalar AWSIPAddress
-
-directive @aws_iam on FIELD_DEFINITION | OBJECT
-
-directive @aws_cognito_user_pools(cognito_groups: String) on FIELD_DEFINITION | OBJECT
-
-directive @auth(rules: [AuthRule!]!) on OBJECT | INTERFACE | FIELD_DEFINITION
+        directive @aws_iam on FIELD_DEFINITION | OBJECT
+        directive @aws_cognito_user_pools(cognito_groups: String) on FIELD_DEFINITION | OBJECT
+    directive @auth(rules: [AuthRule!]!) on OBJECT | INTERFACE | FIELD_DEFINITION
 
 directive @datasource(name: String) on FIELD_DEFINITION | OBJECT
-
 directive @lookup(from: String!, localField: String!, foreignField: String!) on FIELD_DEFINITION
-
 directive @operations(names: [String!]!) on OBJECT
-
 directive @pagination(type: String) on OBJECT
-
 directive @readonly(value: String) on FIELD_DEFINITION
-
 directive @source(name: String) on FIELD_DEFINITION | OBJECT
