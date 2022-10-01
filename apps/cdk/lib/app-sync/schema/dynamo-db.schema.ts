@@ -2,6 +2,7 @@ import * as jompx from '@jompx/constructs';
 import { auth, datasource, lookup, operations, readonly, source } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
+import { tag } from '../directives';
 
 /**
  * Use GraphqlType for simple fields.
@@ -35,16 +36,7 @@ export class DynamoDbSchema {
                 updatedBy: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true })
                 })
-            },
-            // Auth doesn't seem to do anything. Delete.
-            // directives: [
-            //     auth([
-            //         { allow: 'private', provider: 'iam' },
-            //         // { allow: 'private', provider: 'userPool', groups: ['admin'] }
-            //     ]),
-            //     // Directive.cognito(),
-            //     // Directive.iam()
-            // ]
+            }
         });
         this.types.interfaceTypes['DNode'] = DNode;
 
@@ -52,13 +44,14 @@ export class DynamoDbSchema {
             interfaceTypes: [DNode],
             definition: {
                 // name: GraphqlType.string({ isRequired: true }),
-                dMovie: new Field({
+                name: new Field({
                     returnType: GraphqlType.string({ isRequired: true }),
                     directives: [
                         auth([
                             { allow: 'private', provider: 'iam' },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
                         ]),
+                        tag('test')
                     ]
                 }),
                 boolean: GraphqlType.boolean(),
@@ -96,7 +89,8 @@ export class DynamoDbSchema {
                 ]),
                 datasource(AppSyncDatasource.dynamoDb),
                 source('movie'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
+                tag('test')
             ]
         });
         this.types.objectTypes['DMovie'] = DMovie;

@@ -16,7 +16,7 @@ export class AppSyncBuild extends Construct {
 
     constructor(scope: Construct, id: string, props: AppSyncBusinessProps) {
         super(scope, id);
-        
+
         if (props?.schemaBuilder) {
 
             // Add MySQL schema.

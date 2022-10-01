@@ -5,7 +5,7 @@
       "../../node_modules/@types"
     ],
     "outDir": "tsc.out", // Custom: Move transpiled ts files to dist directory.
-    // "sourceMap": false // Fix error: option sourceMap cannot be specified with option inlineSourceMap. 5/29 update: Getting message in Jest to make this true. Let's see what happens.
+    "sourceMap": false // Fix error: option sourceMap cannot be specified with option inlineSourceMap. 5/29 update: Getting message in Jest to make this true but results in same build error.
   },
   "exclude": [
     "tsc.out",

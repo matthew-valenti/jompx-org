@@ -4266,6 +4266,29 @@
         ]
       },
       {
+        "name": "flag",
+        "description": null,
+        "isRepeatable": false,
+        "locations": [
+          "FIELD_DEFINITION",
+          "OBJECT"
+        ],
+        "args": [
+          {
+            "name": "value",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "AWSJSON",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
+      },
+      {
         "name": "include",
         "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
         "isRepeatable": false,
@@ -4467,11 +4490,11 @@
         ],
         "args": [
           {
-            "name": "name",
+            "name": "value",
             "description": null,
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "AWSJSON",
               "ofType": null
             },
             "defaultValue": null,

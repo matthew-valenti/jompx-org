@@ -13,7 +13,8 @@
       "executor": "@jompx/jcdk:graphql-schema",
       "cwd": "apps/cdk",
       "options": {
-        "cdkOutSchemaFilePattern": "apps/cdk/cdk.out/assembly-CdkPipelineStack-AppStage/*AppSyncStack*.template.json"
+        "cdkOutSchemaFilePattern": "apps/cdk/cdk.out/assembly-CdkPipelineStack-AppStage/*AppSyncStack*.template.json",
+        "customDirectiveFilePattern": "apps/cdk/tsc.out/apps/cdk/lib/app-sync/directives/!(*.d).js"
       }
     },
     "synth": {
