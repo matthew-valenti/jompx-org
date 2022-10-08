@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operations, readonly, source } from '@jompx/constructs'; // Custom directives.
+import { auth, datasource, lookup, operation, primaryKey, readonly, source, sortKey } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
 import { tag } from '../directives';
@@ -8,6 +8,9 @@ import { tag } from '../directives';
  * Use GraphqlType for simple fields.
  * Use Field if additional attributes are required e.g. directives.
  * Use ResolvableField if the field exists in another type or datasource.
+ * For one table design:
+ *  - Name first fields PK and SK.
+ *  - PK = ORG#<OrgName>
   */
 export class DynamoDbSchema {
 
@@ -22,7 +25,10 @@ export class DynamoDbSchema {
         const DNode = new InterfaceType('DNode', {
             definition: {
                 id: new Field({
-                    returnType: GraphqlType.id({ isRequired: true })
+                    returnType: GraphqlType.id({ isRequired: true }),
+                    directives: [
+                        primaryKey(true)
+                    ]
                 }),
                 createdAt: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true })
@@ -51,6 +57,7 @@ export class DynamoDbSchema {
                             { allow: 'private', provider: 'iam' },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
                         ]),
+                        sortKey(true),
                         tag('test')
                     ]
                 }),
@@ -89,7 +96,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource(AppSyncDatasource.dynamoDb),
                 source('movie'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
+                operation(['findCursor', 'findOne', 'scanCursor', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
                 tag('test')
             ]
         });
@@ -122,7 +129,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource(AppSyncDatasource.dynamoDb),
                 source('movieActor'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DMovieActor'] = DMovieActor;
@@ -147,7 +154,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource(AppSyncDatasource.dynamoDb),
                 source('actor'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DActor'] = DActor;

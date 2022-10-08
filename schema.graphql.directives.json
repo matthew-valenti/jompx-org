@@ -68,7 +68,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -82,7 +82,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -96,7 +96,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -110,7 +110,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -124,7 +124,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -142,7 +142,17 @@
         "fields": [
             {
                 "name": "id",
-                "directives": []
+                "directives": [
+                    {
+                        "name": "primaryKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isPrimaryKey\":true}"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "createdAt",
@@ -181,8 +191,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -190,8 +200,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "mySql"
+                        "name": "value",
+                        "value": "{\"name\":\"mySql\"}"
                     }
                 ]
             },
@@ -205,11 +215,11 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -288,16 +298,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "MMovieActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "id"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "movieId"
+                                "name": "value",
+                                "value": "{\"from\":\"MMovieActor\",\"localField\":\"id\",\"foreignField\":\"movieId\"}"
                             }
                         ]
                     }
@@ -311,7 +313,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -325,7 +327,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -339,7 +341,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -353,7 +355,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -367,7 +369,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -548,23 +550,6 @@
                 ]
             },
             {
-                "name": "dMovieFind",
-                "directives": [
-                    {
-                        "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": [
-                            {
-                                "name": "cognito_groups"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
                 "name": "dMovieFindOne",
                 "directives": [
                     {
@@ -654,8 +639,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -663,8 +648,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "mySql"
+                        "name": "value",
+                        "value": "{\"name\":\"mySql\"}"
                     }
                 ]
             },
@@ -678,11 +663,11 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -703,16 +688,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "MMovie"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "movieId"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "id"
+                                "name": "value",
+                                "value": "{\"from\":\"MMovie\",\"localField\":\"movieId\",\"foreignField\":\"id\"}"
                             }
                         ]
                     }
@@ -725,16 +702,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "MActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "actorId"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "id"
+                                "name": "value",
+                                "value": "{\"from\":\"MActor\",\"localField\":\"actorId\",\"foreignField\":\"id\"}"
                             }
                         ]
                     }
@@ -748,7 +717,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -762,7 +731,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -776,7 +745,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -790,7 +759,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -804,7 +773,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -885,8 +854,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -894,8 +863,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "mySql"
+                        "name": "value",
+                        "value": "{\"name\":\"mySql\"}"
                     }
                 ]
             },
@@ -909,11 +878,11 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -930,16 +899,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "MMovieActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "id"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "actorId"
+                                "name": "value",
+                                "value": "{\"from\":\"MMovieActor\",\"localField\":\"id\",\"foreignField\":\"actorId\"}"
                             }
                         ]
                     }
@@ -953,7 +914,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -967,7 +928,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -981,7 +942,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -995,7 +956,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -1009,7 +970,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "true"
+                                "value": "{\"isReadonly\":true}"
                             }
                         ]
                     }
@@ -1090,8 +1051,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -1099,8 +1060,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "dynamoDb"
+                        "name": "value",
+                        "value": "{\"name\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -1114,11 +1075,20 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"scanCursor\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
+                    }
+                ]
+            },
+            {
+                "name": "tag",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"name\":\"test\"}"
                     }
                 ]
             }
@@ -1135,8 +1105,26 @@
                         "name": "auth",
                         "arguments": [
                             {
-                                "name": "rules",
-                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "sortKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isSortKey\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "tag",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"name\":\"test\"}"
                             }
                         ]
                     }
@@ -1215,16 +1203,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "DMovieActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "id"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "movieId"
+                                "name": "value",
+                                "value": "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"movieId\"}"
                             }
                         ]
                     }
@@ -1232,7 +1212,17 @@
             },
             {
                 "name": "id",
-                "directives": []
+                "directives": [
+                    {
+                        "name": "primaryKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isPrimaryKey\":true}"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "createdAt",
@@ -1253,60 +1243,6 @@
         ]
     },
     {
-        "name": "DMovieEdge",
-        "directives": [
-            {
-                "name": "aws_iam",
-                "arguments": []
-            },
-            {
-                "name": "aws_cognito_user_pools",
-                "arguments": [
-                    {
-                        "name": "cognito_groups"
-                    }
-                ]
-            }
-        ],
-        "fields": [
-            {
-                "name": "node",
-                "directives": []
-            }
-        ]
-    },
-    {
-        "name": "DMovieConnection",
-        "directives": [
-            {
-                "name": "aws_iam",
-                "arguments": []
-            },
-            {
-                "name": "aws_cognito_user_pools",
-                "arguments": [
-                    {
-                        "name": "cognito_groups"
-                    }
-                ]
-            }
-        ],
-        "fields": [
-            {
-                "name": "edges",
-                "directives": []
-            },
-            {
-                "name": "pageInfo",
-                "directives": []
-            },
-            {
-                "name": "totalCount",
-                "directives": []
-            }
-        ]
-    },
-    {
         "name": "DMovieActor",
         "directives": [
             {
@@ -1321,8 +1257,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -1330,8 +1266,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "dynamoDb"
+                        "name": "value",
+                        "value": "{\"name\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -1345,11 +1281,11 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -1370,16 +1306,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "DMovie"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "movieId"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "id"
+                                "name": "value",
+                                "value": "{\"from\":\"DMovie\",\"localField\":\"movieId\",\"foreignField\":\"id\"}"
                             }
                         ]
                     }
@@ -1392,16 +1320,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "DActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "actorId"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "id"
+                                "name": "value",
+                                "value": "{\"from\":\"DActor\",\"localField\":\"actorId\",\"foreignField\":\"id\"}"
                             }
                         ]
                     }
@@ -1409,7 +1329,17 @@
             },
             {
                 "name": "id",
-                "directives": []
+                "directives": [
+                    {
+                        "name": "primaryKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isPrimaryKey\":true}"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "createdAt",
@@ -1490,8 +1420,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             },
@@ -1499,8 +1429,8 @@
                 "name": "datasource",
                 "arguments": [
                     {
-                        "name": "name",
-                        "value": "dynamoDb"
+                        "name": "value",
+                        "value": "{\"name\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -1514,11 +1444,11 @@
                 ]
             },
             {
-                "name": "operations",
+                "name": "operation",
                 "arguments": [
                     {
-                        "name": "names",
-                        "value": "find,findOne,insertOne,insertMany,updateOne,updateMany,upsertOne,upsertMany,deleteOne,deleteMany"
+                        "name": "value",
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -1535,16 +1465,8 @@
                         "name": "lookup",
                         "arguments": [
                             {
-                                "name": "from",
-                                "value": "DMovieActor"
-                            },
-                            {
-                                "name": "localField",
-                                "value": "id"
-                            },
-                            {
-                                "name": "foreignField",
-                                "value": "actorId"
+                                "name": "value",
+                                "value": "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"actorId\"}"
                             }
                         ]
                     }
@@ -1552,7 +1474,17 @@
             },
             {
                 "name": "id",
-                "directives": []
+                "directives": [
+                    {
+                        "name": "primaryKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isPrimaryKey\":true}"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "createdAt",
@@ -1625,8 +1557,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             }
@@ -1657,8 +1589,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
                     }
                 ]
             }
@@ -1691,8 +1623,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                     }
                 ]
             }
@@ -1705,8 +1637,8 @@
                         "name": "auth",
                         "arguments": [
                             {
-                                "name": "rules",
-                                "value": "[{\"allow\":\"owner\",\"provider\":\"iam\"}]"
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"owner\",\"provider\":\"iam\"}]}"
                             }
                         ]
                     }
@@ -1725,8 +1657,8 @@
                         "name": "auth",
                         "arguments": [
                             {
-                                "name": "rules",
-                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                             }
                         ]
                     }
@@ -1739,8 +1671,8 @@
                         "name": "auth",
                         "arguments": [
                             {
-                                "name": "rules",
-                                "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                             }
                         ]
                     }
@@ -1779,8 +1711,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                     }
                 ]
             }
@@ -1803,8 +1735,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                     }
                 ]
             }
@@ -1831,8 +1763,8 @@
                 "name": "auth",
                 "arguments": [
                     {
-                        "name": "rules",
-                        "value": "[{\"allow\":\"private\",\"provider\":\"iam\"}]"
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
                     }
                 ]
             }

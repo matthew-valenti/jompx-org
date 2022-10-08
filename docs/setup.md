@@ -640,7 +640,8 @@ npm install --save-dev esbuild@0
 ```
 // Manually deploy a stack to sandbox1:
 nx login cdk --profile jompx-sandbox1
-nx run cdk:list // Set local config stage = prod or test or sandbox1
+***IAM Identity Center (successor to AWS Single Sign-On) streamlines how you manage workforce user access to AWS
+nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www.youtube.com/watch?v=4yJp5-jGGNk
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
 
 ---
@@ -677,6 +678,8 @@ nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --
 nx run cdk:graphql-schema
 // Create files: schema.graphql.json & schema.graphql.types.ts
 npm run codegen
+// Run in Jompx NOT in org (to copy over fresh graphql files).
+nx run constructs:cschema
 ```
 
 ### CDK Watch & Hotswap
@@ -865,6 +868,7 @@ nx run-many --all --target=lint
 
 ## Thoughts:
 Explain constructs and levels where Jompx is very high level constructs.
+Developer time is the highest cost line item of a typical project.
 Do not create dependent stacks on the AppSync stack. It's good practice to be able to destroy and re-create the AppSync stack if necessary (without having to destroy every stack that 
 happens to call a GraphQL endpoint).
 Clear separation between AWS and Jompx including errors.
@@ -875,6 +879,9 @@ What is a stage e.g. dev, test, prod, sandbox1. We can't use env because that me
 Explain ID type and use across all keys/primary keys. Caution: does ID work for custom mutations inputs?
 Look at the Shopify docs. They do a good job!
 TODO: Nx interactive commands not working: https://github.com/nrwl/nx/issues/8269
+Grid of databases supported.
+Grid of operations per datasource supported.
+There is some repitino when defining the schema. But this can be a good thing. We can throw away the API and Jomppx and still be left with a fully functional database. What would happen if Jompx generated the schema? Instead AppSync Jompx sits on top of datasources.
 
 https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Why don't I like this? What am I missing.
 It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.

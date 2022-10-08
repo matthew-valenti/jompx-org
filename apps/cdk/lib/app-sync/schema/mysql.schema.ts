@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operations, readonly, source } from '@jompx/constructs'; // Custom directives.
+import { auth, datasource, lookup, operation, readonly, source } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
 
@@ -93,7 +93,7 @@ export class MySqlSchema {
                 ]),
                 datasource(AppSyncDatasource.mySql),
                 source('movie'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes.MMovie = MMovie;
@@ -125,7 +125,7 @@ export class MySqlSchema {
                 ]),
                 datasource(AppSyncDatasource.mySql),
                 source('movieActor'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes.MMovieActor = MMovieActor;
@@ -150,7 +150,7 @@ export class MySqlSchema {
                 ]),
                 datasource(AppSyncDatasource.mySql),
                 source('actor'),
-                operations(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes.MActor = MActor;

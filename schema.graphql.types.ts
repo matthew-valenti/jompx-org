@@ -135,18 +135,6 @@ export type DMovieActorEdge = {
   node?: Maybe<DMovieActor>;
 };
 
-export type DMovieConnection = {
-  __typename?: 'DMovieConnection';
-  edges?: Maybe<Array<Maybe<DMovieEdge>>>;
-  pageInfo: PageInfoOffset;
-  totalCount?: Maybe<Scalars['Int']>;
-};
-
-export type DMovieEdge = {
-  __typename?: 'DMovieEdge';
-  node?: Maybe<DMovie>;
-};
-
 export type DNode = {
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
@@ -320,7 +308,6 @@ export type Query = {
   dActorFindOne?: Maybe<DActor>;
   dMovieActorFind?: Maybe<DMovieActorConnection>;
   dMovieActorFindOne?: Maybe<DMovieActor>;
-  dMovieFind?: Maybe<DMovieConnection>;
   dMovieFindOne?: Maybe<DMovie>;
   mActorFind?: Maybe<MActorConnection>;
   mActorFindOne?: Maybe<MActor>;
@@ -354,14 +341,6 @@ export type QueryDMovieActorFindArgs = {
 
 export type QueryDMovieActorFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-};
-
-
-export type QueryDMovieFindArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 
