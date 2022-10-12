@@ -1,7 +1,6 @@
 import * as jompx from '@jompx/constructs';
 import { auth, datasource, lookup, operation, readonly, source } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
-import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
 
 export class MySqlSchema {
 
@@ -53,7 +52,7 @@ export class MySqlSchema {
             //     // ])
             // ]
         });
-        this.types.interfaceTypes.MNode = MNode;
+        this.types.interfaceTypes['MNode'] = MNode;
 
         const MMovie = new ObjectType('MMovie', {
             interfaceTypes: [MNode],
@@ -80,7 +79,7 @@ export class MySqlSchema {
                 mMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    dataSource: this.datasources['mySql'],
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
@@ -91,12 +90,12 @@ export class MySqlSchema {
                     { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource('mySql'),
                 source('movie'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MMovie = MMovie;
+        this.types.objectTypes['MMovie'] = MMovie;
 
         const MMovieActor = new ObjectType('MMovieActor', {
             interfaceTypes: [MNode],
@@ -105,14 +104,14 @@ export class MySqlSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 mMovie: new ResolvableField({
                     returnType: MMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    dataSource: this.datasources['mySql'],
                     directives: [
                         lookup({ from: 'MMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 mActor: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MActor', isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    dataSource: this.datasources['mySql'],
                     directives: [
                         lookup({ from: 'MActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -123,12 +122,12 @@ export class MySqlSchema {
                     { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource('mySql'),
                 source('movieActor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MMovieActor = MMovieActor;
+        this.types.objectTypes['MMovieActor'] = MMovieActor;
 
         const MActor = new ObjectType('MActor', {
             interfaceTypes: [MNode],
@@ -137,7 +136,7 @@ export class MySqlSchema {
                 // An actor can have 0 or more movies.
                 mMovieActors: new ResolvableField({
                     returnType: MMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources[AppSyncDatasource.mySql],
+                    dataSource: this.datasources['mySql'],
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
@@ -148,11 +147,11 @@ export class MySqlSchema {
                     { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.mySql),
+                datasource('mySql'),
                 source('actor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
-        this.types.objectTypes.MActor = MActor;
+        this.types.objectTypes['MActor'] = MActor;
     }
 }

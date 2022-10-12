@@ -144,11 +144,11 @@
                 "name": "id",
                 "directives": [
                     {
-                        "name": "primaryKey",
+                        "name": "partitionKey",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"isPrimaryKey\":true}"
+                                "value": "{\"isPartitionKey\":true}"
                             }
                         ]
                     }
@@ -621,6 +621,20 @@
         ]
     },
     {
+        "name": "MMovieProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "MMovieActor",
         "directives": [
             {
@@ -836,6 +850,20 @@
         ]
     },
     {
+        "name": "MMovieActorProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "MActor",
         "directives": [
             {
@@ -1033,6 +1061,20 @@
         ]
     },
     {
+        "name": "MActorProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "DMovie",
         "directives": [
             {
@@ -1079,16 +1121,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"scanCursor\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
-                    }
-                ]
-            },
-            {
-                "name": "tag",
-                "arguments": [
-                    {
-                        "name": "value",
-                        "value": "{\"name\":\"test\"}"
+                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -1116,15 +1149,6 @@
                             {
                                 "name": "value",
                                 "value": "{\"isSortKey\":true}"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "tag",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"name\":\"test\"}"
                             }
                         ]
                     }
@@ -1214,11 +1238,118 @@
                 "name": "id",
                 "directives": [
                     {
-                        "name": "primaryKey",
+                        "name": "partitionKey",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"isPrimaryKey\":true}"
+                                "value": "{\"isPartitionKey\":true}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieIndex",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            },
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
+                    }
+                ]
+            },
+            {
+                "name": "datasource",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"name\":\"dynamoDb\"}"
+                    }
+                ]
+            },
+            {
+                "name": "source",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"name\":\"movie\"}"
+                    }
+                ]
+            },
+            {
+                "name": "operation",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"names\":[\"findCursor\"]}"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "url",
+                "directives": []
+            },
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "id",
+                "directives": [
+                    {
+                        "name": "partitionKey",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"isPartitionKey\":true}"
                             }
                         ]
                     }
@@ -1331,11 +1462,11 @@
                 "name": "id",
                 "directives": [
                     {
-                        "name": "primaryKey",
+                        "name": "partitionKey",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"isPrimaryKey\":true}"
+                                "value": "{\"isPartitionKey\":true}"
                             }
                         ]
                     }
@@ -1401,6 +1532,20 @@
             },
             {
                 "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieActorProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
                 "directives": []
             }
         ]
@@ -1476,11 +1621,11 @@
                 "name": "id",
                 "directives": [
                     {
-                        "name": "primaryKey",
+                        "name": "partitionKey",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"isPrimaryKey\":true}"
+                                "value": "{\"isPartitionKey\":true}"
                             }
                         ]
                     }
@@ -1546,6 +1691,20 @@
             },
             {
                 "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DActorProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
                 "directives": []
             }
         ]

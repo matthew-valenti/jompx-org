@@ -6,14 +6,14 @@ import * as jompx from '@jompx/constructs';
 // Business.
 import { PostSchema } from '@cdk/lib/post/post.construct';
 
-export interface AppSyncBuildProps extends cdk.StackProps {
+export interface AppSyncBusinessProps extends cdk.StackProps {
     graphqlApi: appsync.GraphqlApi;
     schemaBuilder: jompx.AppSyncSchemaBuilder;
 }
 
 export class AppSyncBusiness extends Construct {
 
-    constructor(scope: Construct, id: string, props: AppSyncBuildProps) {
+    constructor(scope: Construct, id: string, props: AppSyncBusinessProps) {
         super(scope, id);
 
         if (props?.schemaBuilder) {

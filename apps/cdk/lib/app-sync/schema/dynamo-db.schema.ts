@@ -1,8 +1,7 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operation, primaryKey, readonly, source, sortKey } from '@jompx/constructs'; // Custom directives.
-import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
-import { AppSyncDatasource } from '@cdk/lib/cdk/stacks/app-sync.stack';
-import { tag } from '../directives';
+import { auth, datasource, lookup, operation, partitionKey, readonly, source, sortKey } from '@jompx/constructs'; // Custom directives.
+import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField,  } from '@aws-cdk/aws-appsync-alpha';
+// import { tag } from '../directives';
 
 /**
  * Use GraphqlType for simple fields.
@@ -27,7 +26,7 @@ export class DynamoDbSchema {
                 id: new Field({
                     returnType: GraphqlType.id({ isRequired: true }),
                     directives: [
-                        primaryKey(true)
+                        partitionKey(true)
                     ]
                 }),
                 createdAt: new Field({
@@ -58,7 +57,7 @@ export class DynamoDbSchema {
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
                         ]),
                         sortKey(true),
-                        tag('test')
+                        // tag('test')
                     ]
                 }),
                 boolean: GraphqlType.boolean(),
@@ -83,7 +82,7 @@ export class DynamoDbSchema {
                 dMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type.
-                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
+                    dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
@@ -94,13 +93,32 @@ export class DynamoDbSchema {
                     { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.dynamoDb),
+                datasource('dynamoDb'),
                 source('movie'),
-                operation(['findCursor', 'findOne', 'scanCursor', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
-                tag('test')
+                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
+                // tag('test')
             ]
         });
         this.types.objectTypes['DMovie'] = DMovie;
+
+        const DMovieIndex = new ObjectType('DMovieIndex', {
+            interfaceTypes: [DNode],
+            definition: {
+                url: GraphqlType.awsUrl(),
+                name: GraphqlType.string({ isRequired: true })
+            },
+            directives: [
+                auth([
+                    { allow: 'private', provider: 'iam' },
+                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                ]),
+                datasource('dynamoDb'),
+                source('movie'),
+                // indexName('movieIndex'),
+                operation(['findCursor'])
+            ]
+        });
+        this.types.objectTypes['DMovieIndex'] = DMovieIndex;
 
         const DMovieActor = new ObjectType('DMovieActor', {
             interfaceTypes: [DNode],
@@ -109,14 +127,14 @@ export class DynamoDbSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 dMovie: new ResolvableField({
                     returnType: DMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
+                    dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({ from: 'DMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 dActor: new ResolvableField({
                     returnType: DMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
+                    dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({ from: 'DActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -127,7 +145,7 @@ export class DynamoDbSchema {
                     // { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.dynamoDb),
+                datasource('dynamoDb'),
                 source('movieActor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -141,7 +159,7 @@ export class DynamoDbSchema {
                 // An actor can have 0 or more movies.
                 dMovieActors: new ResolvableField({
                     returnType: DMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources[AppSyncDatasource.dynamoDb],
+                    dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
@@ -152,7 +170,7 @@ export class DynamoDbSchema {
                     // { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
-                datasource(AppSyncDatasource.dynamoDb),
+                datasource('dynamoDb'),
                 source('actor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]

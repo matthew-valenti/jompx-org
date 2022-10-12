@@ -85,6 +85,11 @@ export type DActorEdge = {
   node?: Maybe<DActor>;
 };
 
+export type DActorProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type DMovie = DNode & {
   __typename?: 'DMovie';
   boolean?: Maybe<Scalars['Boolean']>;
@@ -135,6 +140,27 @@ export type DMovieActorEdge = {
   node?: Maybe<DMovieActor>;
 };
 
+export type DMovieActorProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type DMovieIndex = DNode & {
+  __typename?: 'DMovieIndex';
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+  url?: Maybe<Scalars['AWSURL']>;
+};
+
+export type DMovieProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type DNode = {
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
@@ -164,6 +190,11 @@ export type MActorConnection = {
 export type MActorEdge = {
   __typename?: 'MActorEdge';
   node?: Maybe<MActor>;
+};
+
+export type MActorProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MMovie = MNode & {
@@ -215,6 +246,11 @@ export type MMovieActorEdge = {
   node?: Maybe<MMovieActor>;
 };
 
+export type MMovieActorProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type MMovieConnection = {
   __typename?: 'MMovieConnection';
   edges?: Maybe<Array<Maybe<MMovieEdge>>>;
@@ -225,6 +261,11 @@ export type MMovieConnection = {
 export type MMovieEdge = {
   __typename?: 'MMovieEdge';
   node?: Maybe<MMovie>;
+};
+
+export type MMovieProps = {
+  consistentRead?: InputMaybe<Scalars['Boolean']>;
+  returnConsumedCapacity?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MNode = {
@@ -328,6 +369,7 @@ export type QueryDActorFindArgs = {
 
 export type QueryDActorFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DActorProps>;
 };
 
 
@@ -341,11 +383,13 @@ export type QueryDMovieActorFindArgs = {
 
 export type QueryDMovieActorFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DMovieActorProps>;
 };
 
 
 export type QueryDMovieFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DMovieProps>;
 };
 
 
@@ -359,6 +403,7 @@ export type QueryMActorFindArgs = {
 
 export type QueryMActorFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<MActorProps>;
 };
 
 
@@ -372,6 +417,7 @@ export type QueryMMovieActorFindArgs = {
 
 export type QueryMMovieActorFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<MMovieActorProps>;
 };
 
 
@@ -385,6 +431,7 @@ export type QueryMMovieFindArgs = {
 
 export type QueryMMovieFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<MMovieProps>;
 };
 
 export type MPostFindExampleMutationVariables = Exact<{

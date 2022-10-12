@@ -31,41 +31,5 @@ export class DynamoDbStack extends cdk.Stack {
             // sortKey: { name: 'name', type: dynamodb.AttributeType.STRING }
         });
         this.tables.push(movieTable);
-
-        // // Create AppSync resource.
-        // const appSync = new jompx.AppSync(this, 'AppSync', {
-        //     name: 'api',
-        //     additionalAuthorizationModes: [
-        //         {
-        //             authorizationType: appsync.AuthorizationType.USER_POOL,
-        //             userPoolConfig: { userPool: props.userPool }
-        //         }
-        //     ]
-        // });
-
-        // this.graphqlApi = appSync.graphqlApi;
-        // this.schemaBuilder = appSync.schemaBuilder;
-
-        // // Add MySQL datasource.
-        // const jompxMySqlDataSource = new jmysql.AppSyncMySqlDataSourceConstruct(this, AppSyncDatasource.mySql, { // TODO: Not thrilled about having the name construct here!!??
-        //     graphqlSchema: {
-        //         filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
-        //         directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
-        //     },
-        //     lambdaFunctionProps: { memorySize: 128 * 2 }
-        // });
-        // this.schemaBuilder.addDataSource(AppSyncDatasource.mySql, jompxMySqlDataSource.lambdaFunction);
-
-        // // Add auto build GraphQL endpoints.
-        // new AppSyncBuild(this, 'AppSyncBuild', {
-        //     graphqlApi: this.graphqlApi,
-        //     schemaBuilder: this.schemaBuilder
-        // });
-
-        // // Add business GraphQL endpoints.
-        // new AppSyncBusiness(this, 'AppSyncBusiness', {
-        //     graphqlApi: this.graphqlApi,
-        //     schemaBuilder: this.schemaBuilder
-        // });
     }
 }

@@ -680,6 +680,13 @@ nx run cdk:graphql-schema
 npm run codegen
 // Run in Jompx NOT in org (to copy over fresh graphql files).
 nx run constructs:cschema
+
+mutation MyMutation {
+  dMovieUpdateOne(input: {name: "movie2"}, filter:"{ \"id\": { \"$eq\": \"1\" } }") {
+    id
+    name
+  }
+}
 ```
 
 ### CDK Watch & Hotswap
