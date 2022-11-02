@@ -57,6 +57,66 @@
         "fields": []
     },
     {
+        "name": "FindCursorProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "Boolean",
+        "fields": []
+    },
+    {
+        "name": "FindOneProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "consistentRead",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "InsertOneProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "returnValues",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "UpdateOneProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "returnValues",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "MNode",
         "directives": [],
         "fields": [
@@ -142,17 +202,7 @@
         "fields": [
             {
                 "name": "id",
-                "directives": [
-                    {
-                        "name": "partitionKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isPartitionKey\":true}"
-                            }
-                        ]
-                    }
-                ]
+                "directives": []
             },
             {
                 "name": "createdAt",
@@ -378,10 +428,6 @@
         ]
     },
     {
-        "name": "Boolean",
-        "fields": []
-    },
-    {
         "name": "Float",
         "fields": []
     },
@@ -550,7 +596,49 @@
                 ]
             },
             {
+                "name": "dMovieFindCursor",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
                 "name": "dMovieFindOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "dMovieIndexFindCursor",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -621,15 +709,315 @@
         ]
     },
     {
-        "name": "MMovieProps",
+        "name": "MMovieInput",
         "directives": [],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "name",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "boolean",
+                "directives": []
+            },
+            {
+                "name": "float",
+                "directives": []
+            },
+            {
+                "name": "int",
+                "directives": []
+            },
+            {
+                "name": "date",
+                "directives": []
+            },
+            {
+                "name": "dateTime",
+                "directives": []
+            },
+            {
+                "name": "email",
+                "directives": []
+            },
+            {
+                "name": "ipAddress",
+                "directives": []
+            },
+            {
+                "name": "json",
+                "directives": []
+            },
+            {
+                "name": "phone",
+                "directives": []
+            },
+            {
+                "name": "time",
+                "directives": []
+            },
+            {
+                "name": "timestamp",
+                "directives": []
+            },
+            {
+                "name": "url",
+                "directives": []
+            },
+            {
+                "name": "sourceField",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "Mutation",
+        "directives": [],
+        "fields": [
+            {
+                "name": "mMovieInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mMovieUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mMovieActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mMovieActorUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mActorUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "dMovieUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "dMovieActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dMovieActorUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dActorUpdateOne",
+                "directives": [
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mPostFindExample",
+                "directives": [
+                    {
+                        "name": "auth",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "mPostQueryExample",
+                "directives": [
+                    {
+                        "name": "auth",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MMovieUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
+                "directives": []
+            },
+            {
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -850,15 +1238,37 @@
         ]
     },
     {
-        "name": "MMovieActorProps",
+        "name": "MMovieActorInput",
         "directives": [],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "movieId",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "actorId",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MMovieActorUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
+                "directives": []
+            },
+            {
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -1061,15 +1471,47 @@
         ]
     },
     {
-        "name": "MActorProps",
+        "name": "MActorInput",
         "directives": [],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "name",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "MActorUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieAttributes",
+        "directives": [],
+        "fields": [
+            {
+                "name": "attribute1",
+                "directives": []
+            },
+            {
+                "name": "attribute2",
                 "directives": []
             }
         ]
@@ -1090,11 +1532,15 @@
                 ]
             },
             {
+                "name": "aws_api_key",
+                "arguments": []
+            },
+            {
                 "name": "auth",
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}"
                     }
                 ]
             },
@@ -1135,20 +1581,15 @@
                         "arguments": []
                     },
                     {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    },
+                    {
                         "name": "auth",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "sortKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isSortKey\":true}"
+                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}"
                             }
                         ]
                     }
@@ -1221,6 +1662,28 @@
                 ]
             },
             {
+                "name": "attributes",
+                "directives": []
+            },
+            {
+                "name": "owners",
+                "directives": []
+            },
+            {
+                "name": "groups",
+                "directives": [
+                    {
+                        "name": "set",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"dataType\":\"string\"}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "dMovieActors",
                 "directives": [
                     {
@@ -1236,17 +1699,7 @@
             },
             {
                 "name": "id",
-                "directives": [
-                    {
-                        "name": "partitionKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isPartitionKey\":true}"
-                            }
-                        ]
-                    }
-                ]
+                "directives": []
             },
             {
                 "name": "createdAt",
@@ -1267,15 +1720,201 @@
         ]
     },
     {
-        "name": "DMovieProps",
-        "directives": [],
+        "name": "DMovieCursorEdge",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            },
+            {
+                "name": "aws_api_key",
+                "arguments": []
+            }
+        ],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "cursor",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieCursorConnection",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            },
+            {
+                "name": "aws_api_key",
+                "arguments": []
+            }
+        ],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieAttributesInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "attribute1",
+                "directives": []
+            },
+            {
+                "name": "attribute2",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "name",
+                "directives": []
+            },
+            {
+                "name": "boolean",
+                "directives": []
+            },
+            {
+                "name": "float",
+                "directives": []
+            },
+            {
+                "name": "decimal",
+                "directives": []
+            },
+            {
+                "name": "int",
+                "directives": []
+            },
+            {
+                "name": "date",
+                "directives": []
+            },
+            {
+                "name": "dateTime",
+                "directives": []
+            },
+            {
+                "name": "email",
+                "directives": []
+            },
+            {
+                "name": "ipAddress",
+                "directives": []
+            },
+            {
+                "name": "json",
+                "directives": []
+            },
+            {
+                "name": "phone",
+                "directives": []
+            },
+            {
+                "name": "time",
+                "directives": []
+            },
+            {
+                "name": "timestamp",
+                "directives": []
+            },
+            {
+                "name": "url",
+                "directives": []
+            },
+            {
+                "name": "sourceField",
+                "directives": []
+            },
+            {
+                "name": "attributes",
+                "directives": []
+            },
+            {
+                "name": "owners",
+                "directives": []
+            },
+            {
+                "name": "groups",
+                "directives": []
+            },
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
+                "directives": []
+            },
+            {
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -1343,17 +1982,7 @@
             },
             {
                 "name": "id",
-                "directives": [
-                    {
-                        "name": "partitionKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isPartitionKey\":true}"
-                            }
-                        ]
-                    }
-                ]
+                "directives": []
             },
             {
                 "name": "createdAt",
@@ -1369,6 +1998,64 @@
             },
             {
                 "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieIndexCursorEdge",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "cursor",
+                "directives": []
+            },
+            {
+                "name": "node",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieIndexCursorConnection",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "edges",
+                "directives": []
+            },
+            {
+                "name": "pageInfo",
+                "directives": []
+            },
+            {
+                "name": "totalCount",
                 "directives": []
             }
         ]
@@ -1460,17 +2147,7 @@
             },
             {
                 "name": "id",
-                "directives": [
-                    {
-                        "name": "partitionKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isPartitionKey\":true}"
-                            }
-                        ]
-                    }
-                ]
+                "directives": []
             },
             {
                 "name": "createdAt",
@@ -1537,15 +2214,57 @@
         ]
     },
     {
-        "name": "DMovieActorProps",
+        "name": "DMovieActorInput",
         "directives": [],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "movieId",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "actorId",
+                "directives": []
+            },
+            {
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DMovieActorUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
+                "directives": []
+            },
+            {
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -1619,17 +2338,7 @@
             },
             {
                 "name": "id",
-                "directives": [
-                    {
-                        "name": "partitionKey",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"isPartitionKey\":true}"
-                            }
-                        ]
-                    }
-                ]
+                "directives": []
             },
             {
                 "name": "createdAt",
@@ -1696,15 +2405,53 @@
         ]
     },
     {
-        "name": "DActorProps",
+        "name": "DActorInput",
         "directives": [],
         "fields": [
             {
-                "name": "consistentRead",
+                "name": "name",
                 "directives": []
             },
             {
-                "name": "returnConsumedCapacity",
+                "name": "id",
+                "directives": []
+            },
+            {
+                "name": "createdAt",
+                "directives": []
+            },
+            {
+                "name": "createdBy",
+                "directives": []
+            },
+            {
+                "name": "updatedAt",
+                "directives": []
+            },
+            {
+                "name": "updatedBy",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DActorUpdateOneInput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "set",
+                "directives": []
+            },
+            {
+                "name": "unset",
+                "directives": []
+            },
+            {
+                "name": "inc",
+                "directives": []
+            },
+            {
+                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -1717,7 +2464,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}"
                     }
                 ]
             }
@@ -1749,7 +2496,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}"
+                        "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}"
                     }
                 ]
             }
@@ -1797,41 +2544,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"rules\":[{\"allow\":\"owner\",\"provider\":\"iam\"}]}"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name": "Mutation",
-        "directives": [],
-        "fields": [
-            {
-                "name": "mPostFindExample",
-                "directives": [
-                    {
-                        "name": "auth",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "mPostQueryExample",
-                "directives": [
-                    {
-                        "name": "auth",
-                        "arguments": [
-                            {
-                                "name": "value",
-                                "value": "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}"
+                                "value": "{\"rules\":[{\"allow\":\"owners\",\"provider\":\"iam\"}]}"
                             }
                         ]
                     }
@@ -1936,6 +2649,25 @@
             {
                 "name": "test",
                 "directives": []
+            }
+        ]
+    },
+    {
+        "name": "Subscription",
+        "directives": [],
+        "fields": [
+            {
+                "name": "dMovieUpdated",
+                "directives": [
+                    {
+                        "name": "aws_subscribe",
+                        "arguments": [
+                            {
+                                "name": "mutations"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },

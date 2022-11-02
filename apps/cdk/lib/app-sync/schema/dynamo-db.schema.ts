@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operation, partitionKey, readonly, source, sortKey } from '@jompx/constructs'; // Custom directives.
+import { auth, datasource, lookup, operation, partitionKey, readonly, set, source, sortKey } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField,  } from '@aws-cdk/aws-appsync-alpha';
 // import { tag } from '../directives';
 
@@ -25,9 +25,9 @@ export class DynamoDbSchema {
             definition: {
                 id: new Field({
                     returnType: GraphqlType.id({ isRequired: true }),
-                    directives: [
-                        partitionKey(true)
-                    ]
+                    // directives: [
+                    //     partitionKey(true)
+                    // ]
                 }),
                 createdAt: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true })
@@ -45,6 +45,18 @@ export class DynamoDbSchema {
         });
         this.types.interfaceTypes['DNode'] = DNode;
 
+        const DMovieAttributes = new ObjectType('DMovieAttributes', {
+            definition: {
+                attribute1: new Field({
+                    returnType: GraphqlType.string()
+                }),
+                attribute2: new Field({
+                    returnType: GraphqlType.string()
+                })
+            }
+        });
+        this.types.objectTypes['DMovieAttributes'] = DMovieAttributes;
+
         const DMovie = new ObjectType('DMovie', {
             interfaceTypes: [DNode],
             definition: {
@@ -55,8 +67,9 @@ export class DynamoDbSchema {
                         auth([
                             { allow: 'private', provider: 'iam' },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                            { allow: 'private', provider: 'apiKey' },
                         ]),
-                        sortKey(true),
+                        // sortKey(true),
                         // tag('test')
                     ]
                 }),
@@ -79,6 +92,16 @@ export class DynamoDbSchema {
                         source('sourceField')
                     ]
                 }),
+                attributes: new Field({
+                    returnType: DMovieAttributes.attribute(),
+                }),
+                owners: GraphqlType.string({isList: true}),
+                groups: new Field({
+                    returnType: GraphqlType.string({isList: true}),
+                    directives: [
+                        set('string')
+                    ]
+                }),
                 dMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type.
@@ -91,7 +114,8 @@ export class DynamoDbSchema {
             directives: [
                 auth([
                     { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { allow: 'private', provider: 'userPool', groups: ['admin'] },
+                    { allow: 'private', provider: 'apiKey' }
                 ]),
                 datasource('dynamoDb'),
                 source('movie'),

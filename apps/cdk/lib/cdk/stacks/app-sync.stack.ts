@@ -32,6 +32,12 @@ export class AppSyncStack extends cdk.Stack {
                 {
                     authorizationType: appsync.AuthorizationType.USER_POOL,
                     userPoolConfig: { userPool: props.userPool }
+                },
+                {
+                    authorizationType: appsync.AuthorizationType.API_KEY,
+                    apiKeyConfig: {
+                        expires: cdk.Expiration.after(cdk.Duration.days(365)),
+                    }
                 }
             ]
         });

@@ -762,6 +762,16 @@ npm install --save-dev @nxtend/ionic-angular
 
 // Create app.
 nx generate @nxtend/ionic-angular:application --name admin --template sidemenu
+nx run admin:serve
+
+// Generate
+npm i @ionic/angular-toolkit
+npx nx g @ionic/angular-toolkit:page pages/subscription --routing --project=admin -dry-run
+
+// Install AWS Amplify
+// TODO: Use latest version.
+npm i aws-amplify@4.3.19
+
 ```
 
 Root files changed:
@@ -899,6 +909,7 @@ Interesting graphQL query generator with autocomplete etc. called TypeScript-DSL
 Do we want native GraphQL which kind of a bummer or something like this which is custom?
 Can it keep up with GraphQL changes?
 https://github.com/babyfish-ct/graphql-ts-client
+Copy paste schema.graphql into AppSync (and delete directives) to see the schema error.
 
 Aggregate query would be nice e.g.
 aggregate {

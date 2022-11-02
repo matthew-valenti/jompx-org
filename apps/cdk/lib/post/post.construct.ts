@@ -68,7 +68,7 @@ export class PostSchema extends Construct {
             id: new Field({
                 returnType: GraphqlType.id(),
                 directives: [
-                    jompx.auth([{ allow: 'owner', provider: 'iam' }]) // TODO: Implement field level security.
+                    jompx.auth([{ allow: 'owners', provider: 'iam' }]) // TODO: Implement field level security.
                 ]
             }),
         };
