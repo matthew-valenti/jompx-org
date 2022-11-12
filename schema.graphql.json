@@ -659,65 +659,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "DActorUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "DMovie",
         "description": null,
@@ -903,13 +844,17 @@
             "deprecationReason": null
           },
           {
-            "name": "json",
+            "name": "list",
             "description": null,
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "AWSJSON",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1337,65 +1282,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "DMovieActorUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "DMovieAttributes",
         "description": null,
@@ -1420,6 +1306,50 @@
               "kind": "SCALAR",
               "name": "String",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute3",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute4",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute5",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1455,6 +1385,50 @@
               "kind": "SCALAR",
               "name": "String",
               "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute3",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute4",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "attribute5",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
@@ -1917,12 +1891,16 @@
             "deprecationReason": null
           },
           {
-            "name": "json",
+            "name": "list",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "AWSJSON",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
@@ -2034,65 +2012,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "AWSURL",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "DMovieUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DMovieInput",
               "ofType": null
             },
             "defaultValue": null,
@@ -2546,65 +2465,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "MActorUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MActorInput",
               "ofType": null
             },
             "defaultValue": null,
@@ -3160,65 +3020,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "MMovieActorUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieActorInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "MMovieConnection",
         "description": null,
@@ -3464,65 +3265,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "AWSURL",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "MMovieUpdateOneInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "addToSet",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "inc",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "set",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "unset",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "MMovieInput",
               "ofType": null
             },
             "defaultValue": null,
@@ -3983,8 +3725,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DActorUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },
@@ -4089,8 +3831,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DMovieActorUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },
@@ -4195,8 +3937,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "DMovieUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },
@@ -4301,8 +4043,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "MActorUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },
@@ -4407,8 +4149,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "MMovieActorUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },
@@ -4513,8 +4255,8 @@
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "MMovieUpdateOneInput",
+                    "kind": "SCALAR",
+                    "name": "AWSJSON",
                     "ofType": null
                   }
                 },

@@ -1,6 +1,6 @@
 import * as jompx from '@jompx/constructs';
 import { auth, datasource, lookup, operation, partitionKey, readonly, set, source, sortKey } from '@jompx/constructs'; // Custom directives.
-import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField,  } from '@aws-cdk/aws-appsync-alpha';
+import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField, } from '@aws-cdk/aws-appsync-alpha';
 // import { tag } from '../directives';
 
 /**
@@ -52,6 +52,18 @@ export class DynamoDbSchema {
                 }),
                 attribute2: new Field({
                     returnType: GraphqlType.string()
+                }),
+                attribute3: new Field({
+                    returnType: GraphqlType.int()
+                }),
+                attribute4: new Field({
+                    returnType: GraphqlType.string({ isList: true })
+                }),
+                attribute5: new Field({
+                    returnType: GraphqlType.string({ isList: true }),
+                    directives: [
+                        set('string')
+                    ]
                 })
             }
         });
@@ -81,7 +93,7 @@ export class DynamoDbSchema {
                 dateTime: GraphqlType.awsDateTime(),
                 email: GraphqlType.awsEmail(),
                 ipAddress: GraphqlType.awsIpAddress(),
-                json: GraphqlType.awsJson(),
+                // json: GraphqlType.awsJson(),
                 phone: GraphqlType.awsPhone(),
                 time: GraphqlType.awsTime(),
                 timestamp: GraphqlType.awsTimestamp(),
@@ -89,15 +101,21 @@ export class DynamoDbSchema {
                 sourceField: new Field({
                     returnType: GraphqlType.string(),
                     directives: [
-                        source('sourceField')
+                        source('source')
                     ]
                 }),
+                list: GraphqlType.string({ isList: true }),
                 attributes: new Field({
                     returnType: DMovieAttributes.attribute(),
                 }),
-                owners: GraphqlType.string({isList: true}),
+                owners: new Field({
+                    returnType: GraphqlType.string({ isList: true }),
+                    directives: [
+                        set('string')
+                    ]
+                }),
                 groups: new Field({
-                    returnType: GraphqlType.string({isList: true}),
+                    returnType: GraphqlType.string({ isList: true }),
                     directives: [
                         set('string')
                     ]

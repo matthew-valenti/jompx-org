@@ -1001,28 +1001,6 @@
         ]
     },
     {
-        "name": "MMovieUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
-                "directives": []
-            }
-        ]
-    },
-    {
         "name": "MMovieActor",
         "directives": [
             {
@@ -1252,28 +1230,6 @@
         ]
     },
     {
-        "name": "MMovieActorUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
-                "directives": []
-            }
-        ]
-    },
-    {
         "name": "MActor",
         "directives": [
             {
@@ -1481,28 +1437,6 @@
         ]
     },
     {
-        "name": "MActorUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
-                "directives": []
-            }
-        ]
-    },
-    {
         "name": "DMovieAttributes",
         "directives": [],
         "fields": [
@@ -1513,6 +1447,28 @@
             {
                 "name": "attribute2",
                 "directives": []
+            },
+            {
+                "name": "attribute3",
+                "directives": []
+            },
+            {
+                "name": "attribute4",
+                "directives": []
+            },
+            {
+                "name": "attribute5",
+                "directives": [
+                    {
+                        "name": "set",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"dataType\":\"string\"}"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -1628,10 +1584,6 @@
                 "directives": []
             },
             {
-                "name": "json",
-                "directives": []
-            },
-            {
                 "name": "phone",
                 "directives": []
             },
@@ -1655,11 +1607,15 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"name\":\"sourceField\"}"
+                                "value": "{\"name\":\"source\"}"
                             }
                         ]
                     }
                 ]
+            },
+            {
+                "name": "list",
+                "directives": []
             },
             {
                 "name": "attributes",
@@ -1667,7 +1623,17 @@
             },
             {
                 "name": "owners",
-                "directives": []
+                "directives": [
+                    {
+                        "name": "set",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"dataType\":\"string\"}"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "name": "groups",
@@ -1796,6 +1762,18 @@
             {
                 "name": "attribute2",
                 "directives": []
+            },
+            {
+                "name": "attribute3",
+                "directives": []
+            },
+            {
+                "name": "attribute4",
+                "directives": []
+            },
+            {
+                "name": "attribute5",
+                "directives": []
             }
         ]
     },
@@ -1840,10 +1818,6 @@
                 "directives": []
             },
             {
-                "name": "json",
-                "directives": []
-            },
-            {
                 "name": "phone",
                 "directives": []
             },
@@ -1861,6 +1835,10 @@
             },
             {
                 "name": "sourceField",
+                "directives": []
+            },
+            {
+                "name": "list",
                 "directives": []
             },
             {
@@ -1893,28 +1871,6 @@
             },
             {
                 "name": "updatedBy",
-                "directives": []
-            }
-        ]
-    },
-    {
-        "name": "DMovieUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
                 "directives": []
             }
         ]
@@ -2248,28 +2204,6 @@
         ]
     },
     {
-        "name": "DMovieActorUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
-                "directives": []
-            }
-        ]
-    },
-    {
         "name": "DActor",
         "directives": [
             {
@@ -2430,28 +2364,6 @@
             },
             {
                 "name": "updatedBy",
-                "directives": []
-            }
-        ]
-    },
-    {
-        "name": "DActorUpdateOneInput",
-        "directives": [],
-        "fields": [
-            {
-                "name": "set",
-                "directives": []
-            },
-            {
-                "name": "unset",
-                "directives": []
-            },
-            {
-                "name": "inc",
-                "directives": []
-            },
-            {
-                "name": "addToSet",
                 "directives": []
             }
         ]

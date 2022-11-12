@@ -95,13 +95,6 @@ export type DActorInput = {
   updatedBy?: InputMaybe<Scalars['AWSDateTime']>;
 };
 
-export type DActorUpdateOneInput = {
-  addToSet?: InputMaybe<DActorInput>;
-  inc?: InputMaybe<DActorInput>;
-  set?: InputMaybe<DActorInput>;
-  unset?: InputMaybe<DActorInput>;
-};
-
 export type DMovie = DNode & {
   __typename?: 'DMovie';
   attributes?: Maybe<DMovieAttributes>;
@@ -118,7 +111,7 @@ export type DMovie = DNode & {
   id?: Maybe<Scalars['ID']>;
   int?: Maybe<Scalars['Int']>;
   ipAddress?: Maybe<Scalars['AWSIPAddress']>;
-  json?: Maybe<Scalars['AWSJSON']>;
+  list?: Maybe<Array<Maybe<Scalars['String']>>>;
   name?: Maybe<Scalars['String']>;
   owners?: Maybe<Array<Maybe<Scalars['String']>>>;
   phone?: Maybe<Scalars['AWSPhone']>;
@@ -165,22 +158,21 @@ export type DMovieActorInput = {
   updatedBy?: InputMaybe<Scalars['AWSDateTime']>;
 };
 
-export type DMovieActorUpdateOneInput = {
-  addToSet?: InputMaybe<DMovieActorInput>;
-  inc?: InputMaybe<DMovieActorInput>;
-  set?: InputMaybe<DMovieActorInput>;
-  unset?: InputMaybe<DMovieActorInput>;
-};
-
 export type DMovieAttributes = {
   __typename?: 'DMovieAttributes';
   attribute1?: Maybe<Scalars['String']>;
   attribute2?: Maybe<Scalars['String']>;
+  attribute3?: Maybe<Scalars['Int']>;
+  attribute4?: Maybe<Array<Maybe<Scalars['String']>>>;
+  attribute5?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type DMovieAttributesInput = {
   attribute1?: InputMaybe<Scalars['String']>;
   attribute2?: InputMaybe<Scalars['String']>;
+  attribute3?: InputMaybe<Scalars['Int']>;
+  attribute4?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  attribute5?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type DMovieCursorConnection = {
@@ -234,7 +226,7 @@ export type DMovieInput = {
   id?: InputMaybe<Scalars['ID']>;
   int?: InputMaybe<Scalars['Int']>;
   ipAddress?: InputMaybe<Scalars['AWSIPAddress']>;
-  json?: InputMaybe<Scalars['AWSJSON']>;
+  list?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   name?: InputMaybe<Scalars['String']>;
   owners?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   phone?: InputMaybe<Scalars['AWSPhone']>;
@@ -244,13 +236,6 @@ export type DMovieInput = {
   updatedAt?: InputMaybe<Scalars['AWSDateTime']>;
   updatedBy?: InputMaybe<Scalars['AWSDateTime']>;
   url?: InputMaybe<Scalars['AWSURL']>;
-};
-
-export type DMovieUpdateOneInput = {
-  addToSet?: InputMaybe<DMovieInput>;
-  inc?: InputMaybe<DMovieInput>;
-  set?: InputMaybe<DMovieInput>;
-  unset?: InputMaybe<DMovieInput>;
 };
 
 export type DNode = {
@@ -301,13 +286,6 @@ export type MActorEdge = {
 
 export type MActorInput = {
   name?: InputMaybe<Scalars['String']>;
-};
-
-export type MActorUpdateOneInput = {
-  addToSet?: InputMaybe<MActorInput>;
-  inc?: InputMaybe<MActorInput>;
-  set?: InputMaybe<MActorInput>;
-  unset?: InputMaybe<MActorInput>;
 };
 
 export type MMovie = MNode & {
@@ -364,13 +342,6 @@ export type MMovieActorInput = {
   movieId?: InputMaybe<Scalars['ID']>;
 };
 
-export type MMovieActorUpdateOneInput = {
-  addToSet?: InputMaybe<MMovieActorInput>;
-  inc?: InputMaybe<MMovieActorInput>;
-  set?: InputMaybe<MMovieActorInput>;
-  unset?: InputMaybe<MMovieActorInput>;
-};
-
 export type MMovieConnection = {
   __typename?: 'MMovieConnection';
   edges?: Maybe<Array<Maybe<MMovieEdge>>>;
@@ -398,13 +369,6 @@ export type MMovieInput = {
   time?: InputMaybe<Scalars['AWSTime']>;
   timestamp?: InputMaybe<Scalars['AWSTimestamp']>;
   url?: InputMaybe<Scalars['AWSURL']>;
-};
-
-export type MMovieUpdateOneInput = {
-  addToSet?: InputMaybe<MMovieInput>;
-  inc?: InputMaybe<MMovieInput>;
-  set?: InputMaybe<MMovieInput>;
-  unset?: InputMaybe<MMovieInput>;
 };
 
 export type MNode = {
@@ -481,7 +445,7 @@ export type MutationDActorInsertOneArgs = {
 export type MutationDActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: DActorUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -495,7 +459,7 @@ export type MutationDMovieActorInsertOneArgs = {
 export type MutationDMovieActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: DMovieActorUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -509,7 +473,7 @@ export type MutationDMovieInsertOneArgs = {
 export type MutationDMovieUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: DMovieUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -523,7 +487,7 @@ export type MutationMActorInsertOneArgs = {
 export type MutationMActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: MActorUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -537,7 +501,7 @@ export type MutationMMovieActorInsertOneArgs = {
 export type MutationMMovieActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: MMovieActorUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -551,7 +515,7 @@ export type MutationMMovieInsertOneArgs = {
 export type MutationMMovieUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
-  update: MMovieUpdateOneInput;
+  update: Scalars['AWSJSON'];
 };
 
 

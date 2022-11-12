@@ -159,38 +159,32 @@ input MMovieInput {
 type Mutation {
   mMovieInsertOne(insert: MMovieInput! filter: AWSJSON props: InsertOneProps): MMovie
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
-  mMovieUpdateOne(filter: AWSJSON update: MMovieUpdateOneInput! props: UpdateOneProps): MMovie
+  mMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): MMovie
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieActorInsertOne(insert: MMovieActorInput! filter: AWSJSON props: InsertOneProps): MMovieActor
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
-  mMovieActorUpdateOne(filter: AWSJSON update: MMovieActorUpdateOneInput! props: UpdateOneProps): MMovieActor
+  mMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): MMovieActor
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mActorInsertOne(insert: MActorInput! filter: AWSJSON props: InsertOneProps): MActor
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
-  mActorUpdateOne(filter: AWSJSON update: MActorUpdateOneInput! props: UpdateOneProps): MActor
+  mActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): MActor
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   dMovieInsertOne(insert: DMovieInput! filter: AWSJSON props: InsertOneProps): DMovie
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_api_key
-  dMovieUpdateOne(filter: AWSJSON update: DMovieUpdateOneInput! props: UpdateOneProps): DMovie
+  dMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): DMovie
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_api_key
   dMovieActorInsertOne(insert: DMovieActorInput! filter: AWSJSON props: InsertOneProps): DMovieActor
   @aws_cognito_user_pools(cognito_groups: ["admin"])
-  dMovieActorUpdateOne(filter: AWSJSON update: DMovieActorUpdateOneInput! props: UpdateOneProps): DMovieActor
+  dMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): DMovieActor
   @aws_cognito_user_pools(cognito_groups: ["admin"])
   dActorInsertOne(insert: DActorInput! filter: AWSJSON props: InsertOneProps): DActor
   @aws_cognito_user_pools(cognito_groups: ["admin"])
-  dActorUpdateOne(filter: AWSJSON update: DActorUpdateOneInput! props: UpdateOneProps): DActor
+  dActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): DActor
   @aws_cognito_user_pools(cognito_groups: ["admin"])
   mPostFindExample(input: MPostFindExampleInput!): MPostFindExampleOutput
   @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}")
   mPostQueryExample(input: MPostQueryExampleInput!): MPostQueryExampleOutput
   @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"}]}")
-}
-input MMovieUpdateOneInput {
-  set: MMovieInput
-  unset: MMovieInput
-  inc: MMovieInput
-  addToSet: MMovieInput
 }
 type MMovieActor implements MNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}") @datasource(value: "{\"name\":\"mySql\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   movieId: ID
@@ -222,12 +216,6 @@ input MMovieActorInput {
   movieId: ID
   actorId: ID
 }
-input MMovieActorUpdateOneInput {
-  set: MMovieActorInput
-  unset: MMovieActorInput
-  inc: MMovieActorInput
-  addToSet: MMovieActorInput
-}
 type MActor implements MNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}") @datasource(value: "{\"name\":\"mySql\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   mMovieActors: [MMovieActor]
@@ -254,15 +242,13 @@ type MActorConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]
 input MActorInput {
   name: String
 }
-input MActorUpdateOneInput {
-  set: MActorInput
-  unset: MActorInput
-  inc: MActorInput
-  addToSet: MActorInput
-}
 type DMovieAttributes {
   attribute1: String
   attribute2: String
+  attribute3: Int
+  attribute4: [String]
+  attribute5: [String]
+  @set(value: "{\"dataType\":\"string\"}")
 }
 type DMovie implements DNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_api_key @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}") @datasource(value: "{\"name\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
@@ -275,15 +261,16 @@ type DMovie implements DNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["
   dateTime: AWSDateTime
   email: AWSEmail
   ipAddress: AWSIPAddress
-  json: AWSJSON
   phone: AWSPhone
   time: AWSTime
   timestamp: AWSTimestamp
   url: AWSURL
   sourceField: String
-  @source(value: "{\"name\":\"sourceField\"}")
+  @source(value: "{\"name\":\"source\"}")
+  list: [String]
   attributes: DMovieAttributes
   owners: [String]
+  @set(value: "{\"dataType\":\"string\"}")
   groups: [String]
   @set(value: "{\"dataType\":\"string\"}")
   dMovieActors: [DMovieActor]!
@@ -306,6 +293,9 @@ type DMovieCursorConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["a
 input DMovieAttributesInput {
   attribute1: String
   attribute2: String
+  attribute3: Int
+  attribute4: [String]
+  attribute5: [String]
 }
 input DMovieInput {
   name: String
@@ -317,12 +307,12 @@ input DMovieInput {
   dateTime: AWSDateTime
   email: AWSEmail
   ipAddress: AWSIPAddress
-  json: AWSJSON
   phone: AWSPhone
   time: AWSTime
   timestamp: AWSTimestamp
   url: AWSURL
   sourceField: String
+  list: [String]
   attributes: DMovieAttributesInput
   owners: [String]
   groups: [String]
@@ -331,12 +321,6 @@ input DMovieInput {
   createdBy: AWSDateTime
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
-}
-input DMovieUpdateOneInput {
-  set: DMovieInput
-  unset: DMovieInput
-  inc: DMovieInput
-  addToSet: DMovieInput
 }
 type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}") @datasource(value: "{\"name\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"findCursor\"]}") {
   url: AWSURL
@@ -386,12 +370,6 @@ input DMovieActorInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-input DMovieActorUpdateOneInput {
-  set: DMovieActorInput
-  unset: DMovieActorInput
-  inc: DMovieActorInput
-  addToSet: DMovieActorInput
-}
 type DActor implements DNode @aws_cognito_user_pools(cognito_groups: ["admin"]) @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]}]}") @datasource(value: "{\"name\":\"dynamoDb\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   dMovieActors: [DMovieActor]
@@ -417,12 +395,6 @@ input DActorInput {
   createdBy: AWSDateTime
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
-}
-input DActorUpdateOneInput {
-  set: DActorInput
-  unset: DActorInput
-  inc: DActorInput
-  addToSet: DActorInput
 }
 type PageInfoCursor @auth(value: "{\"rules\":[{\"allow\":\"private\",\"provider\":\"iam\"},{\"allow\":\"private\",\"provider\":\"userPool\",\"groups\":[\"admin\"]},{\"allow\":\"private\",\"provider\":\"apiKey\"}]}") {
   hasPreviousPage: Boolean!
