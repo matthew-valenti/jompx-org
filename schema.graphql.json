@@ -499,7 +499,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DActorConnection",
+        "name": "DActorCursorConnection",
         "description": null,
         "fields": [
           {
@@ -511,7 +511,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DActorEdge",
+                "name": "DActorCursorEdge",
                 "ofType": null
               }
             },
@@ -527,7 +527,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoOffset",
+                "name": "PageInfoCursor",
                 "ofType": null
               }
             },
@@ -554,9 +554,21 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DActorEdge",
+        "name": "DActorCursorEdge",
         "description": null,
         "fields": [
+          {
+            "name": "cursor",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "node",
             "description": null,
@@ -1030,7 +1042,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovie",
+              "name": "DActor",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1110,7 +1122,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieActorConnection",
+        "name": "DMovieActorCursorConnection",
         "description": null,
         "fields": [
           {
@@ -1122,7 +1134,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DMovieActorEdge",
+                "name": "DMovieActorCursorEdge",
                 "ofType": null
               }
             },
@@ -1138,7 +1150,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoOffset",
+                "name": "PageInfoCursor",
                 "ofType": null
               }
             },
@@ -1165,9 +1177,21 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieActorEdge",
+        "name": "DMovieActorCursorEdge",
         "description": null,
         "fields": [
+          {
+            "name": "cursor",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "node",
             "description": null,
@@ -1605,18 +1629,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "AWSDateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "url",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "AWSURL",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2114,6 +2126,53 @@
             "ofType": null
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteOneProps",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "returnConsumedCapacity",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "returnItemCollectionMetrics",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "returnValues",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
       },
       {
         "kind": "INPUT_OBJECT",
@@ -3638,6 +3697,43 @@
         "description": null,
         "fields": [
           {
+            "name": "dActorDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "DActor",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "dActorInsertOne",
             "description": null,
             "args": [
@@ -3738,6 +3834,43 @@
             "type": {
               "kind": "OBJECT",
               "name": "DActor",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "dMovieActorDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "DMovieActor",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3850,6 +3983,43 @@
             "deprecationReason": null
           },
           {
+            "name": "dMovieDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "DMovie",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "dMovieInsertOne",
             "description": null,
             "args": [
@@ -3950,6 +4120,43 @@
             "type": {
               "kind": "OBJECT",
               "name": "DMovie",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "mActorDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MActor",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4062,6 +4269,43 @@
             "deprecationReason": null
           },
           {
+            "name": "mMovieActorDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MMovieActor",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "mMovieActorInsertOne",
             "description": null,
             "args": [
@@ -4162,6 +4406,43 @@
             "type": {
               "kind": "OBJECT",
               "name": "MMovieActor",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "mMovieDeleteOne",
+            "description": null,
+            "args": [
+              {
+                "name": "filter",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "AWSJSON",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeleteOneProps",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MMovie",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4461,9 +4742,33 @@
         "description": null,
         "fields": [
           {
-            "name": "dActorFind",
+            "name": "dActorFindCursor",
             "description": null,
             "args": [
+              {
+                "name": "after",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "before",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
               {
                 "name": "filter",
                 "description": null,
@@ -4477,7 +4782,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "limit",
+                "name": "first",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -4489,11 +4794,23 @@
                 "deprecationReason": null
               },
               {
-                "name": "skip",
+                "name": "last",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -4505,7 +4822,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "AWSJSON",
+                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -4515,7 +4832,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DActorConnection",
+              "name": "DActorCursorConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4559,9 +4876,33 @@
             "deprecationReason": null
           },
           {
-            "name": "dMovieActorFind",
+            "name": "dMovieActorFindCursor",
             "description": null,
             "args": [
+              {
+                "name": "after",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "before",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
               {
                 "name": "filter",
                 "description": null,
@@ -4575,7 +4916,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "limit",
+                "name": "first",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -4587,11 +4928,23 @@
                 "deprecationReason": null
               },
               {
-                "name": "skip",
+                "name": "last",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "props",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -4603,7 +4956,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "AWSJSON",
+                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -4613,7 +4966,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovieActorConnection",
+              "name": "DMovieActorCursorConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -6432,6 +6785,28 @@
         "isRepeatable": false,
         "locations": [
           "FIELD_DEFINITION"
+        ],
+        "args": [
+          {
+            "name": "value",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "AWSJSON",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
+      },
+      {
+        "name": "secondaryIndex",
+        "description": null,
+        "isRepeatable": false,
+        "locations": [
+          "OBJECT"
         ],
         "args": [
           {

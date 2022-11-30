@@ -884,6 +884,8 @@ nx run-many --all --target=lint
 ??? Come back to lint. Nx has setup instructions: https://nx.dev/guides/eslint
 
 ## Thoughts:
+Joins on expressions phase 2.
+Infrastructure as code.
 Explain constructs and levels where Jompx is very high level constructs.
 Developer time is the highest cost line item of a typical project.
 Do not create dependent stacks on the AppSync stack. It's good practice to be able to destroy and re-create the AppSync stack if necessary (without having to destroy every stack that 
@@ -904,7 +906,7 @@ https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Wh
 It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.
 Schema first always! Which unfortunately means CDK synth.
 
-I THINK WE WANT TO USE THIS ON THE CLIENT?
+I THINK WE WANT TO USE THIS AUTOCMOPLETE CONCEPT ON THE CLIENT?
 Interesting graphQL query generator with autocomplete etc. called TypeScript-DSL i.e. syntax highlighting.
 Do we want native GraphQL which kind of a bummer or something like this which is custom?
 Can it keep up with GraphQL changes?

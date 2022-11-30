@@ -88,7 +88,7 @@ export class MySqlSchema {
             directives: [
                 auth([
                     { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { allow: 'private', provider: 'userPool', groups: ['*'] }
                 ]),
                 datasource('mySql'),
                 source('movie'),

@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operation, partitionKey, readonly, set, source, sortKey } from '@jompx/constructs'; // Custom directives.
+import { auth, datasource, lookup, operation, partitionKey, readonly, secondaryIndex, set, source, sortKey } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField, } from '@aws-cdk/aws-appsync-alpha';
 // import { tag } from '../directives';
 
@@ -69,6 +69,24 @@ export class DynamoDbSchema {
         });
         this.types.objectTypes['DMovieAttributes'] = DMovieAttributes;
 
+        const expr = {
+            $expr: {
+                $eq: [
+                    "$myField",
+                    "$myOtherField"
+                ]
+            }
+        };
+
+        // const expr2 = { owner: { $eq: 'stack.cognitoSub' } };
+        // const expr3 = { groups: { $in: ['stack.cognitoGroups'] } };
+        // const expr4 = { owner: { $eq: 'stack.cognitoSub' } };
+        // public key OR public iam allows "UnAuthenticated Role" from Cognito Identity Pools for public access instead of an API Key. 
+        // private cognito OR iam allows "uthenticated Role" from Cognito Identity Pools for private access
+        // { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
+        // 1. deny all.
+        // 2. allow 
+
         const DMovie = new ObjectType('DMovie', {
             interfaceTypes: [DNode],
             definition: {
@@ -77,7 +95,7 @@ export class DynamoDbSchema {
                     returnType: GraphqlType.string({ isRequired: true }),
                     directives: [
                         auth([
-                            { allow: 'private', provider: 'iam' },
+                            { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
                             { allow: 'private', provider: 'apiKey' },
                         ]),
@@ -122,17 +140,40 @@ export class DynamoDbSchema {
                 }),
                 dMovieActors: new ResolvableField({
                     // A movie must have actors.
-                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type.
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type example.
                     dataSource: this.datasources['dynamoDb'],
                     directives: [
-                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
+                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId', pipeline: {} })
                     ]
+
+                    /*
+                    $lookup:
+                        {
+                        from: "warehouses",
+                        let: { order_item: "$item", order_qty: "$ordered" },
+                        pipeline: [
+                            { $match:
+                                { $expr:
+                                    { $and:
+                                    [
+                                        { $eq: [ "$stock_item",  "$$order_item" ] },
+                                        { $gte: [ "$instock", "$$order_qty" ] }
+                                    ]
+                                    }
+                                }
+                            },
+                            { $project: { stock_item: 0, _id: 0 } }
+                        ],
+                        as: "stockdata"
+                        }
+                    }
+                    */
                 })
             },
             directives: [
                 auth([
                     { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] },
+                    { allow: 'private', provider: 'userPool', groups: ['*'] },
                     { allow: 'private', provider: 'apiKey' }
                 ]),
                 datasource('dynamoDb'),
@@ -146,7 +187,6 @@ export class DynamoDbSchema {
         const DMovieIndex = new ObjectType('DMovieIndex', {
             interfaceTypes: [DNode],
             definition: {
-                url: GraphqlType.awsUrl(),
                 name: GraphqlType.string({ isRequired: true })
             },
             directives: [
@@ -156,7 +196,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource('dynamoDb'),
                 source('movie'),
-                // indexName('movieIndex'),
+                secondaryIndex('movieIndex'),
                 operation(['findCursor'])
             ]
         });
@@ -175,7 +215,7 @@ export class DynamoDbSchema {
                     ]
                 }),
                 dActor: new ResolvableField({
-                    returnType: DMovie.attribute({ isRequired: true }),
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DActor', isRequired: true }), // String return type example.
                     dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({ from: 'DActor', localField: 'actorId', foreignField: 'id' })
@@ -184,12 +224,12 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    // { allow: 'private', provider: 'iam' },
+                    { allow: 'private', provider: 'iam' },
                     { allow: 'private', provider: 'userPool', groups: ['admin'] }
                 ]),
                 datasource('dynamoDb'),
                 source('movieActor'),
-                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DMovieActor'] = DMovieActor;
@@ -214,7 +254,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource('dynamoDb'),
                 source('actor'),
-                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DActor'] = DActor;

@@ -74,15 +74,16 @@ export type DActor = DNode & {
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
 };
 
-export type DActorConnection = {
-  __typename?: 'DActorConnection';
-  edges?: Maybe<Array<Maybe<DActorEdge>>>;
-  pageInfo: PageInfoOffset;
+export type DActorCursorConnection = {
+  __typename?: 'DActorCursorConnection';
+  edges?: Maybe<Array<Maybe<DActorCursorEdge>>>;
+  pageInfo: PageInfoCursor;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type DActorEdge = {
-  __typename?: 'DActorEdge';
+export type DActorCursorEdge = {
+  __typename?: 'DActorCursorEdge';
+  cursor?: Maybe<Scalars['String']>;
   node?: Maybe<DActor>;
 };
 
@@ -128,7 +129,7 @@ export type DMovieActor = DNode & {
   actorId?: Maybe<Scalars['ID']>;
   createdAt?: Maybe<Scalars['AWSDateTime']>;
   createdBy?: Maybe<Scalars['AWSDateTime']>;
-  dActor?: Maybe<DMovie>;
+  dActor?: Maybe<DActor>;
   dMovie?: Maybe<DMovie>;
   id?: Maybe<Scalars['ID']>;
   movieId?: Maybe<Scalars['ID']>;
@@ -136,15 +137,16 @@ export type DMovieActor = DNode & {
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
 };
 
-export type DMovieActorConnection = {
-  __typename?: 'DMovieActorConnection';
-  edges?: Maybe<Array<Maybe<DMovieActorEdge>>>;
-  pageInfo: PageInfoOffset;
+export type DMovieActorCursorConnection = {
+  __typename?: 'DMovieActorCursorConnection';
+  edges?: Maybe<Array<Maybe<DMovieActorCursorEdge>>>;
+  pageInfo: PageInfoCursor;
   totalCount?: Maybe<Scalars['Int']>;
 };
 
-export type DMovieActorEdge = {
-  __typename?: 'DMovieActorEdge';
+export type DMovieActorCursorEdge = {
+  __typename?: 'DMovieActorCursorEdge';
+  cursor?: Maybe<Scalars['String']>;
   node?: Maybe<DMovieActor>;
 };
 
@@ -196,7 +198,6 @@ export type DMovieIndex = DNode & {
   name: Scalars['String'];
   updatedAt?: Maybe<Scalars['AWSDateTime']>;
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
-  url?: Maybe<Scalars['AWSURL']>;
 };
 
 export type DMovieIndexCursorConnection = {
@@ -244,6 +245,12 @@ export type DNode = {
   id?: Maybe<Scalars['ID']>;
   updatedAt?: Maybe<Scalars['AWSDateTime']>;
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
+};
+
+export type DeleteOneProps = {
+  returnConsumedCapacity?: InputMaybe<Scalars['String']>;
+  returnItemCollectionMetrics?: InputMaybe<Scalars['String']>;
+  returnValues?: InputMaybe<Scalars['String']>;
 };
 
 export type FindCursorProps = {
@@ -418,20 +425,32 @@ export type MPostQueryExampleTestTestOutput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  dActorDeleteOne?: Maybe<DActor>;
   dActorInsertOne?: Maybe<DActor>;
   dActorUpdateOne?: Maybe<DActor>;
+  dMovieActorDeleteOne?: Maybe<DMovieActor>;
   dMovieActorInsertOne?: Maybe<DMovieActor>;
   dMovieActorUpdateOne?: Maybe<DMovieActor>;
+  dMovieDeleteOne?: Maybe<DMovie>;
   dMovieInsertOne?: Maybe<DMovie>;
   dMovieUpdateOne?: Maybe<DMovie>;
+  mActorDeleteOne?: Maybe<MActor>;
   mActorInsertOne?: Maybe<MActor>;
   mActorUpdateOne?: Maybe<MActor>;
+  mMovieActorDeleteOne?: Maybe<MMovieActor>;
   mMovieActorInsertOne?: Maybe<MMovieActor>;
   mMovieActorUpdateOne?: Maybe<MMovieActor>;
+  mMovieDeleteOne?: Maybe<MMovie>;
   mMovieInsertOne?: Maybe<MMovie>;
   mMovieUpdateOne?: Maybe<MMovie>;
   mPostFindExample?: Maybe<MPostFindExampleOutput>;
   mPostQueryExample?: Maybe<MPostQueryExampleOutput>;
+};
+
+
+export type MutationDActorDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
 };
 
 
@@ -449,6 +468,12 @@ export type MutationDActorUpdateOneArgs = {
 };
 
 
+export type MutationDMovieActorDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
+};
+
+
 export type MutationDMovieActorInsertOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: DMovieActorInput;
@@ -460,6 +485,12 @@ export type MutationDMovieActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
   update: Scalars['AWSJSON'];
+};
+
+
+export type MutationDMovieDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
 };
 
 
@@ -477,6 +508,12 @@ export type MutationDMovieUpdateOneArgs = {
 };
 
 
+export type MutationMActorDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
+};
+
+
 export type MutationMActorInsertOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MActorInput;
@@ -491,6 +528,12 @@ export type MutationMActorUpdateOneArgs = {
 };
 
 
+export type MutationMMovieActorDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
+};
+
+
 export type MutationMMovieActorInsertOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MMovieActorInput;
@@ -502,6 +545,12 @@ export type MutationMMovieActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
   update: Scalars['AWSJSON'];
+};
+
+
+export type MutationMMovieDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
 };
 
 
@@ -544,9 +593,9 @@ export type PageInfoOffset = {
 
 export type Query = {
   __typename?: 'Query';
-  dActorFind?: Maybe<DActorConnection>;
+  dActorFindCursor?: Maybe<DActorCursorConnection>;
   dActorFindOne?: Maybe<DActor>;
-  dMovieActorFind?: Maybe<DMovieActorConnection>;
+  dMovieActorFindCursor?: Maybe<DMovieActorCursorConnection>;
   dMovieActorFindOne?: Maybe<DMovieActor>;
   dMovieFindCursor?: Maybe<DMovieCursorConnection>;
   dMovieFindOne?: Maybe<DMovie>;
@@ -560,11 +609,14 @@ export type Query = {
 };
 
 
-export type QueryDActorFindArgs = {
+export type QueryDActorFindCursorArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['AWSJSON']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  props?: InputMaybe<FindCursorProps>;
+  sort?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -574,11 +626,14 @@ export type QueryDActorFindOneArgs = {
 };
 
 
-export type QueryDMovieActorFindArgs = {
+export type QueryDMovieActorFindCursorArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['AWSJSON']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  props?: InputMaybe<FindCursorProps>;
+  sort?: InputMaybe<Scalars['String']>;
 };
 
 
