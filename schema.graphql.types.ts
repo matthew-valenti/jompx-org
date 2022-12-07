@@ -22,46 +22,25 @@ export type Scalars = {
   AWSURL: any;
 };
 
-export enum AuthOperation {
-  DeleteMany = 'deleteMany',
-  DeleteOne = 'deleteOne',
-  Find = 'find',
-  FindCursor = 'findCursor',
-  FindOne = 'findOne',
-  InsertMany = 'insertMany',
-  InsertOne = 'insertOne',
-  UpdateMany = 'updateMany',
-  UpdateOne = 'updateOne',
-  UpsertMany = 'upsertMany',
-  UpsertOne = 'upsertOne'
+export enum AuthAction {
+  Create = 'create',
+  Delete = 'delete',
+  Read = 'read',
+  Update = 'update'
 }
 
 export enum AuthProvider {
   ApiKey = 'apiKey',
-  Function = 'function',
   Iam = 'iam',
   Oidc = 'oidc',
   UserPool = 'userPool'
 }
 
 export type AuthRule = {
-  allow: AuthStrategy;
-  groupClaim?: InputMaybe<Scalars['String']>;
-  groups?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  groupsField?: InputMaybe<Scalars['String']>;
-  operations?: InputMaybe<Array<InputMaybe<AuthOperation>>>;
-  ownerClaim?: InputMaybe<Scalars['String']>;
-  ownersField?: InputMaybe<Scalars['String']>;
+  action?: InputMaybe<Scalars['String']>;
+  conditions?: InputMaybe<Array<InputMaybe<Scalars['AWSJSON']>>>;
   provider: AuthProvider;
 };
-
-export enum AuthStrategy {
-  Custom = 'custom',
-  Groups = 'groups',
-  Owners = 'owners',
-  Private = 'private',
-  Public = 'public'
-}
 
 export type DActor = DNode & {
   __typename?: 'DActor';
@@ -158,6 +137,30 @@ export type DMovieActorInput = {
   movieId?: InputMaybe<Scalars['ID']>;
   updatedAt?: InputMaybe<Scalars['AWSDateTime']>;
   updatedBy?: InputMaybe<Scalars['AWSDateTime']>;
+};
+
+export type DMovieAnalytics = DNode & {
+  __typename?: 'DMovieAnalytics';
+  action?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['AWSDateTime']>;
+  createdBy?: Maybe<Scalars['AWSDateTime']>;
+  id?: Maybe<Scalars['ID']>;
+  movieId: Scalars['ID'];
+  timeStamp: Scalars['AWSTimestamp'];
+  updatedAt?: Maybe<Scalars['AWSDateTime']>;
+  updatedBy?: Maybe<Scalars['AWSDateTime']>;
+};
+
+export type DMovieAnalyticsConnection = {
+  __typename?: 'DMovieAnalyticsConnection';
+  edges?: Maybe<Array<Maybe<DMovieAnalyticsEdge>>>;
+  pageInfo: PageInfoOffset;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type DMovieAnalyticsEdge = {
+  __typename?: 'DMovieAnalyticsEdge';
+  node?: Maybe<DMovieAnalytics>;
 };
 
 export type DMovieAttributes = {
@@ -295,9 +298,42 @@ export type MActorInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type MFile = MNode & {
+  __typename?: 'MFile';
+  createdAt: Scalars['AWSDateTime'];
+  createdBy: Scalars['AWSDateTime'];
+  entityId?: Maybe<Scalars['String']>;
+  entityKey?: Maybe<Scalars['String']>;
+  entityName?: Maybe<Scalars['String']>;
+  filename?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  updatedAt: Scalars['AWSDateTime'];
+  updatedBy: Scalars['AWSDateTime'];
+};
+
+export type MFileConnection = {
+  __typename?: 'MFileConnection';
+  edges?: Maybe<Array<Maybe<MFileEdge>>>;
+  pageInfo: PageInfoOffset;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type MFileEdge = {
+  __typename?: 'MFileEdge';
+  node?: Maybe<MFile>;
+};
+
+export type MFileInput = {
+  entityId?: InputMaybe<Scalars['String']>;
+  entityKey?: InputMaybe<Scalars['String']>;
+  entityName?: InputMaybe<Scalars['String']>;
+  filename?: InputMaybe<Scalars['String']>;
+};
+
 export type MMovie = MNode & {
   __typename?: 'MMovie';
   boolean?: Maybe<Scalars['Boolean']>;
+  clicks?: Maybe<DMovieAnalytics>;
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
   date?: Maybe<Scalars['AWSDate']>;
@@ -310,7 +346,9 @@ export type MMovie = MNode & {
   json?: Maybe<Scalars['AWSJSON']>;
   mMovieActors: Array<Maybe<MMovieActor>>;
   name?: Maybe<Scalars['String']>;
+  owners?: Maybe<Array<Maybe<Scalars['String']>>>;
   phone?: Maybe<Scalars['AWSPhone']>;
+  poster?: Maybe<MFile>;
   sourceField?: Maybe<Scalars['String']>;
   time?: Maybe<Scalars['AWSTime']>;
   timestamp?: Maybe<Scalars['AWSTimestamp']>;
@@ -371,6 +409,7 @@ export type MMovieInput = {
   ipAddress?: InputMaybe<Scalars['AWSIPAddress']>;
   json?: InputMaybe<Scalars['AWSJSON']>;
   name?: InputMaybe<Scalars['String']>;
+  owners?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   phone?: InputMaybe<Scalars['AWSPhone']>;
   sourceField?: InputMaybe<Scalars['String']>;
   time?: InputMaybe<Scalars['AWSTime']>;
@@ -437,6 +476,9 @@ export type Mutation = {
   mActorDeleteOne?: Maybe<MActor>;
   mActorInsertOne?: Maybe<MActor>;
   mActorUpdateOne?: Maybe<MActor>;
+  mFileDeleteOne?: Maybe<MFile>;
+  mFileInsertOne?: Maybe<MFile>;
+  mFileUpdateOne?: Maybe<MFile>;
   mMovieActorDeleteOne?: Maybe<MMovieActor>;
   mMovieActorInsertOne?: Maybe<MMovieActor>;
   mMovieActorUpdateOne?: Maybe<MMovieActor>;
@@ -528,6 +570,26 @@ export type MutationMActorUpdateOneArgs = {
 };
 
 
+export type MutationMFileDeleteOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<DeleteOneProps>;
+};
+
+
+export type MutationMFileInsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  insert: MFileInput;
+  props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationMFileUpdateOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateOneProps>;
+  update: Scalars['AWSJSON'];
+};
+
+
 export type MutationMMovieActorDeleteOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<DeleteOneProps>;
@@ -597,11 +659,15 @@ export type Query = {
   dActorFindOne?: Maybe<DActor>;
   dMovieActorFindCursor?: Maybe<DMovieActorCursorConnection>;
   dMovieActorFindOne?: Maybe<DMovieActor>;
+  dMovieAnalyticsFind?: Maybe<DMovieAnalyticsConnection>;
+  dMovieAnalyticsFindOne?: Maybe<DMovieAnalytics>;
   dMovieFindCursor?: Maybe<DMovieCursorConnection>;
   dMovieFindOne?: Maybe<DMovie>;
   dMovieIndexFindCursor?: Maybe<DMovieIndexCursorConnection>;
   mActorFind?: Maybe<MActorConnection>;
   mActorFindOne?: Maybe<MActor>;
+  mFileFind?: Maybe<MFileConnection>;
+  mFileFindOne?: Maybe<MFile>;
   mMovieActorFind?: Maybe<MMovieActorConnection>;
   mMovieActorFindOne?: Maybe<MMovieActor>;
   mMovieFind?: Maybe<MMovieConnection>;
@@ -638,6 +704,20 @@ export type QueryDMovieActorFindCursorArgs = {
 
 
 export type QueryDMovieActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<FindOneProps>;
+};
+
+
+export type QueryDMovieAnalyticsFindArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryDMovieAnalyticsFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<FindOneProps>;
 };
@@ -680,6 +760,20 @@ export type QueryMActorFindArgs = {
 
 
 export type QueryMActorFindOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<FindOneProps>;
+};
+
+
+export type QueryMFileFindArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
+};
+
+
+export type QueryMFileFindOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<FindOneProps>;
 };

@@ -703,7 +703,7 @@ Assign a group?
 ## AppSync
 - We don't want to use VTL. However, Jompx does use a small amount of VTL.
 - Code First Schema.
-- KISS. 
+- KISS.
 - A datasourc is simply a Lambda function that receives event params and returns json.
 - A resolverField is a field whose data will come from an AppSync resolver (same or different Lambda datasource).
 

@@ -68,13 +68,13 @@ export class PostSchema extends Construct {
             id: new Field({
                 returnType: GraphqlType.id(),
                 directives: [
-                    jompx.auth([{ allow: 'owners', provider: 'iam' }]) // TODO: Implement field level security.
+                    jompx.auth([{ provider: 'iam' }]) // TODO: Implement field level security.
                 ]
             }),
         };
 
         const auth = jompx.auth([
-            { allow: 'private', provider: 'iam' }
+            { provider: 'iam' }
         ]);
 
         this.props.schemaBuilder.addMutation({ name: mutationName, dataSourceName: 'mPost', input, output, auth, methodName: this.findExample.name });
@@ -104,7 +104,7 @@ export class PostSchema extends Construct {
         };
 
         const auth = jompx.auth([
-            { allow: 'private', provider: 'iam' }
+            { provider: 'iam' }
         ]);
 
         this.props.schemaBuilder.addMutation({ name: mutationName, dataSourceName: 'mPost', input, output, auth, methodName: this.queryExample.name });

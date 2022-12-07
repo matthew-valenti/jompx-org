@@ -53,7 +53,8 @@ export class AppSyncStack extends cdk.Stack {
                 // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
                 // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
             },
-            lambdaFunctionProps: { memorySize: 128 * 2 }
+            lambdaFunctionProps: { memorySize: 128 * 2 },
+            options: {}
         });
         this.schemaBuilder.addDataSource('mySql', jompxMySqlDataSource.lambdaFunction);
 

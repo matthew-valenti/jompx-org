@@ -48,7 +48,7 @@ export class MySqlSchema {
             // Auth doesn't seem to do anything. Delete.
             // directives: [
             //     // auth([
-            //     //     { allow: 'private', provider: 'iam' }
+            //     //     { provider: 'iam' }
             //     // ])
             // ]
         });
@@ -76,6 +76,9 @@ export class MySqlSchema {
                         source('sourceField')
                     ]
                 }),
+                owners: new Field({
+                    returnType: GraphqlType.string({ isList: true })
+                }),
                 mMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
@@ -83,12 +86,53 @@ export class MySqlSchema {
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
+                }),
+                poster: new ResolvableField({
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
+                    dataSource: this.datasources['mySql'],
+                    directives: [
+                        lookup({
+                            from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$entityName", "MMovie"] },
+                                                { $eq: ["$entityId", "$$myMovieId"] },
+                                                { $eq: ["$entityKey", "poster"] },
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        })
+                    ]
+                }),
+                clicks: new ResolvableField({
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics' }),
+                    dataSource: this.datasources['mySql'],
+                    directives: [
+                        lookup({
+                            from: 'DMovieAnalytics', let: { myMovieId: "$id" }, pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$movieId", "$$myMovieId"] },
+                                                { $eq: ["$action", "click"] },
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        })
+                    ]
                 })
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['*'] }
+                    { provider: 'iam', condition: { $expr: { $in: { '$$event.identity.username': '$owners' } } } },
+                    { provider: 'userPool', props: { groups: ['*'] } }
                 ]),
                 datasource('mySql'),
                 source('movie'),
@@ -119,8 +163,8 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('mySql'),
                 source('movieActor'),
@@ -144,8 +188,8 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('mySql'),
                 source('actor'),
@@ -153,5 +197,25 @@ export class MySqlSchema {
             ]
         });
         this.types.objectTypes['MActor'] = MActor;
+
+        const MFile = new ObjectType('MFile', {
+            interfaceTypes: [MNode],
+            definition: {
+                entityName: GraphqlType.string({ isRequired: true }),
+                entityId: GraphqlType.string({ isRequired: true }),
+                entityKey: GraphqlType.string({ isRequired: true }),
+                filename: GraphqlType.string({ isRequired: true }),
+            },
+            directives: [
+                auth([
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
+                ]),
+                datasource('mySql'),
+                source('file'),
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+            ]
+        });
+        this.types.objectTypes['MFile'] = MFile;
     }
 }

@@ -82,10 +82,12 @@ export class DynamoDbSchema {
         // const expr3 = { groups: { $in: ['stack.cognitoGroups'] } };
         // const expr4 = { owner: { $eq: 'stack.cognitoSub' } };
         // public key OR public iam allows "UnAuthenticated Role" from Cognito Identity Pools for public access instead of an API Key. 
-        // private cognito OR iam allows "uthenticated Role" from Cognito Identity Pools for private access
+        // private cognito OR iam allows "authenticated Role" from Cognito Identity Pools for private access
         // { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
         // 1. deny all.
         // 2. allow 
+        // auth([
+        //    { provider: 'iam', condition: { $eq: { $owner, @@cognitoSub } } },
 
         const DMovie = new ObjectType('DMovie', {
             interfaceTypes: [DNode],
@@ -95,10 +97,15 @@ export class DynamoDbSchema {
                     returnType: GraphqlType.string({ isRequired: true }),
                     directives: [
                         auth([
-                            { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
+                            { provider: 'iam', condition: { $in: { '$$event.identity.username': '$owners' } } },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
-                            { allow: 'private', provider: 'apiKey' },
+                            { provider: 'apiKey' },
                         ]),
+                        // auth([
+                        //     { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
+                        //     // { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                        //     { allow: 'private', provider: 'apiKey' },
+                        // ]),
                         // sortKey(true),
                         // tag('test')
                     ]
@@ -143,38 +150,35 @@ export class DynamoDbSchema {
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type example.
                     dataSource: this.datasources['dynamoDb'],
                     directives: [
-                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId', pipeline: {} })
+                        lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
 
                     /*
                     $lookup:
                         {
-                        from: "warehouses",
-                        let: { order_item: "$item", order_qty: "$ordered" },
+                        from: "DMovieActor",
+                        let: { myMovieId: "$movieId", myActorId: "$actorId" },
                         pipeline: [
                             { $match:
                                 { $expr:
                                     { $and:
                                     [
-                                        { $eq: [ "$stock_item",  "$$order_item" ] },
-                                        { $gte: [ "$instock", "$$order_qty" ] }
+                                        { $eq: [ "$movieId",  "$$myMovieId" ] },
+                                        { $eq: [ "$actorId",  "$$myActorId" ] },
                                     ]
                                     }
                                 }
                             },
-                            { $project: { stock_item: 0, _id: 0 } }
-                        ],
-                        as: "stockdata"
-                        }
+                        ]
                     }
                     */
                 })
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['*'] },
-                    { allow: 'private', provider: 'apiKey' }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { provider: 'apiKey' }
                 ]),
                 datasource('dynamoDb'),
                 source('movie'),
@@ -191,8 +195,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamoDb'),
                 source('movie'),
@@ -224,8 +228,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamoDb'),
                 source('movieActor'),
@@ -249,8 +253,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    // { allow: 'private', provider: 'iam' },
-                    { allow: 'private', provider: 'userPool', groups: ['admin'] }
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamoDb'),
                 source('actor'),
@@ -258,5 +262,24 @@ export class DynamoDbSchema {
             ]
         });
         this.types.objectTypes['DActor'] = DActor;
+
+        const DMovieAnalytics = new ObjectType('DMovieAnalytics', {
+            interfaceTypes: [DNode],
+            definition: {
+                movieId: GraphqlType.id({ isRequired: true }),
+                timeStamp: GraphqlType.awsTimestamp({ isRequired: true }),
+                action: GraphqlType.string(),
+            },
+            directives: [
+                auth([
+                    { provider: 'iam' },
+                    { provider: 'userPool', props: { groups: ['*'] } },
+                ]),
+                datasource('dynamoDb'),
+                source('analytics'),
+                operation(['find', 'findOne'])
+            ]
+        });
+        this.types.objectTypes['DMovieAnalytics'] = DMovieAnalytics;
     }
 }
