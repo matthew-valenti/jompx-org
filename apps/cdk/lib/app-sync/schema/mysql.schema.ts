@@ -110,7 +110,7 @@ export class MySqlSchema {
                 }),
                 clicks: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics' }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['dynamoDb'],
                     directives: [
                         lookup({
                             from: 'DMovieAnalytics', let: { myMovieId: "$id" }, pipeline: [

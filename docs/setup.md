@@ -481,7 +481,7 @@ Update jest config to run tests in lib folder: apps\cdk\jest.config.js. We will 
 // from:
 roots: ['<rootDir>/test'],
 // to:
-roots: ['<rootDir>/lib'],
+roots: roots: ['<rootDir>/test', '<rootDir>/lib'],
 
 // TODO: Jest VSCode debug only works if we point it to CDK: "cwd": "${workspaceFolder}/apps/cdk",
 ```
@@ -634,7 +634,7 @@ aws-cdk
 
 Install esbuild for fast bundling of Lambda code.
 ```
-npm install --save-dev esbuild@0
+npm install --save-dev esbuild
 ```
 
 ```

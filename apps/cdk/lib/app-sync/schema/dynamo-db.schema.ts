@@ -152,27 +152,28 @@ export class DynamoDbSchema {
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
-
-                    /*
-                    $lookup:
-                        {
-                        from: "DMovieActor",
-                        let: { myMovieId: "$movieId", myActorId: "$actorId" },
-                        pipeline: [
-                            { $match:
-                                { $expr:
-                                    { $and:
-                                    [
-                                        { $eq: [ "$movieId",  "$$myMovieId" ] },
-                                        { $eq: [ "$actorId",  "$$myActorId" ] },
-                                    ]
+                }),
+                poster: new ResolvableField({
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
+                    dataSource: this.datasources['mySql'],
+                    directives: [
+                        lookup({
+                            from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$entityName", "MMovie"] },
+                                                { $eq: ["$entityId", "$$myMovieId"] },
+                                                { $eq: ["$entityKey", "poster"] },
+                                            ]
+                                        }
                                     }
                                 }
-                            },
-                        ]
-                    }
-                    */
-                })
+                            ]
+                        })
+                    ]
+                }),
             },
             directives: [
                 auth([

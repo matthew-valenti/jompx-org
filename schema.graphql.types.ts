@@ -53,6 +53,17 @@ export type DActor = DNode & {
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
 };
 
+
+export type DActorDMovieActorsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  props?: InputMaybe<FindCursorProps>;
+  sort?: InputMaybe<Scalars['String']>;
+};
+
 export type DActorCursorConnection = {
   __typename?: 'DActorCursorConnection';
   edges?: Maybe<Array<Maybe<DActorCursorEdge>>>;
@@ -95,12 +106,24 @@ export type DMovie = DNode & {
   name?: Maybe<Scalars['String']>;
   owners?: Maybe<Array<Maybe<Scalars['String']>>>;
   phone?: Maybe<Scalars['AWSPhone']>;
+  poster?: Maybe<MFile>;
   sourceField?: Maybe<Scalars['String']>;
   time?: Maybe<Scalars['AWSTime']>;
   timestamp?: Maybe<Scalars['AWSTimestamp']>;
   updatedAt?: Maybe<Scalars['AWSDateTime']>;
   updatedBy?: Maybe<Scalars['AWSDateTime']>;
   url?: Maybe<Scalars['AWSURL']>;
+};
+
+
+export type DMovieDMovieActorsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  props?: InputMaybe<FindCursorProps>;
+  sort?: InputMaybe<Scalars['String']>;
 };
 
 export type DMovieActor = DNode & {

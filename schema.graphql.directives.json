@@ -240,7 +240,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"mySql\"}"
+                        "value": "{\"id\":\"mySql\"}"
                     }
                 ]
             },
@@ -1147,7 +1147,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"mySql\"}"
+                        "value": "{\"id\":\"mySql\"}"
                     }
                 ]
             },
@@ -1364,7 +1364,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"mySql\"}"
+                        "value": "{\"id\":\"mySql\"}"
                     }
                 ]
             },
@@ -1559,7 +1559,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"mySql\"}"
+                        "value": "{\"id\":\"mySql\"}"
                     }
                 ]
             },
@@ -1804,7 +1804,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -1957,6 +1957,20 @@
                             {
                                 "name": "value",
                                 "value": "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"movieId\"}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "poster",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"from\":\"MFile\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$entityName\",\"MMovie\"]},{\"$eq\":[\"$entityId\",\"$$myMovieId\"]},{\"$eq\":[\"$entityKey\",\"poster\"]}]}}}]}"
                             }
                         ]
                     }
@@ -2191,7 +2205,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -2325,7 +2339,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -2516,7 +2530,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamoDb\"}"
                     }
                 ]
             },
@@ -2685,7 +2699,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"name\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamoDb\"}"
                     }
                 ]
             },
