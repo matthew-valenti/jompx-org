@@ -119,17 +119,17 @@ type Query {
   @aws_iam @aws_cognito_user_pools
   mFileFindOne(filter: AWSJSON props: FindOneProps): MFile
   @aws_iam @aws_cognito_user_pools
-  dMovieFindCursor(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): DMovieCursorConnection
+  dMovieFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DMovieConnection
   @aws_iam @aws_cognito_user_pools @aws_api_key
   dMovieFindOne(filter: AWSJSON props: FindOneProps): DMovie
   @aws_iam @aws_cognito_user_pools @aws_api_key
-  dMovieIndexFindCursor(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): DMovieIndexCursorConnection
+  dMovieIndexFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DMovieIndexConnection
   @aws_iam @aws_cognito_user_pools
-  dMovieActorFindCursor(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): DMovieActorCursorConnection
+  dMovieActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DMovieActorConnection
   @aws_iam @aws_cognito_user_pools
   dMovieActorFindOne(filter: AWSJSON props: FindOneProps): DMovieActor
   @aws_iam @aws_cognito_user_pools
-  dActorFindCursor(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): DActorCursorConnection
+  dActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int): DActorConnection
   @aws_iam @aws_cognito_user_pools
   dActorFindOne(filter: AWSJSON props: FindOneProps): DActor
   @aws_iam @aws_cognito_user_pools
@@ -297,7 +297,7 @@ type DMovieAttributes {
   attribute5: [String]
   @set(value: "{\"dataType\":\"string\"}")
 }
-type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   @aws_iam @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":{\"$$event.identity.username\":\"$owners\"}}},{\"provider\":\"apiKey\"}]}")
   boolean: Boolean
@@ -320,8 +320,10 @@ type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth
   @set(value: "{\"dataType\":\"string\"}")
   groups: [String]
   @set(value: "{\"dataType\":\"string\"}")
-  dMovieActors(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): [DMovieActor]!
+  dMovieActors: [DMovieActor]!
   @lookup(value: "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"movieId\"}")
+  files: [MFile]
+  @lookup(value: "{\"from\":\"MFile\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$entityName\",\"MMovie\"]},{\"$eq\":[\"$entityId\",\"$$myMovieId\"]},{\"$eq\":[\"$entityKey\",\"file\"]}]}}}]}")
   poster: MFile
   @lookup(value: "{\"from\":\"MFile\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$entityName\",\"MMovie\"]},{\"$eq\":[\"$entityId\",\"$$myMovieId\"]},{\"$eq\":[\"$entityKey\",\"poster\"]}]}}}]}")
   id: ID
@@ -330,13 +332,12 @@ type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieCursorEdge @aws_iam @aws_cognito_user_pools @aws_api_key {
-  cursor: String
+type DMovieEdge @aws_iam @aws_cognito_user_pools @aws_api_key {
   node: DMovie
 }
-type DMovieCursorConnection @aws_iam @aws_cognito_user_pools @aws_api_key {
-  edges: [DMovieCursorEdge]
-  pageInfo: PageInfoCursor!
+type DMovieConnection @aws_iam @aws_cognito_user_pools @aws_api_key {
+  edges: [DMovieEdge]
+  pageInfo: PageInfoOffset!
   totalCount: Int
 }
 input DMovieAttributesInput {
@@ -371,7 +372,7 @@ input DMovieInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @secondaryIndex(value: "{\"name\":\"movieIndex\"}") @operation(value: "{\"names\":[\"findCursor\"]}") {
+type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movie\"}") @secondaryIndex(value: "{\"name\":\"movieIndex\"}") @operation(value: "{\"names\":[\"find\"]}") {
   name: String!
   id: ID
   createdAt: AWSDateTime
@@ -379,16 +380,15 @@ type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools @auth(value: 
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieIndexCursorEdge @aws_iam @aws_cognito_user_pools {
-  cursor: String
+type DMovieIndexEdge @aws_iam @aws_cognito_user_pools {
   node: DMovieIndex
 }
-type DMovieIndexCursorConnection @aws_iam @aws_cognito_user_pools {
-  edges: [DMovieIndexCursorEdge]
-  pageInfo: PageInfoCursor!
+type DMovieIndexConnection @aws_iam @aws_cognito_user_pools {
+  edges: [DMovieIndexEdge]
+  pageInfo: PageInfoOffset!
   totalCount: Int
 }
-type DMovieActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DMovieActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   movieId: ID
   actorId: ID
   dMovie: DMovie
@@ -401,13 +401,12 @@ type DMovieActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: 
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieActorCursorEdge @aws_iam @aws_cognito_user_pools {
-  cursor: String
+type DMovieActorEdge @aws_iam @aws_cognito_user_pools {
   node: DMovieActor
 }
-type DMovieActorCursorConnection @aws_iam @aws_cognito_user_pools {
-  edges: [DMovieActorCursorEdge]
-  pageInfo: PageInfoCursor!
+type DMovieActorConnection @aws_iam @aws_cognito_user_pools {
+  edges: [DMovieActorEdge]
+  pageInfo: PageInfoOffset!
   totalCount: Int
 }
 input DMovieActorInput {
@@ -419,9 +418,9 @@ input DMovieActorInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamoDb\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
-  dMovieActors(filter: AWSJSON sort: String first: Int after: String last: Int before: String props: FindCursorProps): [DMovieActor]
+  dMovieActors: [DMovieActor]
   @lookup(value: "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"actorId\"}")
   id: ID
   createdAt: AWSDateTime
@@ -429,13 +428,12 @@ type DActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"r
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DActorCursorEdge @aws_iam @aws_cognito_user_pools {
-  cursor: String
+type DActorEdge @aws_iam @aws_cognito_user_pools {
   node: DActor
 }
-type DActorCursorConnection @aws_iam @aws_cognito_user_pools {
-  edges: [DActorCursorEdge]
-  pageInfo: PageInfoCursor!
+type DActorConnection @aws_iam @aws_cognito_user_pools {
+  edges: [DActorEdge]
+  pageInfo: PageInfoOffset!
   totalCount: Int
 }
 input DActorInput {

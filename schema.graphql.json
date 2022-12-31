@@ -267,92 +267,7 @@
           {
             "name": "dMovieActors",
             "description": null,
-            "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "first",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "last",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "sort",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "LIST",
               "name": null,
@@ -427,7 +342,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DActorCursorConnection",
+        "name": "DActorConnection",
         "description": null,
         "fields": [
           {
@@ -439,7 +354,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DActorCursorEdge",
+                "name": "DActorEdge",
                 "ofType": null
               }
             },
@@ -455,7 +370,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoCursor",
+                "name": "PageInfoOffset",
                 "ofType": null
               }
             },
@@ -482,21 +397,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DActorCursorEdge",
+        "name": "DActorEdge",
         "description": null,
         "fields": [
-          {
-            "name": "cursor",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "node",
             "description": null,
@@ -654,92 +557,7 @@
           {
             "name": "dMovieActors",
             "description": null,
-            "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "first",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "last",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "sort",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -800,6 +618,22 @@
               "kind": "SCALAR",
               "name": "AWSEmail",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "files",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MFile",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1147,7 +981,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieActorCursorConnection",
+        "name": "DMovieActorConnection",
         "description": null,
         "fields": [
           {
@@ -1159,7 +993,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DMovieActorCursorEdge",
+                "name": "DMovieActorEdge",
                 "ofType": null
               }
             },
@@ -1175,7 +1009,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoCursor",
+                "name": "PageInfoOffset",
                 "ofType": null
               }
             },
@@ -1202,21 +1036,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieActorCursorEdge",
+        "name": "DMovieActorEdge",
         "description": null,
         "fields": [
-          {
-            "name": "cursor",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "node",
             "description": null,
@@ -1689,7 +1511,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieCursorConnection",
+        "name": "DMovieConnection",
         "description": null,
         "fields": [
           {
@@ -1701,7 +1523,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DMovieCursorEdge",
+                "name": "DMovieEdge",
                 "ofType": null
               }
             },
@@ -1717,7 +1539,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoCursor",
+                "name": "PageInfoOffset",
                 "ofType": null
               }
             },
@@ -1744,21 +1566,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieCursorEdge",
+        "name": "DMovieEdge",
         "description": null,
         "fields": [
-          {
-            "name": "cursor",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "node",
             "description": null,
@@ -1872,7 +1682,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieIndexCursorConnection",
+        "name": "DMovieIndexConnection",
         "description": null,
         "fields": [
           {
@@ -1884,7 +1694,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "DMovieIndexCursorEdge",
+                "name": "DMovieIndexEdge",
                 "ofType": null
               }
             },
@@ -1900,7 +1710,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfoCursor",
+                "name": "PageInfoOffset",
                 "ofType": null
               }
             },
@@ -1927,21 +1737,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "DMovieIndexCursorEdge",
+        "name": "DMovieIndexEdge",
         "description": null,
         "fields": [
-          {
-            "name": "cursor",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "node",
             "description": null,
@@ -5457,33 +5255,9 @@
         "description": null,
         "fields": [
           {
-            "name": "dActorFindCursor",
+            "name": "dActorFind",
             "description": null,
             "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "filter",
                 "description": null,
@@ -5497,7 +5271,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "first",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -5509,23 +5283,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "last",
+                "name": "skip",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5537,7 +5299,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "AWSJSON",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5547,7 +5309,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DActorCursorConnection",
+              "name": "DActorConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5591,33 +5353,9 @@
             "deprecationReason": null
           },
           {
-            "name": "dMovieActorFindCursor",
+            "name": "dMovieActorFind",
             "description": null,
             "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "filter",
                 "description": null,
@@ -5631,7 +5369,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "first",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -5643,23 +5381,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "last",
+                "name": "skip",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5671,7 +5397,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "AWSJSON",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5681,7 +5407,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovieActorCursorConnection",
+              "name": "DMovieActorConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5823,33 +5549,9 @@
             "deprecationReason": null
           },
           {
-            "name": "dMovieFindCursor",
+            "name": "dMovieFind",
             "description": null,
             "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "filter",
                 "description": null,
@@ -5863,7 +5565,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "first",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -5875,23 +5577,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "last",
+                "name": "skip",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5903,7 +5593,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "AWSJSON",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -5913,7 +5603,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovieCursorConnection",
+              "name": "DMovieConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5957,33 +5647,9 @@
             "deprecationReason": null
           },
           {
-            "name": "dMovieIndexFindCursor",
+            "name": "dMovieIndexFind",
             "description": null,
             "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "filter",
                 "description": null,
@@ -5997,7 +5663,7 @@
                 "deprecationReason": null
               },
               {
-                "name": "first",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -6009,23 +5675,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "last",
+                "name": "skip",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "props",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "FindCursorProps",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -6037,7 +5691,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "AWSJSON",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -6047,7 +5701,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovieIndexCursorConnection",
+              "name": "DMovieIndexConnection",
               "ofType": null
             },
             "isDeprecated": false,

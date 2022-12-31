@@ -69,14 +69,14 @@ export class DynamoDbSchema {
         });
         this.types.objectTypes['DMovieAttributes'] = DMovieAttributes;
 
-        const expr = {
-            $expr: {
-                $eq: [
-                    "$myField",
-                    "$myOtherField"
-                ]
-            }
-        };
+        // const expr = {
+        //     $expr: {
+        //         $eq: [
+        //             "$myField",
+        //             "$myOtherField"
+        //         ]
+        //     }
+        // };
 
         // const expr2 = { owner: { $eq: 'stack.cognitoSub' } };
         // const expr3 = { groups: { $in: ['stack.cognitoGroups'] } };
@@ -153,6 +153,27 @@ export class DynamoDbSchema {
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 }),
+                files: new ResolvableField({
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile', isList: true }),
+                    dataSource: this.datasources['mySql'],
+                    directives: [
+                        lookup({
+                            from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$entityName", "MMovie"] },
+                                                { $eq: ["$entityId", "$$myMovieId"] },
+                                                { $eq: ["$entityKey", "file"] },
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        })
+                    ]
+                }),
                 poster: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
                     dataSource: this.datasources['mySql'],
@@ -183,7 +204,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource('dynamoDb'),
                 source('movie'),
-                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
                 // tag('test')
             ]
         });
@@ -202,7 +223,7 @@ export class DynamoDbSchema {
                 datasource('dynamoDb'),
                 source('movie'),
                 secondaryIndex('movieIndex'),
-                operation(['findCursor'])
+                operation(['find'])
             ]
         });
         this.types.objectTypes['DMovieIndex'] = DMovieIndex;
@@ -234,7 +255,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource('dynamoDb'),
                 source('movieActor'),
-                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DMovieActor'] = DMovieActor;
@@ -259,7 +280,7 @@ export class DynamoDbSchema {
                 ]),
                 datasource('dynamoDb'),
                 source('actor'),
-                operation(['findCursor', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['DActor'] = DActor;

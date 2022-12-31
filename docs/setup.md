@@ -315,7 +315,8 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 Do not install NPM package globally. https://docs.aws.amazon.com/cdk/v2/guide/work-with-cdk-typescript.html
 ```
-npm install -D aws-cdk // Do not install globally. Install as dev dependency and use npx.
+npm install aws-cdk // Do not install globally. Install as dev dependency and use npx.
+*If already installed globally then uninstall (or cdk commands will always use the global version): npm uninstall -g aws-cdk
 mkdir apps/cdk
 cd apps/cdk
 npx aws-cdk --version
@@ -884,6 +885,7 @@ nx run-many --all --target=lint
 ??? Come back to lint. Nx has setup instructions: https://nx.dev/guides/eslint
 
 ## Thoughts:
+Jompx: write less do anything! A less-code approach.
 Joins on expressions phase 2.
 Infrastructure as code.
 Explain constructs and levels where Jompx is very high level constructs.

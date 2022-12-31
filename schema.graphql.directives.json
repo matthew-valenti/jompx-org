@@ -611,7 +611,7 @@
                 ]
             },
             {
-                "name": "dMovieFindCursor",
+                "name": "dMovieFind",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -645,7 +645,7 @@
                 ]
             },
             {
-                "name": "dMovieIndexFindCursor",
+                "name": "dMovieIndexFind",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -658,7 +658,7 @@
                 ]
             },
             {
-                "name": "dMovieActorFindCursor",
+                "name": "dMovieActorFind",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -684,7 +684,7 @@
                 ]
             },
             {
-                "name": "dActorFindCursor",
+                "name": "dActorFind",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -1822,7 +1822,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -1963,6 +1963,20 @@
                 ]
             },
             {
+                "name": "files",
+                "directives": [
+                    {
+                        "name": "lookup",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"from\":\"MFile\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$entityName\",\"MMovie\"]},{\"$eq\":[\"$entityId\",\"$$myMovieId\"]},{\"$eq\":[\"$entityKey\",\"file\"]}]}}}]}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "poster",
                 "directives": [
                     {
@@ -1999,7 +2013,7 @@
         ]
     },
     {
-        "name": "DMovieCursorEdge",
+        "name": "DMovieEdge",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2016,17 +2030,13 @@
         ],
         "fields": [
             {
-                "name": "cursor",
-                "directives": []
-            },
-            {
                 "name": "node",
                 "directives": []
             }
         ]
     },
     {
-        "name": "DMovieCursorConnection",
+        "name": "DMovieConnection",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2232,7 +2242,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"findCursor\"]}"
+                        "value": "{\"names\":[\"find\"]}"
                     }
                 ]
             }
@@ -2265,7 +2275,7 @@
         ]
     },
     {
-        "name": "DMovieIndexCursorEdge",
+        "name": "DMovieIndexEdge",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2278,17 +2288,13 @@
         ],
         "fields": [
             {
-                "name": "cursor",
-                "directives": []
-            },
-            {
                 "name": "node",
                 "directives": []
             }
         ]
     },
     {
-        "name": "DMovieIndexCursorConnection",
+        "name": "DMovieIndexConnection",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2357,7 +2363,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -2422,7 +2428,7 @@
         ]
     },
     {
-        "name": "DMovieActorCursorEdge",
+        "name": "DMovieActorEdge",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2435,17 +2441,13 @@
         ],
         "fields": [
             {
-                "name": "cursor",
-                "directives": []
-            },
-            {
                 "name": "node",
                 "directives": []
             }
         ]
     },
     {
-        "name": "DMovieActorCursorConnection",
+        "name": "DMovieActorConnection",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2548,7 +2550,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"findCursor\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -2595,7 +2597,7 @@
         ]
     },
     {
-        "name": "DActorCursorEdge",
+        "name": "DActorEdge",
         "directives": [
             {
                 "name": "aws_iam",
@@ -2608,17 +2610,13 @@
         ],
         "fields": [
             {
-                "name": "cursor",
-                "directives": []
-            },
-            {
                 "name": "node",
                 "directives": []
             }
         ]
     },
     {
-        "name": "DActorCursorConnection",
+        "name": "DActorConnection",
         "directives": [
             {
                 "name": "aws_iam",
