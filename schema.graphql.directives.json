@@ -32,7 +32,7 @@
         "fields": []
     },
     {
-        "name": "FindCursorProps",
+        "name": "FindProps",
         "directives": [],
         "fields": [
             {
@@ -2853,6 +2853,36 @@
             },
             {
                 "name": "limit",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "InsertOneOutput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "insertedId",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "UpdateOneOutput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "modifiedCount",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "DeleteOneOutput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "deletedCount",
                 "directives": []
             }
         ]
