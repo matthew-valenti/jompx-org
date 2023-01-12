@@ -148,14 +148,14 @@ export class DynamoDbSchema {
                 dMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type example.
-                    dataSource: this.datasources['dynamoDb'],
+                    dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 }),
                 files: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile', isList: true }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -176,7 +176,7 @@ export class DynamoDbSchema {
                 }),
                 poster: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -202,7 +202,7 @@ export class DynamoDbSchema {
                     { provider: 'userPool', props: { groups: ['*'] } },
                     { provider: 'apiKey' }
                 ]),
-                datasource('dynamoDb'),
+                datasource('dynamodb'),
                 source('movie'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany']),
                 // tag('test')
@@ -220,7 +220,7 @@ export class DynamoDbSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('dynamoDb'),
+                datasource('dynamodb'),
                 source('movie'),
                 secondaryIndex('movieIndex'),
                 operation(['find'])
@@ -235,14 +235,14 @@ export class DynamoDbSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 dMovie: new ResolvableField({
                     returnType: DMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources['dynamoDb'],
+                    dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({ from: 'DMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 dActor: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DActor', isRequired: true }), // String return type example.
-                    dataSource: this.datasources['dynamoDb'],
+                    dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({ from: 'DActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -253,7 +253,7 @@ export class DynamoDbSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('dynamoDb'),
+                datasource('dynamodb'),
                 source('movieActor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -267,7 +267,7 @@ export class DynamoDbSchema {
                 // An actor can have 0 or more movies.
                 dMovieActors: new ResolvableField({
                     returnType: DMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources['dynamoDb'],
+                    dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
@@ -278,7 +278,7 @@ export class DynamoDbSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('dynamoDb'),
+                datasource('dynamodb'),
                 source('actor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -297,7 +297,7 @@ export class DynamoDbSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('dynamoDb'),
+                datasource('dynamodb'),
                 source('analytics'),
                 operation(['find', 'findOne'])
             ]

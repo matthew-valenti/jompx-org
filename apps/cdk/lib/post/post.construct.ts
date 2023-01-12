@@ -34,6 +34,7 @@ export class PostSchema extends Construct {
             memorySize: 128 * 2,
             description: `AppSync resolver for post.`,
             environment: {
+                datasourceId: 'mPost'
                 // TODO: This fails one first time deploy because /appSync/graphqlUrl does not exist in SSM yet. Try catch does not work. Unable to find solution?
                 // graphqlUrl: ssm.StringParameter.valueForStringParameter(this, '/appSync/graphqlUrl')
             }
@@ -46,7 +47,7 @@ export class PostSchema extends Construct {
             // TODO: resources: ['arn:${Partition}:appsync:${Region}:${Account}:apis/${GraphQLAPIId}/*']
         }));
 
-        this.props.schemaBuilder.addDataSource('mPost', lambdaFunction);
+        this.props.schemaBuilder.addDataSource(lambdaFunction);
     }
 
     /**

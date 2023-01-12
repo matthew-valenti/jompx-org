@@ -82,14 +82,14 @@ export class MySqlSchema {
                 mMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 }),
                 poster: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -110,7 +110,7 @@ export class MySqlSchema {
                 }),
                 clicks: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics' }),
-                    dataSource: this.datasources['dynamoDb'],
+                    dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({
                             from: 'DMovieAnalytics', let: { myMovieId: "$id" }, pipeline: [
@@ -134,7 +134,7 @@ export class MySqlSchema {
                     { provider: 'iam', condition: { $expr: { $in: { '$$event.identity.username': '$owners' } } } },
                     { provider: 'userPool', props: { groups: ['*'] } }
                 ]),
-                datasource('mySql'),
+                datasource('mysql'),
                 source('movie'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -148,14 +148,14 @@ export class MySqlSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 mMovie: new ResolvableField({
                     returnType: MMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({ from: 'MMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 mActor: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MActor', isRequired: true }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({ from: 'MActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -166,7 +166,7 @@ export class MySqlSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('mySql'),
+                datasource('mysql'),
                 source('movieActor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -180,7 +180,7 @@ export class MySqlSchema {
                 // An actor can have 0 or more movies.
                 mMovieActors: new ResolvableField({
                     returnType: MMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources['mySql'],
+                    dataSource: this.datasources['mysql'],
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
@@ -191,7 +191,7 @@ export class MySqlSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('mySql'),
+                datasource('mysql'),
                 source('actor'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]
@@ -211,7 +211,7 @@ export class MySqlSchema {
                     { provider: 'iam' },
                     { provider: 'userPool', props: { groups: ['*'] } },
                 ]),
-                datasource('mySql'),
+                datasource('mysql'),
                 source('file'),
                 operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
             ]

@@ -240,7 +240,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"mySql\"}"
+                        "value": "{\"id\":\"mysql\"}"
                     }
                 ]
             },
@@ -1147,7 +1147,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"mySql\"}"
+                        "value": "{\"id\":\"mysql\"}"
                     }
                 ]
             },
@@ -1364,7 +1364,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"mySql\"}"
+                        "value": "{\"id\":\"mysql\"}"
                     }
                 ]
             },
@@ -1559,7 +1559,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"mySql\"}"
+                        "value": "{\"id\":\"mysql\"}"
                     }
                 ]
             },
@@ -1804,7 +1804,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamodb\"}"
                     }
                 ]
             },
@@ -2215,7 +2215,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamodb\"}"
                     }
                 ]
             },
@@ -2345,7 +2345,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamodb\"}"
                     }
                 ]
             },
@@ -2532,7 +2532,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamodb\"}"
                     }
                 ]
             },
@@ -2697,7 +2697,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"id\":\"dynamoDb\"}"
+                        "value": "{\"id\":\"dynamodb\"}"
                     }
                 ]
             },

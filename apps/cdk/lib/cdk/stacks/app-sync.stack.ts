@@ -3,7 +3,7 @@ import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
 import * as jconstructs from '@jompx/constructs';
-import * as jmysql from '@jompx/mysql-datasource';
+import * as jsql from '@jompx/sql-datasource';
 import * as jdynamodb from '@jompx/dynamodb-datasource';
 import { DynamoDbStack } from './dynamo-db.stack';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
@@ -46,7 +46,8 @@ export class AppSyncStack extends cdk.Stack {
         this.schemaBuilder = appSync.schemaBuilder;
 
         // Add MySQL datasource.
-        const jompxMySqlDataSource = new jmysql.AppSyncMySqlDataSourceConstruct(this, 'mySql', { // TODO: Not thrilled about having the name construct here so rename JAppSync...
+        const jompxMySqlDataSource = new jsql.AppSyncSqlDataSourceConstruct(this, 'MySql', { // TODO: Not thrilled about having the name construct here so rename JAppSync...
+            datasourceId: 'mysql',
             graphqlSchema: {
                 filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
                 directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
@@ -56,10 +57,11 @@ export class AppSyncStack extends cdk.Stack {
             lambdaFunctionProps: { memorySize: 128 * 2 },
             options: {}
         });
-        this.schemaBuilder.addDataSource(jompxMySqlDataSource.datasourceId, jompxMySqlDataSource.lambdaFunction);
+        this.schemaBuilder.addDataSource(jompxMySqlDataSource.lambdaFunction);
 
         // Add DynamoDb datasource.
-        const jompxDynamoDbDataSource = new jdynamodb.AppSyncDynamoDbDataSourceConstruct(this, 'dynamoDb', { // TODO: Not thrilled about having the name construct here!!??
+        const jompxDynamoDbDataSource = new jdynamodb.AppSyncDynamoDbDataSourceConstruct(this, 'DynamoDb', { // TODO: Not thrilled about having the name construct here!!??
+            datasourceId: 'dynamodb',
             graphqlSchema: {
                 filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
                 directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
@@ -69,7 +71,7 @@ export class AppSyncStack extends cdk.Stack {
             lambdaFunctionProps: { memorySize: 128 * 2 },
             options: {}
         });
-        this.schemaBuilder.addDataSource(jompxDynamoDbDataSource.datasourceId, jompxDynamoDbDataSource.lambdaFunction);
+        this.schemaBuilder.addDataSource(jompxDynamoDbDataSource.lambdaFunction);
 
         // Security: Grant the DynamoDb Lambda datasource read/write access to all DynamoDb tables.
         props.dataSourceStack.dynamoDbStack.tables.forEach(table => {
