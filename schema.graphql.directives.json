@@ -138,6 +138,15 @@
                                 "value": "{\"isReadonly\":true}"
                             }
                         ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}"
+                            }
+                        ]
                     }
                 ]
             },
@@ -164,6 +173,15 @@
                             {
                                 "name": "value",
                                 "value": "{\"isReadonly\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}"
                             }
                         ]
                     }
@@ -231,7 +249,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$expr\":{\"$in\":{\"$$event.identity.username\":\"$owners\"}}}},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}"
+                        "value": "{\"rules\":[{\"provider\":\"iam\",\"action\":[\"create\",\"read\",\"update\",\"delete\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}}},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}"
                     }
                 ]
             },
@@ -401,6 +419,15 @@
                                 "value": "{\"isReadonly\":true}"
                             }
                         ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}"
+                            }
+                        ]
                     }
                 ]
             },
@@ -427,6 +454,15 @@
                             {
                                 "name": "value",
                                 "value": "{\"isReadonly\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}"
                             }
                         ]
                     }
@@ -1232,6 +1268,15 @@
                                 "value": "{\"isReadonly\":true}"
                             }
                         ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1258,6 +1303,15 @@
                             {
                                 "name": "value",
                                 "value": "{\"isReadonly\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}"
                             }
                         ]
                     }
@@ -1431,6 +1485,15 @@
                                 "value": "{\"isReadonly\":true}"
                             }
                         ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1457,6 +1520,15 @@
                             {
                                 "name": "value",
                                 "value": "{\"isReadonly\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}"
                             }
                         ]
                     }
@@ -1624,6 +1696,15 @@
                                 "value": "{\"isReadonly\":true}"
                             }
                         ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1650,6 +1731,15 @@
                             {
                                 "name": "value",
                                 "value": "{\"isReadonly\":true}"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultValue",
+                        "arguments": [
+                            {
+                                "name": "value",
+                                "value": "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}"
                             }
                         ]
                     }
@@ -1844,7 +1934,7 @@
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":{\"$$event.identity.username\":\"$owners\"}}},{\"provider\":\"apiKey\"}]}"
+                                "value": "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},{\"provider\":\"apiKey\"}]}"
                             }
                         ]
                     }

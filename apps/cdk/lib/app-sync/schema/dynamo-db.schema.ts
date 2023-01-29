@@ -97,7 +97,7 @@ export class DynamoDbSchema {
                     returnType: GraphqlType.string({ isRequired: true }),
                     directives: [
                         auth([
-                            { provider: 'iam', condition: { $in: { '$$event.identity.username': '$owners' } } },
+                            { provider: 'iam', condition: { $in: ['$$event.identity.username', '$owners'] } },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
                             { provider: 'apiKey' },
                         ]),

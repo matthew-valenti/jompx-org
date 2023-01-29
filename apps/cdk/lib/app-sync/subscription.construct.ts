@@ -19,7 +19,7 @@ export class AppSyncSubscription extends Construct {
         if (props?.schemaBuilder) {
 
             props.graphqlApi.addSubscription('dMovieUpdated', new appsync.Field({
-                returnType: props.schemaBuilder.schemaTypes.objectTypes['DMovie'].attribute(),
+                returnType: props.schemaBuilder.schemaTypes.objectTypes['UpdateOneOutput'].attribute(),
                 // Filter subscriptions with args e.g. subscribe to movie updates for a speicifc movie id.
                 // args: {
                 //     id: appsync.GraphqlType.id({ isRequired: true })

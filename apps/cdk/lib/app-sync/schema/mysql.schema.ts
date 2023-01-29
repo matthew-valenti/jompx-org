@@ -1,5 +1,5 @@
 import * as jompx from '@jompx/constructs';
-import { auth, datasource, lookup, operation, readonly, source } from '@jompx/constructs'; // Custom directives.
+import { auth, datasource, defaultValue, lookup, operation, readonly, source } from '@jompx/constructs'; // Custom directives.
 import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
 
 export class MySqlSchema {
@@ -23,7 +23,8 @@ export class MySqlSchema {
                 createdAt: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true }),
                     directives: [
-                        readonly(true)
+                        readonly(true),
+                        defaultValue({ onInsert: { $ifNull: ['$$NOW'] } })
                     ]
                 }),
                 createdBy: new Field({
@@ -35,7 +36,8 @@ export class MySqlSchema {
                 updatedAt: new Field({
                     returnType: GraphqlType.awsDateTime({ isRequired: true }),
                     directives: [
-                        readonly(true)
+                        readonly(true),
+                        defaultValue({ onInsert: { $ifNull: ['$$NOW'] }, onUpdate: { $ifNull: ['$$NOW'] } })
                     ]
                 }),
                 updatedBy: new Field({
@@ -99,7 +101,7 @@ export class MySqlSchema {
                                             $and: [
                                                 { $eq: ["$entityName", "MMovie"] },
                                                 { $eq: ["$entityId", "$$myMovieId"] },
-                                                { $eq: ["$entityKey", "poster"] },
+                                                { $eq: ["$entityKey", "poster"] }
                                             ]
                                         }
                                     }
@@ -119,7 +121,7 @@ export class MySqlSchema {
                                         $expr: {
                                             $and: [
                                                 { $eq: ["$movieId", "$$myMovieId"] },
-                                                { $eq: ["$action", "click"] },
+                                                { $eq: ["$action", "click"] }
                                             ]
                                         }
                                     }
@@ -131,7 +133,7 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam', condition: { $expr: { $in: { '$$event.identity.username': '$owners' } } } },
+                    { provider: 'iam', action: ['create', 'read', 'update', 'delete'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } } },
                     { provider: 'userPool', props: { groups: ['*'] } }
                 ]),
                 datasource('mysql'),

@@ -550,7 +550,6 @@ export type MutationDActorDeleteOneArgs = {
 
 
 export type MutationDActorInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: DActorInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -570,7 +569,6 @@ export type MutationDMovieActorDeleteOneArgs = {
 
 
 export type MutationDMovieActorInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: DMovieActorInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -590,7 +588,6 @@ export type MutationDMovieDeleteOneArgs = {
 
 
 export type MutationDMovieInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: DMovieInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -610,7 +607,6 @@ export type MutationMActorDeleteOneArgs = {
 
 
 export type MutationMActorInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MActorInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -630,7 +626,6 @@ export type MutationMFileDeleteOneArgs = {
 
 
 export type MutationMFileInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MFileInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -650,7 +645,6 @@ export type MutationMMovieActorDeleteOneArgs = {
 
 
 export type MutationMMovieActorInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MMovieActorInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -670,7 +664,6 @@ export type MutationMMovieDeleteOneArgs = {
 
 
 export type MutationMMovieInsertOneArgs = {
-  filter?: InputMaybe<Scalars['AWSJSON']>;
   insert: MMovieInput;
   props?: InputMaybe<InsertOneProps>;
 };
@@ -858,7 +851,7 @@ export type QueryMMovieFindOneArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  dMovieUpdated?: Maybe<DMovie>;
+  dMovieUpdated?: Maybe<UpdateOneOutput>;
 };
 
 export type UpdateOneOutput = {

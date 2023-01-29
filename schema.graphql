@@ -45,11 +45,11 @@ interface MNode {
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
   createdAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}")
   createdBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
   updatedAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}")
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
@@ -60,7 +60,7 @@ interface DNode {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$expr\":{\"$in\":{\"$$event.identity.username\":\"$owners\"}}}},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"action\":[\"create\",\"read\",\"update\",\"delete\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}}},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   boolean: Boolean
   float: Float
@@ -86,11 +86,11 @@ type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"r
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
   createdAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}")
   createdBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
   updatedAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}")
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
@@ -156,43 +156,43 @@ input MMovieInput {
   owners: [String]
 }
 type Mutation {
-  mMovieInsertOne(insert: MMovieInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  mMovieInsertOne(insert: MMovieInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   mMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
   mMovieDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
-  mMovieActorInsertOne(insert: MMovieActorInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  mMovieActorInsertOne(insert: MMovieActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   mMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
   mMovieActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
-  mActorInsertOne(insert: MActorInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  mActorInsertOne(insert: MActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   mActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
   mActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
-  mFileInsertOne(insert: MFileInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  mFileInsertOne(insert: MFileInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   mFileUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
   mFileDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
-  dMovieInsertOne(insert: DMovieInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  dMovieInsertOne(insert: DMovieInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools @aws_api_key
   dMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools @aws_api_key
   dMovieDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools @aws_api_key
-  dMovieActorInsertOne(insert: DMovieActorInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  dMovieActorInsertOne(insert: DMovieActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   dMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
   dMovieActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
-  dActorInsertOne(insert: DActorInput! filter: AWSJSON props: InsertOneProps): InsertOneOutput
+  dActorInsertOne(insert: DActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   dActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
   @aws_iam @aws_cognito_user_pools
@@ -213,11 +213,11 @@ type MMovieActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: 
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
   createdAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}")
   createdBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
   updatedAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}")
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
@@ -240,11 +240,11 @@ type MActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"r
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
   createdAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}")
   createdBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
   updatedAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}")
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
@@ -267,11 +267,11 @@ type MFile implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"ru
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
   createdAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]}}")
   createdBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
   updatedAt: AWSDateTime!
-  @readonly(value: "{\"isReadonly\":true}")
+  @readonly(value: "{\"isReadonly\":true}") @defaultValue(value: "{\"onInsert\":{\"$ifNull\":[\"$$NOW\"]},\"onUpdate\":{\"$ifNull\":[\"$$NOW\"]}}")
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
@@ -299,7 +299,7 @@ type DMovieAttributes {
 }
 type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
-  @aws_iam @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":{\"$$event.identity.username\":\"$owners\"}}},{\"provider\":\"apiKey\"}]}")
+  @aws_iam @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},{\"provider\":\"apiKey\"}]}")
   boolean: Boolean
   float: Float
   decimal: Float
@@ -509,7 +509,7 @@ type MPostQueryExampleOutput @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}"
   test: MPostQueryExampleTestOutput
 }
 type Subscription {
-  dMovieUpdated: DMovie
+  dMovieUpdated: UpdateOneOutput
   @aws_subscribe(mutations: ["dMovieUpdateOne"])
 }
 
@@ -532,6 +532,7 @@ directive @aws_lambda on FIELD_DEFINITION | OBJECT
 directive @aws_subscribe(mutations: [String!]!) on FIELD_DEFINITION
 directive @auth(value: AWSJSON) on FIELD_DEFINITION | OBJECT
 directive @datasource(value: AWSJSON) on FIELD_DEFINITION | OBJECT
+directive @defaultValue(value: AWSJSON) on FIELD_DEFINITION
 directive @lookup(value: AWSJSON) on FIELD_DEFINITION
 directive @operation(value: AWSJSON) on OBJECT
 directive @partitionKey(value: AWSJSON) on FIELD_DEFINITION

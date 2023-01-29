@@ -46,7 +46,7 @@ export class AppSyncStack extends cdk.Stack {
         this.schemaBuilder = appSync.schemaBuilder;
 
         // Add MySQL datasource.
-        const jompxMySqlDataSource = new jsql.AppSyncSqlDataSourceConstruct(this, 'MySql', { // TODO: Not thrilled about having the name construct here so rename JAppSync...
+        const jompxMySqlDataSource = new jsql.JompxAppSyncSqlDataSource(this, 'MySql', {
             datasourceId: 'mysql',
             graphqlSchema: {
                 filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
@@ -55,12 +55,14 @@ export class AppSyncStack extends cdk.Stack {
                 // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
             },
             lambdaFunctionProps: { memorySize: 128 * 2 },
-            options: {}
+            options: {
+                engine: 'mysql_8.0.x'
+            }
         });
         this.schemaBuilder.addDataSource(jompxMySqlDataSource.lambdaFunction);
 
         // Add DynamoDb datasource.
-        const jompxDynamoDbDataSource = new jdynamodb.AppSyncDynamoDbDataSourceConstruct(this, 'DynamoDb', { // TODO: Not thrilled about having the name construct here!!??
+        const jompxDynamoDbDataSource = new jdynamodb.JompxAppSyncDynamoDbDataSource(this, 'DynamoDb', {
             datasourceId: 'dynamodb',
             graphqlSchema: {
                 filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.

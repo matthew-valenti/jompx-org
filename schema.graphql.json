@@ -4459,18 +4459,6 @@
             "description": null,
             "args": [
               {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "insert",
                 "description": null,
                 "type": {
@@ -4601,18 +4589,6 @@
             "name": "dMovieActorInsertOne",
             "description": null,
             "args": [
-              {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "insert",
                 "description": null,
@@ -4745,18 +4721,6 @@
             "description": null,
             "args": [
               {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "insert",
                 "description": null,
                 "type": {
@@ -4887,18 +4851,6 @@
             "name": "mActorInsertOne",
             "description": null,
             "args": [
-              {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "insert",
                 "description": null,
@@ -5031,18 +4983,6 @@
             "description": null,
             "args": [
               {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "insert",
                 "description": null,
                 "type": {
@@ -5174,18 +5114,6 @@
             "description": null,
             "args": [
               {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "insert",
                 "description": null,
                 "type": {
@@ -5316,18 +5244,6 @@
             "name": "mMovieInsertOne",
             "description": null,
             "args": [
-              {
-                "name": "filter",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "AWSJSON",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
               {
                 "name": "insert",
                 "description": null,
@@ -6585,7 +6501,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "DMovie",
+              "name": "UpdateOneOutput",
               "ofType": null
             },
             "isDeprecated": false,
@@ -7691,6 +7607,28 @@
         "locations": [
           "FIELD_DEFINITION",
           "OBJECT"
+        ],
+        "args": [
+          {
+            "name": "value",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "AWSJSON",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
+      },
+      {
+        "name": "defaultValue",
+        "description": null,
+        "isRepeatable": false,
+        "locations": [
+          "FIELD_DEFINITION"
         ],
         "args": [
           {
