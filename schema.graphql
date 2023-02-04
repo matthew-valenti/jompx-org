@@ -60,7 +60,7 @@ interface DNode {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"action\":[\"create\",\"read\",\"update\",\"delete\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}}},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type MMovie implements MNode @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @auth(value: "{\"rules\":[{\"type\":\"iam\",\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\"]},\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Group admin has full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},\"comment\":\"Group author has access owned movies only. and cannot delete.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"comment\":\"Group user can read all.\"}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   boolean: Boolean
   float: Float
@@ -81,7 +81,7 @@ type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"r
   @lookup(value: "{\"from\":\"MMovieActor\",\"localField\":\"id\",\"foreignField\":\"movieId\"}")
   poster: MFile
   @lookup(value: "{\"from\":\"MFile\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$entityName\",\"MMovie\"]},{\"$eq\":[\"$entityId\",\"$$myMovieId\"]},{\"$eq\":[\"$entityKey\",\"poster\"]}]}}}]}")
-  clicks: DMovieAnalytics
+  clicks(filter: AWSJSON sort: AWSJSON skip: Int limit: Int props: FindProps): [DMovieAnalytics]
   @lookup(value: "{\"from\":\"DMovieAnalytics\",\"let\":{\"myMovieId\":\"$id\"},\"pipeline\":[{\"$match\":{\"$expr\":{\"$and\":[{\"$eq\":[\"$movieId\",\"$$myMovieId\"]},{\"$eq\":[\"$action\",\"click\"]}]}}}]}")
   id: ID!
   @readonly(value: "{\"isReadonly\":true}")
@@ -94,19 +94,19 @@ type MMovie implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"r
   updatedBy: AWSDateTime!
   @readonly(value: "{\"isReadonly\":true}")
 }
-type MMovieEdge @aws_iam @aws_cognito_user_pools {
+type MMovieEdge @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
   node: MMovie
 }
-type MMovieConnection @aws_iam @aws_cognito_user_pools {
+type MMovieConnection @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) {
   edges: [MMovieEdge]
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
 type Query {
   mMovieFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int props: FindProps): MMovieConnection
-  @aws_iam @aws_cognito_user_pools
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieFindOne(filter: AWSJSON props: FindOneProps): MMovie
-  @aws_iam @aws_cognito_user_pools
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieActorFind(filter: AWSJSON sort: AWSJSON skip: Int limit: Int props: FindProps): MMovieActorConnection
   @aws_iam @aws_cognito_user_pools
   mMovieActorFindOne(filter: AWSJSON props: FindOneProps): MMovieActor
@@ -157,11 +157,11 @@ input MMovieInput {
 }
 type Mutation {
   mMovieInsertOne(insert: MMovieInput! props: InsertOneProps): InsertOneOutput
-  @aws_iam @aws_cognito_user_pools
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
-  @aws_iam @aws_cognito_user_pools
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
-  @aws_iam @aws_cognito_user_pools
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieActorInsertOne(insert: MMovieActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools
   mMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
@@ -199,11 +199,11 @@ type Mutation {
   dActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools
   mPostFindExample(input: MPostFindExampleInput!): MPostFindExampleOutput
-  @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}")
+  @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}")
   mPostQueryExample(input: MPostQueryExampleInput!): MPostQueryExampleOutput
-  @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}")
+  @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}")
 }
-type MMovieActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type MMovieActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   movieId: ID
   actorId: ID
   mMovie: MMovie
@@ -233,7 +233,7 @@ input MMovieActorInput {
   movieId: ID
   actorId: ID
 }
-type MActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type MActor implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   mMovieActors(filter: AWSJSON sort: AWSJSON skip: Int limit: Int props: FindProps): [MMovieActor]
   @lookup(value: "{\"from\":\"MMovieActor\",\"localField\":\"id\",\"foreignField\":\"actorId\"}")
@@ -259,7 +259,7 @@ type MActorConnection @aws_iam @aws_cognito_user_pools {
 input MActorInput {
   name: String
 }
-type MFile implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"file\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type MFile implements MNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"mysql\"}") @source(value: "{\"name\":\"file\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   entityName: String
   entityId: String
   entityKey: String
@@ -297,9 +297,9 @@ type DMovieAttributes {
   attribute5: [String]
   @set(value: "{\"dataType\":\"string\"}")
 }
-type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DMovie implements DNode @aws_iam @aws_cognito_user_pools @aws_api_key @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"type\":\"apiKey\"}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movie\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
-  @aws_iam @aws_api_key @auth(value: "{\"rules\":[{\"provider\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},{\"provider\":\"apiKey\"}]}")
+  @aws_iam @aws_api_key @auth(value: "{\"rules\":[{\"type\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},{\"type\":\"apiKey\"}]}")
   boolean: Boolean
   float: Float
   decimal: Float
@@ -372,7 +372,7 @@ input DMovieInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movie\"}") @secondaryIndex(value: "{\"name\":\"movieIndex\"}") @operation(value: "{\"names\":[\"find\"]}") {
+type DMovieIndex implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movie\"}") @secondaryIndex(value: "{\"name\":\"movieIndex\"}") @operation(value: "{\"names\":[\"find\"]}") {
   name: String!
   id: ID
   createdAt: AWSDateTime
@@ -388,7 +388,7 @@ type DMovieIndexConnection @aws_iam @aws_cognito_user_pools {
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
-type DMovieActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DMovieActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"movieActor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   movieId: ID
   actorId: ID
   dMovie: DMovie
@@ -418,7 +418,7 @@ input DMovieActorInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
+type DActor implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"actor\"}") @operation(value: "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}") {
   name: String
   dMovieActors(filter: AWSJSON sort: AWSJSON skip: Int limit: Int props: FindProps): [DMovieActor]
   @lookup(value: "{\"from\":\"DMovieActor\",\"localField\":\"id\",\"foreignField\":\"actorId\"}")
@@ -444,7 +444,7 @@ input DActorInput {
   updatedAt: AWSDateTime
   updatedBy: AWSDateTime
 }
-type DMovieAnalytics implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"analytics\"}") @operation(value: "{\"names\":[\"find\",\"findOne\"]}") {
+type DMovieAnalytics implements DNode @aws_iam @aws_cognito_user_pools @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}}]}") @datasource(value: "{\"id\":\"dynamodb\"}") @source(value: "{\"name\":\"analytics\"}") @operation(value: "{\"names\":[\"find\",\"findOne\"]}") {
   movieId: ID!
   timeStamp: AWSTimestamp!
   action: String
@@ -462,13 +462,13 @@ type DMovieAnalyticsConnection @aws_iam @aws_cognito_user_pools {
   pageInfo: PageInfoOffset!
   totalCount: Int
 }
-type PageInfoCursor @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") {
+type PageInfoCursor @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\",\"*\"]}},{\"type\":\"apiKey\"}]}") {
   hasPreviousPage: Boolean!
   hasNextPage: Boolean!
   startCursor: String!
   endCursor: String!
 }
-type PageInfoOffset @auth(value: "{\"rules\":[{\"provider\":\"iam\"},{\"provider\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"provider\":\"apiKey\"}]}") {
+type PageInfoOffset @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\",\"*\"]}},{\"type\":\"apiKey\"}]}") {
   skip: Int!
   limit: Int!
 }
@@ -484,9 +484,9 @@ type DeleteOneOutput {
 input MPostFindExampleInput {
   number1: Int!
 }
-type MPostFindExampleOutput @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}") {
+type MPostFindExampleOutput @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}") {
   id: ID
-  @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}")
+  @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}")
 }
 input MPostQueryExampleTestInput {
   number1: Int!
@@ -495,16 +495,16 @@ input MPostQueryExampleInput {
   number1: Int!
   test: MPostQueryExampleTestInput
 }
-type MPostQueryExampleTestTestOutput @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}") {
+type MPostQueryExampleTestTestOutput @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}") {
   result1: Int!
   result2: Int!
 }
-type MPostQueryExampleTestOutput @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}") {
+type MPostQueryExampleTestOutput @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}") {
   result1: Int!
   result2: Int!
   test: MPostQueryExampleTestTestOutput
 }
-type MPostQueryExampleOutput @auth(value: "{\"rules\":[{\"provider\":\"iam\"}]}") {
+type MPostQueryExampleOutput @auth(value: "{\"rules\":[{\"type\":\"iam\"}]}") {
   id: ID
   test: MPostQueryExampleTestOutput
 }

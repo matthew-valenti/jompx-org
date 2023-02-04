@@ -87,7 +87,7 @@ export class DynamoDbSchema {
         // 1. deny all.
         // 2. allow 
         // auth([
-        //    { provider: 'iam', condition: { $eq: { $owner, @@cognitoSub } } },
+        //    { type: 'iam', condition: { $eq: { $owner, @@cognitoSub } } },
 
         const DMovie = new ObjectType('DMovie', {
             interfaceTypes: [DNode],
@@ -97,9 +97,9 @@ export class DynamoDbSchema {
                     returnType: GraphqlType.string({ isRequired: true }),
                     directives: [
                         auth([
-                            { provider: 'iam', condition: { $in: ['$$event.identity.username', '$owners'] } },
+                            { type: 'iam', condition: { $in: ['$$event.identity.username', '$owners'] } },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
-                            { provider: 'apiKey' },
+                            { type: 'apiKey' },
                         ]),
                         // auth([
                         //     { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
@@ -198,9 +198,9 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
-                    { provider: 'apiKey' }
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
+                    { type: 'apiKey' }
                 ]),
                 datasource('dynamodb'),
                 source('movie'),
@@ -217,8 +217,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamodb'),
                 source('movie'),
@@ -250,8 +250,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamodb'),
                 source('movieActor'),
@@ -275,8 +275,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamodb'),
                 source('actor'),
@@ -294,8 +294,8 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('dynamodb'),
                 source('analytics'),

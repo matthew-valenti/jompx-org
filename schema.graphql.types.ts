@@ -377,7 +377,7 @@ export type MFileInput = {
 export type MMovie = MNode & {
   __typename?: 'MMovie';
   boolean?: Maybe<Scalars['Boolean']>;
-  clicks?: Maybe<DMovieAnalytics>;
+  clicks?: Maybe<Array<Maybe<DMovieAnalytics>>>;
   createdAt: Scalars['AWSDateTime'];
   createdBy: Scalars['AWSDateTime'];
   date?: Maybe<Scalars['AWSDate']>;
@@ -399,6 +399,15 @@ export type MMovie = MNode & {
   updatedAt: Scalars['AWSDateTime'];
   updatedBy: Scalars['AWSDateTime'];
   url?: Maybe<Scalars['AWSURL']>;
+};
+
+
+export type MMovieClicksArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  props?: InputMaybe<FindProps>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 

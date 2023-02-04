@@ -903,6 +903,7 @@ TODO: Nx interactive commands not working: https://github.com/nrwl/nx/issues/826
 Grid of databases supported.
 Grid of operations per datasource supported.
 There is some repitino when defining the schema. But this can be a good thing. We can throw away the API and Jomppx and still be left with a fully functional database. What would happen if Jompx generated the schema? Instead AppSync Jompx sits on top of datasources.
+Jompx philosophy: all typescript, all full stack developers with specialized knowledge, feature owners work across layers, developer friction = cost.
 
 https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Why don't I like this? What am I missing.
 It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.

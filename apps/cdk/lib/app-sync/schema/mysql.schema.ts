@@ -50,7 +50,7 @@ export class MySqlSchema {
             // Auth doesn't seem to do anything. Delete.
             // directives: [
             //     // auth([
-            //     //     { provider: 'iam' }
+            //     //     { type: 'iam' }
             //     // ])
             // ]
         });
@@ -111,7 +111,7 @@ export class MySqlSchema {
                     ]
                 }),
                 clicks: new ResolvableField({
-                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics' }),
+                    returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics', isList: true }),
                     dataSource: this.datasources['dynamodb'],
                     directives: [
                         lookup({
@@ -133,8 +133,12 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam', action: ['create', 'read', 'update', 'delete'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } } },
-                    { provider: 'userPool', props: { groups: ['*'] } }
+                    // { type: 'iam', actions: ['create', 'read', 'update', 'delete'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } } },
+                    // { type: 'userPool', props: { groups: ['admin'] }, actions: ['create', 'read', 'update', 'delete'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } } },
+                    { type: 'iam', actions: ['*'], comment: 'Full access.' },
+                    { type: 'userPool', props: { groups: ['admin'] }, actions: ['*'], comment: 'Group admin has full access.' },
+                    { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } }, 'comment': 'Group author has access owned movies only. and cannot delete.' },
+                    { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], 'comment': 'Group user can read all.' },
                 ]),
                 datasource('mysql'),
                 source('movie'),
@@ -165,8 +169,8 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('mysql'),
                 source('movieActor'),
@@ -190,8 +194,8 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('mysql'),
                 source('actor'),
@@ -210,8 +214,8 @@ export class MySqlSchema {
             },
             directives: [
                 auth([
-                    { provider: 'iam' },
-                    { provider: 'userPool', props: { groups: ['*'] } },
+                    { type: 'iam' },
+                    { type: 'userPool', props: { groups: ['*'] } },
                 ]),
                 datasource('mysql'),
                 source('file'),
