@@ -253,7 +253,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"type\":\"iam\",\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\"]},\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Group admin has full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},\"comment\":\"Group author has access owned movies only. and cannot delete.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"comment\":\"Group user can read all.\"}]}"
+                        "value": "{\"rules\":[{\"type\":\"iam\",\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\"]},\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Group admin has full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},\"comment\":\"Group author has access owned movies only. and cannot delete.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"user\"]},\"actions\":[\"read\"],\"comment\":\"Group user can read all.\"}]}"
                     }
                 ]
             },
@@ -594,10 +594,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -606,10 +602,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -620,10 +612,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -632,10 +620,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -646,10 +630,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -658,10 +638,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -675,7 +651,11 @@
                     },
                     {
                         "name": "aws_cognito_user_pools",
-                        "arguments": []
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
                     },
                     {
                         "name": "aws_api_key",
@@ -692,7 +672,11 @@
                     },
                     {
                         "name": "aws_cognito_user_pools",
-                        "arguments": []
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
                     },
                     {
                         "name": "aws_api_key",
@@ -706,10 +690,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -718,10 +698,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -732,10 +708,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -744,10 +716,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -758,10 +726,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -771,10 +735,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -783,10 +743,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -920,10 +876,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -932,10 +884,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -946,10 +894,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -958,10 +902,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -972,10 +912,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -984,10 +920,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -998,10 +930,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -1011,10 +939,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -1023,10 +947,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -1040,7 +960,11 @@
                     },
                     {
                         "name": "aws_cognito_user_pools",
-                        "arguments": []
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
                     },
                     {
                         "name": "aws_api_key",
@@ -1057,7 +981,11 @@
                     },
                     {
                         "name": "aws_cognito_user_pools",
-                        "arguments": []
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
                     },
                     {
                         "name": "aws_api_key",
@@ -1074,7 +1002,11 @@
                     },
                     {
                         "name": "aws_cognito_user_pools",
-                        "arguments": []
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
                     },
                     {
                         "name": "aws_api_key",
@@ -1088,10 +1020,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -1100,10 +1028,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -1114,10 +1038,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -1126,10 +1046,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -1140,10 +1056,6 @@
                     {
                         "name": "aws_iam",
                         "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
-                        "arguments": []
                     }
                 ]
             },
@@ -1152,10 +1064,6 @@
                 "directives": [
                     {
                         "name": "aws_iam",
-                        "arguments": []
-                    },
-                    {
-                        "name": "aws_cognito_user_pools",
                         "arguments": []
                     }
                 ]
@@ -1906,7 +1814,11 @@
             },
             {
                 "name": "aws_cognito_user_pools",
-                "arguments": []
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
             },
             {
                 "name": "aws_api_key",
@@ -1917,7 +1829,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"*\"]}},{\"type\":\"apiKey\"}]}"
+                        "value": "{\"rules\":[{\"type\":\"iam\",\"actions\":[\"read\"],\"comment\":\"Full access.\"},{\"type\":\"apiKey\",\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\"]},\"actions\":[\"create\",\"read\",\"update\",\"delete\"],\"comment\":\"Group admin has full access.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"author\"]},\"actions\":[\"create\",\"read\",\"update\"],\"condition\":{\"$expr\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},\"comment\":\"Group author has access owned movies only. and cannot delete.\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"user\"]},\"actions\":[\"read\"],\"comment\":\"Group user can read all.\"}]}"
                     }
                 ]
             },
@@ -1958,15 +1870,11 @@
                         "arguments": []
                     },
                     {
-                        "name": "aws_api_key",
-                        "arguments": []
-                    },
-                    {
                         "name": "auth",
                         "arguments": [
                             {
                                 "name": "value",
-                                "value": "{\"rules\":[{\"type\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}},{\"type\":\"apiKey\"}]}"
+                                "value": "{\"rules\":[{\"type\":\"iam\",\"condition\":{\"$in\":[\"$$event.identity.username\",\"$owners\"]}}]}"
                             }
                         ]
                     }
@@ -2143,7 +2051,11 @@
             },
             {
                 "name": "aws_cognito_user_pools",
-                "arguments": []
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
             },
             {
                 "name": "aws_api_key",
@@ -2166,7 +2078,11 @@
             },
             {
                 "name": "aws_cognito_user_pools",
-                "arguments": []
+                "arguments": [
+                    {
+                        "name": "cognito_groups"
+                    }
+                ]
             },
             {
                 "name": "aws_api_key",
@@ -2924,6 +2840,54 @@
         ]
     },
     {
+        "name": "ProblemDetail",
+        "directives": [
+            {
+                "name": "aws_iam",
+                "arguments": []
+            },
+            {
+                "name": "aws_cognito_user_pools",
+                "arguments": []
+            },
+            {
+                "name": "aws_api_key",
+                "arguments": []
+            },
+            {
+                "name": "auth",
+                "arguments": [
+                    {
+                        "name": "value",
+                        "value": "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"userPool\",\"props\":{\"groups\":[\"admin\",\"*\"]}},{\"type\":\"apiKey\"}]}"
+                    }
+                ]
+            }
+        ],
+        "fields": [
+            {
+                "name": "type",
+                "directives": []
+            },
+            {
+                "name": "status",
+                "directives": []
+            },
+            {
+                "name": "title",
+                "directives": []
+            },
+            {
+                "name": "detail",
+                "directives": []
+            },
+            {
+                "name": "instance",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "PageInfoCursor",
         "directives": [
             {
@@ -3008,6 +2972,11 @@
                 "directives": []
             }
         ]
+    },
+    {
+        "name": "Problem",
+        "directives": [],
+        "fields": []
     },
     {
         "name": "MPostFindExampleInput",

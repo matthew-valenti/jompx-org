@@ -84,14 +84,14 @@ export class MySqlSchema {
                 mMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MMovieActor', isList: true, isRequiredList: true }), // String return type.
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 }),
                 poster: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -112,7 +112,7 @@ export class MySqlSchema {
                 }),
                 clicks: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieAnalytics', isList: true }),
-                    dataSource: this.datasources['dynamodb'],
+                    dataSource: this.datasources['dynamodb'].lambdaDataSource,
                     directives: [
                         lookup({
                             from: 'DMovieAnalytics', let: { myMovieId: "$id" }, pipeline: [
@@ -138,7 +138,7 @@ export class MySqlSchema {
                     { type: 'iam', actions: ['*'], comment: 'Full access.' },
                     { type: 'userPool', props: { groups: ['admin'] }, actions: ['*'], comment: 'Group admin has full access.' },
                     { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } }, 'comment': 'Group author has access owned movies only. and cannot delete.' },
-                    { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], 'comment': 'Group user can read all.' },
+                    { type: 'userPool', props: { groups: ['user'] }, actions: ['read'], 'comment': 'Group user can read all.' },
                 ]),
                 datasource('mysql'),
                 source('movie'),
@@ -154,14 +154,14 @@ export class MySqlSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 mMovie: new ResolvableField({
                     returnType: MMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'MMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 mActor: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MActor', isRequired: true }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'MActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -186,7 +186,7 @@ export class MySqlSchema {
                 // An actor can have 0 or more movies.
                 mMovieActors: new ResolvableField({
                     returnType: MMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'MMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]

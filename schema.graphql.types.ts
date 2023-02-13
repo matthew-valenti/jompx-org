@@ -56,9 +56,7 @@ export type DActor = DNode & {
 
 export type DActorDMovieActorsArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -116,18 +114,14 @@ export type DMovie = DNode & {
 
 export type DMovieDMovieActorsArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
 
 export type DMovieFilesArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -708,6 +702,17 @@ export type PageInfoOffset = {
   skip: Scalars['Int'];
 };
 
+export type Problem = ProblemDetail;
+
+export type ProblemDetail = {
+  __typename?: 'ProblemDetail';
+  detail?: Maybe<Scalars['String']>;
+  instance?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   dActorFind?: Maybe<DActorConnection>;
@@ -732,9 +737,7 @@ export type Query = {
 
 export type QueryDActorFindArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -747,9 +750,7 @@ export type QueryDActorFindOneArgs = {
 
 export type QueryDMovieActorFindArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -762,9 +763,7 @@ export type QueryDMovieActorFindOneArgs = {
 
 export type QueryDMovieAnalyticsFindArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -777,9 +776,7 @@ export type QueryDMovieAnalyticsFindOneArgs = {
 
 export type QueryDMovieFindArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 
@@ -792,9 +789,7 @@ export type QueryDMovieFindOneArgs = {
 
 export type QueryDMovieIndexFindArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
-  limit?: InputMaybe<Scalars['Int']>;
   props?: InputMaybe<FindProps>;
-  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['AWSJSON']>;
 };
 

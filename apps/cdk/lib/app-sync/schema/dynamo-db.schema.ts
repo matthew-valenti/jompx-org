@@ -99,7 +99,7 @@ export class DynamoDbSchema {
                         auth([
                             { type: 'iam', condition: { $in: ['$$event.identity.username', '$owners'] } },
                             // { allow: 'private', provider: 'userPool', groups: ['admin'] }
-                            { type: 'apiKey' },
+                            // { type: 'apiKey' },
                         ]),
                         // auth([
                         //     { allow: 'private', provider: 'iam', ownersField: 'owners', ownerClaim: 'sub::username' },
@@ -148,14 +148,14 @@ export class DynamoDbSchema {
                 dMovieActors: new ResolvableField({
                     // A movie must have actors.
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DMovieActor', isList: true, isRequiredList: true }), // String return type example.
-                    dataSource: this.datasources['dynamodb'],
+                    dataSource: this.datasources['dynamodb'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'movieId' })
                     ]
                 }),
                 files: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile', isList: true }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -176,7 +176,7 @@ export class DynamoDbSchema {
                 }),
                 poster: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'MFile' }),
-                    dataSource: this.datasources['mysql'],
+                    dataSource: this.datasources['mysql'].lambdaDataSource,
                     directives: [
                         lookup({
                             from: 'MFile', let: { myMovieId: "$id" }, pipeline: [
@@ -198,9 +198,11 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { type: 'iam' },
-                    { type: 'userPool', props: { groups: ['*'] } },
-                    { type: 'apiKey' }
+                    { type: 'iam', actions: ['read'], comment: 'Full access.' },
+                    { type: 'apiKey', actions: ['*'], comment: 'Full access.' },
+                    { type: 'userPool', props: { groups: ['admin'] }, actions: ['*'], comment: 'Group admin has full access.' },
+                    { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } }, 'comment': 'Group author has access owned movies only. and cannot delete.' },
+                    { type: 'userPool', props: { groups: ['user'] }, actions: ['read'], 'comment': 'Group user can read all.' }
                 ]),
                 datasource('dynamodb'),
                 source('movie'),
@@ -235,14 +237,14 @@ export class DynamoDbSchema {
                 actorId: GraphqlType.id({ isRequired: true }),
                 dMovie: new ResolvableField({
                     returnType: DMovie.attribute({ isRequired: true }),
-                    dataSource: this.datasources['dynamodb'],
+                    dataSource: this.datasources['dynamodb'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'DMovie', localField: 'movieId', foreignField: 'id' })
                     ]
                 }),
                 dActor: new ResolvableField({
                     returnType: jompx.JompxGraphqlType.objectType({ typeName: 'DActor', isRequired: true }), // String return type example.
-                    dataSource: this.datasources['dynamodb'],
+                    dataSource: this.datasources['dynamodb'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'DActor', localField: 'actorId', foreignField: 'id' })
                     ]
@@ -267,7 +269,7 @@ export class DynamoDbSchema {
                 // An actor can have 0 or more movies.
                 dMovieActors: new ResolvableField({
                     returnType: DMovieActor.attribute({ isList: true }),
-                    dataSource: this.datasources['dynamodb'],
+                    dataSource: this.datasources['dynamodb'].lambdaDataSource,
                     directives: [
                         lookup({ from: 'DMovieActor', localField: 'id', foreignField: 'actorId' })
                     ]
