@@ -13,10 +13,10 @@ import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField, } from 
   */
 export class DynamoDbSchema {
 
-    public types: jompx.ISchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
+    public types: jompx.SchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
 
     constructor(
-        private datasources: jompx.IDataSource
+        private datasources: jompx.DataSource
     ) {
 
         // Interface types.
@@ -198,7 +198,7 @@ export class DynamoDbSchema {
             },
             directives: [
                 auth([
-                    { type: 'iam', actions: ['read'], comment: 'Full access.' },
+                    { type: 'iam', actions: ['*'], comment: 'Full access.' },
                     { type: 'apiKey', actions: ['*'], comment: 'Full access.' },
                     { type: 'userPool', props: { groups: ['admin'] }, actions: ['*'], comment: 'Group admin has full access.' },
                     { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } }, 'comment': 'Group author has access owned movies only. and cannot delete.' },

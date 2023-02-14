@@ -4,10 +4,10 @@ import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '
 
 export class MySqlSchema {
 
-    public types: jompx.ISchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
+    public types: jompx.SchemaTypes = { enumTypes: {}, inputTypes: {}, interfaceTypes: {}, objectTypes: {}, unionTypes: {} };
 
     constructor(
-        private datasources: jompx.IDataSource
+        private datasources: jompx.DataSource
     ) {
 
         // Interface types.
