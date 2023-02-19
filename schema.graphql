@@ -501,7 +501,7 @@ type InsertOneOutput {
   insertedId: ID
 }
 type UpsertOneOutput {
-  insertedId: ID
+  upsertedId: ID
   modifiedCount: Int
 }
 type UpdateOneOutput {

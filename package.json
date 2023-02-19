@@ -28,7 +28,6 @@
     "@jompx/constructs": "file:../jompx/dist/libs/constructs",
     "@jompx/dynamodb-datasource": "file:../jompx/dist/libs/dynamodb-datasource",
     "@jompx/graphql": "file:../jompx/dist/libs/graphql",
-    "@jompx/mysql-datasource": "file:../jompx/dist/libs/mysql-datasource",
     "@jompx/sql-datasource": "file:../jompx/dist/libs/sql-datasource",
     "aws-amplify": "^4.3.37",
     "aws-cdk": "2.43.1",

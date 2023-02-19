@@ -3055,7 +3055,7 @@
         "directives": [],
         "fields": [
             {
-                "name": "insertedId",
+                "name": "upsertedId",
                 "directives": []
             },
             {

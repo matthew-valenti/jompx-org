@@ -926,8 +926,8 @@ export type UpdateOneProps = {
 
 export type UpsertOneOutput = {
   __typename?: 'UpsertOneOutput';
-  insertedId?: Maybe<Scalars['ID']>;
   modifiedCount?: Maybe<Scalars['Int']>;
+  upsertedId?: Maybe<Scalars['ID']>;
 };
 
 export type UpsertOneProps = {
