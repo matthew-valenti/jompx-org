@@ -523,24 +523,31 @@ export type Mutation = {
   dActorDeleteOne?: Maybe<DeleteOneOutput>;
   dActorInsertOne?: Maybe<InsertOneOutput>;
   dActorUpdateOne?: Maybe<UpdateOneOutput>;
+  dActorUpsertOne?: Maybe<UpsertOneOutput>;
   dMovieActorDeleteOne?: Maybe<DeleteOneOutput>;
   dMovieActorInsertOne?: Maybe<InsertOneOutput>;
   dMovieActorUpdateOne?: Maybe<UpdateOneOutput>;
+  dMovieActorUpsertOne?: Maybe<UpsertOneOutput>;
   dMovieDeleteOne?: Maybe<DeleteOneOutput>;
   dMovieInsertOne?: Maybe<InsertOneOutput>;
   dMovieUpdateOne?: Maybe<UpdateOneOutput>;
+  dMovieUpsertOne?: Maybe<UpsertOneOutput>;
   mActorDeleteOne?: Maybe<DeleteOneOutput>;
   mActorInsertOne?: Maybe<InsertOneOutput>;
   mActorUpdateOne?: Maybe<UpdateOneOutput>;
+  mActorUpsertOne?: Maybe<UpsertOneOutput>;
   mFileDeleteOne?: Maybe<DeleteOneOutput>;
   mFileInsertOne?: Maybe<InsertOneOutput>;
   mFileUpdateOne?: Maybe<UpdateOneOutput>;
+  mFileUpsertOne?: Maybe<UpsertOneOutput>;
   mMovieActorDeleteOne?: Maybe<DeleteOneOutput>;
   mMovieActorInsertOne?: Maybe<InsertOneOutput>;
   mMovieActorUpdateOne?: Maybe<UpdateOneOutput>;
+  mMovieActorUpsertOne?: Maybe<UpsertOneOutput>;
   mMovieDeleteOne?: Maybe<DeleteOneOutput>;
   mMovieInsertOne?: Maybe<InsertOneOutput>;
   mMovieUpdateOne?: Maybe<UpdateOneOutput>;
+  mMovieUpsertOne?: Maybe<UpsertOneOutput>;
   mPostFindExample?: Maybe<MPostFindExampleOutput>;
   mPostQueryExample?: Maybe<MPostQueryExampleOutput>;
 };
@@ -565,6 +572,13 @@ export type MutationDActorUpdateOneArgs = {
 };
 
 
+export type MutationDActorUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
+};
+
+
 export type MutationDMovieActorDeleteOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<DeleteOneProps>;
@@ -581,6 +595,13 @@ export type MutationDMovieActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
   update: Scalars['AWSJSON'];
+};
+
+
+export type MutationDMovieActorUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
 };
 
 
@@ -603,6 +624,13 @@ export type MutationDMovieUpdateOneArgs = {
 };
 
 
+export type MutationDMovieUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
+};
+
+
 export type MutationMActorDeleteOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<DeleteOneProps>;
@@ -619,6 +647,13 @@ export type MutationMActorUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
   update: Scalars['AWSJSON'];
+};
+
+
+export type MutationMActorUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
 };
 
 
@@ -641,6 +676,13 @@ export type MutationMFileUpdateOneArgs = {
 };
 
 
+export type MutationMFileUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
+};
+
+
 export type MutationMMovieActorDeleteOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<DeleteOneProps>;
@@ -660,6 +702,13 @@ export type MutationMMovieActorUpdateOneArgs = {
 };
 
 
+export type MutationMMovieActorUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
+};
+
+
 export type MutationMMovieDeleteOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<DeleteOneProps>;
@@ -676,6 +725,13 @@ export type MutationMMovieUpdateOneArgs = {
   filter?: InputMaybe<Scalars['AWSJSON']>;
   props?: InputMaybe<UpdateOneProps>;
   update: Scalars['AWSJSON'];
+};
+
+
+export type MutationMMovieUpsertOneArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpsertOneProps>;
+  upsert: Scalars['AWSJSON'];
 };
 
 
@@ -864,6 +920,17 @@ export type UpdateOneOutput = {
 };
 
 export type UpdateOneProps = {
+  returnConsumedCapacity?: InputMaybe<Scalars['String']>;
+  returnValues?: InputMaybe<Scalars['String']>;
+};
+
+export type UpsertOneOutput = {
+  __typename?: 'UpsertOneOutput';
+  insertedId?: Maybe<Scalars['ID']>;
+  modifiedCount?: Maybe<Scalars['Int']>;
+};
+
+export type UpsertOneProps = {
   returnConsumedCapacity?: InputMaybe<Scalars['String']>;
   returnValues?: InputMaybe<Scalars['String']>;
 };

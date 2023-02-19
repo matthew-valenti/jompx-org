@@ -78,6 +78,20 @@
         ]
     },
     {
+        "name": "UpsertOneProps",
+        "directives": [],
+        "fields": [
+            {
+                "name": "returnValues",
+                "directives": []
+            },
+            {
+                "name": "returnConsumedCapacity",
+                "directives": []
+            }
+        ]
+    },
+    {
         "name": "UpdateOneProps",
         "directives": [],
         "fields": [
@@ -280,7 +294,7 @@
                 "arguments": [
                     {
                         "name": "value",
-                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"updateOne\",\"updateMany\",\"upsertOne\",\"upsertMany\",\"deleteOne\",\"deleteMany\"]}"
+                        "value": "{\"names\":[\"find\",\"findOne\",\"insertOne\",\"insertMany\",\"upsertOne\",\"upsertMany\",\"updateOne\",\"updateMany\",\"deleteOne\",\"deleteMany\"]}"
                     }
                 ]
             }
@@ -837,6 +851,23 @@
                 ]
             },
             {
+                "name": "mMovieUpsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "mMovieUpdateOne",
                 "directives": [
                     {
@@ -880,6 +911,15 @@
                 ]
             },
             {
+                "name": "mMovieActorUpsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
                 "name": "mMovieActorUpdateOne",
                 "directives": [
                     {
@@ -899,6 +939,15 @@
             },
             {
                 "name": "mActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "mActorUpsertOne",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -934,6 +983,15 @@
                 ]
             },
             {
+                "name": "mFileUpsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
                 "name": "mFileUpdateOne",
                 "directives": [
                     {
@@ -953,6 +1011,27 @@
             },
             {
                 "name": "dMovieInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    },
+                    {
+                        "name": "aws_cognito_user_pools",
+                        "arguments": [
+                            {
+                                "name": "cognito_groups"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aws_api_key",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "dMovieUpsertOne",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -1024,6 +1103,15 @@
                 ]
             },
             {
+                "name": "dMovieActorUpsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
                 "name": "dMovieActorUpdateOne",
                 "directives": [
                     {
@@ -1043,6 +1131,15 @@
             },
             {
                 "name": "dActorInsertOne",
+                "directives": [
+                    {
+                        "name": "aws_iam",
+                        "arguments": []
+                    }
+                ]
+            },
+            {
+                "name": "dActorUpsertOne",
                 "directives": [
                     {
                         "name": "aws_iam",
@@ -2949,6 +3046,20 @@
         "fields": [
             {
                 "name": "insertedId",
+                "directives": []
+            }
+        ]
+    },
+    {
+        "name": "UpsertOneOutput",
+        "directives": [],
+        "fields": [
+            {
+                "name": "insertedId",
+                "directives": []
+            },
+            {
+                "name": "modifiedCount",
                 "directives": []
             }
         ]

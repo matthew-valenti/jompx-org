@@ -142,7 +142,7 @@ export class MySqlSchema {
                 ]),
                 datasource('mysql'),
                 source('movie'),
-                operation(['find', 'findOne', 'insertOne', 'insertMany', 'updateOne', 'updateMany', 'upsertOne', 'upsertMany', 'deleteOne', 'deleteMany'])
+                operation(['find', 'findOne', 'insertOne', 'insertMany', 'upsertOne', 'upsertMany', 'updateOne', 'updateMany', 'deleteOne', 'deleteMany'])
             ]
         });
         this.types.objectTypes['MMovie'] = MMovie;
