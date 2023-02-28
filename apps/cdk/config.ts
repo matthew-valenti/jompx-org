@@ -1,5 +1,5 @@
 export const Config = {
-    '@myorganization': {
+    '@organization': {
         "matthew": "hello"
     }
-};
+}

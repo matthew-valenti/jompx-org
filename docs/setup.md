@@ -503,15 +503,24 @@ aws sso login --profile jompx-sandbox1
 npx cdk-sso-sync jompx-sandbox1
 ```
 
-### Enable Billing Alerts
-Enable AWS billing alarms to control your AWS budget.
+## Billing
 
-Check "Receive Billing Alerts" here: https://console.aws.amazon.com/billing/home#/
+### Consolidated Billing
+Because we are using AWS Organizations consolidated billing is automatically enabled.  
+The organization's management account is responsible for paying the bills for all accounts in the organization.  
+Read about the benefits of AWS Organizations consolidated billing: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html
+
+### Enable Billing Alerts
+Enable AWS billing alerts to control your AWS budget.
+
+Check the "Receive Billing Alerts" option here: https://console.aws.amazon.com/billing/home#/
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html#turning_on_billing_metrics
 
-You can also check "Receive Free Tier Usage Alerts" if you're trying to stay within free tier usage.
+You can also check the "Receive Free Tier Usage Alerts" option if you're trying to stay within free tier usage.
 
-### Setup Billing Alerts
+### Setup Billing Alarms
+
+Before you can create an alarm, you must enable billing alerts. After you enable billing alerts for the first time, it takes about 15 minutes before you can view billing data and set billing alarms.
 
 ### Management Account Best Practices
 https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html
@@ -644,7 +653,6 @@ nx login cdk --profile jompx-sandbox1
 ***IAM Identity Center (successor to AWS Single Sign-On) streamlines how you manage workforce user access to AWS
 nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www.youtube.com/watch?v=4yJp5-jGGNk
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
-
 ---
 
 // Important: For temporary testing only (in test env). Delete stack after use.

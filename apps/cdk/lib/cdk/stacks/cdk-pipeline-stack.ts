@@ -48,12 +48,17 @@ export class CdkPipelineStack extends cdk.Stack {
                     pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') }));
                     pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first (override env stage to test).
                     pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') }));
+
+                    /// ???
+                    // pipeline.addStage(new AppStage(this, 'CommunicationStage', { ...this.props, env: config.env('management') }));
+                    /// ???
+
                     break;
                 // When stage = test, listen for changes on branch: test.
                 // When stage = test, listen for changes on branch: test-test.
                 case (branch === 'test' || branch === 'test-test'):
                     // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') })); // For temporary testing only (in test env). Delete stack after use.
-                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') }));
+                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') })); // For manual deploy to test environment for troubleshooting issues.
                     break;
                 // When stage = sandbox1, listen for changes on branch containing: sandbox1
                 // Developers can also deploy via CLI and should have their stage set to their sandbox e.g. stage: 'sandbox1'

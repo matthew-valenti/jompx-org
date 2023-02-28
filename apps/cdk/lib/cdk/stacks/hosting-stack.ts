@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
@@ -12,6 +13,9 @@ export interface HostingStackProps extends cdk.StackProps {
 
 export class HostingStack extends cdk.Stack {
 
+    // Share wild card certificates with other stacks.
+    public certificates = new Map<string, acm.Certificate>();
+
     constructor(scope: Construct, id: string, props: HostingStackProps) {
         super(scope, id, props);
 
@@ -23,7 +27,7 @@ export class HostingStack extends cdk.Stack {
 
         if (apps) {
 
-            // Create one wildcard certificate per unique app domain.
+            // Create one wildcard certificate per unique app domain. Created in US East (N. Virginia) region.
             const hostingCertificates = new Map<string, jompx.HostingCertificate>();
             rootDomainNames?.forEach(rootDomainName => {
                 const hostingCertificate = new jompx.HostingCertificate(this, 'HostingCertificate', {
@@ -35,11 +39,15 @@ export class HostingStack extends cdk.Stack {
             apps.forEach(app => {
                 const appNamePascalCase = changeCase.pascalCase(app.name);
 
-                // Dervie the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
+                // Derive the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
                 const domainName = stage === 'prod' ? `${app.name}.${app.rootDomainName}` : `${app.name}.${stage}.${app.rootDomainName}`;
 
                 const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName: `${stage}.${app.rootDomainName}` });
                 const certificate = hostingCertificates.get(app.rootDomainName)?.certificate;
+                
+                if (certificate) {
+                    this.certificates.set(app.rootDomainName, certificate);
+                }
 
                 if (zone && certificate) {
 

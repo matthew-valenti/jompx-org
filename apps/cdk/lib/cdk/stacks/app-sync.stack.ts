@@ -1,8 +1,9 @@
 import * as path from 'path';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
-import * as jconstructs from '@jompx/constructs';
+import * as jompx from '@jompx/constructs';
 import * as jsql from '@jompx/sql-datasource';
 import * as jdynamodb from '@jompx/dynamodb-datasource';
 import { DynamoDbStack } from './dynamo-db.stack';
@@ -14,20 +15,37 @@ export interface AppSyncStackProps extends cdk.StackProps {
     userPool: cdk.aws_cognito.UserPool;
     dataSourceStack: {
         dynamoDbStack: DynamoDbStack
+    },
+    domainName: {
+        label: string;
+        rootDomainName: string;
+        certificate?: acm.Certificate
     }
 }
 
 export class AppSyncStack extends cdk.Stack {
 
     public graphqlApi: appsync.GraphqlApi;
-    public schemaBuilder: jconstructs.AppSyncSchemaBuilder;
+    public schemaBuilder: jompx.AppSyncSchemaBuilder;
 
     constructor(scope: Construct, id: string, props: AppSyncStackProps) {
         super(scope, id, props);
 
+        const config = new jompx.Config(this.node);
+        const stage = config.stage();
+
+        // Derive the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
+        const domainName = stage === 'prod' ? `${props.domainName.label}.${props.domainName.rootDomainName}` : `${props.domainName.label}.${stage}.${props.domainName.rootDomainName}`;
+
         // Create AppSync resource.
-        const appSync = new jconstructs.AppSync(this, 'AppSync', {
+        const appSync = new jompx.AppSync(this, 'AppSync', {
             name: 'api',
+            ...props.domainName?.certificate && {
+                domainName: {
+                    domainName,
+                    certificate: props.domainName.certificate
+                }
+            },
             additionalAuthorizationModes: [
                 {
                     authorizationType: appsync.AuthorizationType.USER_POOL,
