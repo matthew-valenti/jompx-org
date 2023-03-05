@@ -219,7 +219,7 @@ Organization:
       DefaultOrganizationAccessRoleName: OrganizationAccountAccessRole
 ```
 
-As you change your yaml and want to deploy additional organization choices
+As you change your yaml and want to deploy with additional organization choices
 ```
 npx org-formation update organization.yml --profile jompx-management
 npx org-formation create-change-set organization.yml --profile jompx-management
@@ -280,6 +280,7 @@ Create apps\org-formation\subdomains.yml
 
 Creates a CloudFormation stack. If creating multiple domains then use unique stack names e.g. HostedZoneMyDomain1, HostedZoneMyDomain2
 ```
+cd apps/org-formation
 npx org-formation print-stacks subdomains.yml --stack-name HostedZone --parameters domainName=jompx.com --profile jompx-management
 npx org-formation update-stacks subdomains.yml --stack-name HostedZone --parameters domainName=jompx.com --profile jompx-management
 ```
@@ -401,6 +402,7 @@ npm install tsconfig-paths
 }
 ```
 - Add synth as cacheable peration in /nx.json e.g.
+TODO: This doesn't speed anything up! It looks like any code change results in a full synth + cache. So nothing is really cached.
 ```
 "cacheableOperations": [
   "build",
@@ -526,6 +528,7 @@ Before you can create an alarm, you must enable billing alerts. After you enable
 https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html
 
 ### Boostrap CDK
+Login to the matching profile prior to running bootstrap (or boostrap will error due to permissions).
 ugh-nightmare can we have a jompx cli command that picks up from config?
 Version can be found in parameter store variable: /cdk-bootstrap/xxxxxxxxx/version
 Maybe this helps -- boostrap all accounts in one script: https://stackoverflow.com/questions/59206845/how-to-provide-multiple-account-credentials-to-cdk-bootstrap
@@ -538,6 +541,13 @@ set CDK_NEW_BOOTSTRAP=1
 npx cdk bootstrap aws://ACCOUNT-NUMBER/REGION --profile ADMIN-PROFILE ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
     aws://ACCOUNT-ID/REGION
+
+// management
+// For security, do NOT specify --trust. Manual restricted access stack deploys only.
+set CDK_NEW_BOOTSTRAP=1
+npx cdk bootstrap aws://015117255009/us-west-2 --profile jompx-management ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    aws://015117255009/us-west-2
 
 // cicd-test
 set CDK_NEW_BOOTSTRAP=1 
@@ -630,6 +640,82 @@ nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-
 nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
 ```
 
+The CDK pipeline stack is designed to be able to deploy anything to anywhere.
+However, with this flexibility comes some complexity so let's break it down.
+
+1. Branch
+Think of deployments starting with a code repository branch.
+For example, what happens when I push changes to the main branch? Or what happens when I push changes to my sandbox1 branch?
+Pushing changes to a branch will generally trigger a deployment.
+
+2. Environment
+An environment is an AWS account + a region. You're likely to have many environments. For example, test and production environments in us-east-1 that run databases and apps. An organization environment in us-east-1 used for managing all other AWS accounts. You might have cross region redundancy and have us-east-1 and us-west-2 environments. Because it's difficult to remember AWS account + region pairs we give them a name. For example, test, prod, prod-east, prod-west, organization, cicd-test, cicd-prod, sandbox1, sandbox2.
+
+3. Stage
+Deployments are deployed to stages. For example, a developer might start working on a feature and deploy that feature to a sandbox stage.
+When the feature is complete it might be deployed to a test stage and then a production stage.
+
+We put these three concepts together and define: when changes are pushed to a branch, what is the stage, and what environments are we going to deploy to.
+
+For example, we can define that the main branch is our prod stage. i.e. When we push code changes to our main branch we will deploy to prod.
+Our prod stage can be made up of many environments. For example, when we pushed changes to main we might deploy app changes to our app environment, dns changes to the same environment, and CI/CD changes to our cicd-prod environment. But because we can deploy anything to anywhere we can choose to deploy to test environments before deploying to prod environments. That way, if a deployment fails on test, it won't impact the prod environments.
+
+Another example, is we can define that a branch that contains the string "sandbox1" is our sandbox1 stage. i.e. When we push code changes to branch sandbox1-my-new-feature we will deploy to sandbox1. A sandbox account is an account assigned to a single developer. We'll typically have one sandbox account per developer. There are no restrictions on naming sandboxes but as developers come and go it might be easier to name them 1, 2, 3 rather than Mary, Jane, and Peter. Our sandbox1 stage might be made up of many environments but it's typically limited to one AWS account (but multiple regions). i.e. When a developer deploys to a sandbox1 branch we'll probably only want to deploy changes to their sandbox AWS account. For example, when changes are pushed to sandbox1 we might deploy app changes to our app environment and changes common to all AWS accounts (e.g. SES verified domains).
+
+Note that developers can also manually deploy a single stack to an environment. For example, if I'm working on a new AppSync feature I can manually deploy just the AppSync stack (and any stacks it's dependant on) to my sandbox. This is faster for developer iteration than a full deploy.
+
+Setup:
+- In config, environments, list each AWS account + region you will deploy to. Give each environment a name.
+```
+environments: [
+  {
+    accountId: '123456789012',
+    region: 'us-east-1',
+    name: 'prod'
+  }
+]
+```
+
+- In config, stages, list each stage, assign each stage a branch name.
+```
+stages: {
+  prod: {
+    branch: 'main',
+    deployments: []
+  }
+```
+
+- And for each stage, list each deployment. Each deployment will deploy a type (of changes) to an environment.
+```
+stages: {
+  prod: {
+    branch: 'main',
+    deployments: [
+      {
+        type: 'app', // When changes are pushed to branch main then "app" type changes to be deployed to the prod environment.
+        environmentName: 'prod'
+      },
+      {
+        type: 'dns', // When changes are pushed to branch main then "dns" type changes to be deployed to the prod environment.
+        environmentName: 'prod'
+      }
+    ]
+  }
+```
+
+- In CdkPipelineStack, specify for each branch, the "type" of changes to deploy.
+```
+case (branch === 'main'): {
+  // Note how the "app" type is used here.
+  pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first.
+  pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') }));
+
+case (branch === 'sandbox1'): {
+  // Note how the "app" type is used here.
+  pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app', 'sandbox1') }));  // Note how the "app" type is used here.
+```
+*Note that addStage is an AWS CDK pipeline term (and not a Jompx stage). An AWS CDK pipeline stage is simply a container for deploying multiple stacks to an environment.
+
 ### Upgrade CDK
 Version change often.
 ```
@@ -655,15 +741,23 @@ nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
 ---
 
+// Deploy ManagementStack to management environment only.
+nx synth cdk ManagementStack --profile jompx-management
+nx deploy cdk ManagementStack --profile jompx-management
+
 // Important: For temporary testing only (in test env). Delete stack after use.
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
 
-// Deploy DNS to prod only.
+// Deploy DnsStack to prod only.
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 
 ---
+
+nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1 --hotswap
 
 nx synth cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1
 nx deploy cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1
@@ -935,3 +1029,13 @@ aggregate {
       field
       ..
     }
+
+  Cross region AppSync
+  https://aws.amazon.com/blogs/mobile/multi-region-deployment-aws-appsync-dynamodb-tables/
+  AppSync is a fully managed serverless service that makes it easy to develop and host a GraphQL API by handling the heavy lifting required to implement subscriptions, so that organizations can develop their applications with low operational overhead and can focus on the activities that bring value to their customers. AppSync APIs are deployed in a highly available, fault-tolerant and scalable infrastructure within a chosen Region.
+
+  AWS Security Best Practices
+  a little old but good coverage: https://www.youtube.com/watch?v=tmuClE3nWlk
+  security hub
+  audit manager - e.g. will audit pci compliance.
+  config performance pack - e.g. will set account to pci.

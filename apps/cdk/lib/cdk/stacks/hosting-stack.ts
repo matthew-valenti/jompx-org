@@ -7,16 +7,12 @@ import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
 
-export interface HostingStackProps extends cdk.StackProps {
-    // userPool: cdk.aws_cognito.UserPool;
-}
-
 export class HostingStack extends cdk.Stack {
 
     // Share wild card certificates with other stacks.
     public certificates = new Map<string, acm.Certificate>();
 
-    constructor(scope: Construct, id: string, props: HostingStackProps) {
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
         const config = new jompx.Config(this.node);

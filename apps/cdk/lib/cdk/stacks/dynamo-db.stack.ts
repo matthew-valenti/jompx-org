@@ -9,10 +9,6 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 // import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 // import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 
-export interface DynamoDbProps extends cdk.StackProps {
-    // userPool: cdk.aws_cognito.UserPool;
-}
-
 export class DynamoDbStack extends cdk.Stack {
 
     public tables: cdk.aws_dynamodb.Table[] = [];
@@ -20,7 +16,7 @@ export class DynamoDbStack extends cdk.Stack {
     // public graphqlApi: appsync.GraphqlApi;
     // public schemaBuilder: jompx.AppSyncSchemaBuilder;
 
-    constructor(scope: Construct, id: string, props: DynamoDbProps) {
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
         // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-modeling-nosql-B.html

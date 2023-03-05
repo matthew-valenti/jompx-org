@@ -10,13 +10,14 @@ export class AppStage extends cdk.Stage {
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);
 
-        const hostingStack = new HostingStack(this, 'HostingStack', {});
+        const hostingStack = new HostingStack(this, 'HostingStack', props);
 
         const cognitoStack = new CognitoStack(this, 'CognitoStack', props);
 
-        const dynamoDbStack = new DynamoDbStack(this, 'DynamoDbStack', {});
+        const dynamoDbStack = new DynamoDbStack(this, 'DynamoDbStack', props);
 
         new AppSyncStack(this, 'AppSyncStack', {
+            stackProps: props,
             domainName: {
                 label: 'api', // e.g. (for domain api.jompx.com label = api)
                 rootDomainName: 'jompx.com', // e.g. (for domain api.sandbox.jompx.com root domain = jompx.com)

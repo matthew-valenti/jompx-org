@@ -3,6 +3,18 @@ import { IConfig } from '@jompx/constructs';
 export const Config: IConfig = {
     '@jompx': {
         organizationName: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name.
+        emails: [
+            {
+                email: 'admin@jompx.com',
+                tags: ['billing', 'security', 'errors']
+            }
+        ],
+        // TODO: Used by communication stack only for SES. Does this need to be a Jompx config?
+        domains: [
+            {
+                rootDomainName: 'jompx.com'
+            }
+        ],
         apps: [
             {
                 name: 'admin',
@@ -11,6 +23,11 @@ export const Config: IConfig = {
         ],
         // An environment is the target AWS account and region into which a stack will be deployed.
         environments: [
+            {
+                accountId: '015117255009',
+                region: 'us-west-2',
+                name: 'management'
+            },
             {
                 accountId: '863054937555',
                 region: 'us-west-2',
@@ -42,6 +59,10 @@ export const Config: IConfig = {
             prod: {
                 branch: 'main',
                 deployments: [
+                    {
+                        type: 'management',
+                        environmentName: 'management',
+                    },
                     {
                         type: 'cicd',
                         environmentName: 'cicd-prod',

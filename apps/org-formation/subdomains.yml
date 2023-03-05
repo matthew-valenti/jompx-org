@@ -9,7 +9,9 @@ Organization: !Include ./organization.yml
 DefaultOrganizationBindingRegion: us-west-2
 
 # Matthew Notes:
-# Create stack Subdomain in each account.
+# Create a hosted zone across multiple AWS accounts.
+# Create a stack in each account (that matches OrganizationBindings). The name of the stack is a command line parameter.
+# A Route53 public hosted zone domain created in management/master account with subdomain management. The master account cannot have tags.
 # A Route53 public hosted zone domain created in prod account.
 # A Route53 public hosted zone subdomain created in accounts with subdomain tag (in organization.yml).
 # Removed the SSM params in original template and changed root binding account to prod (instead of management).
@@ -34,6 +36,10 @@ Parameters:
 # These bindings can be !Ref'd from the Resources in the resource section
 OrganizationBindings:
 
+  # binding for ManagementHostedZone, ManagementHostedZoneIdParam, ManagementHostedZoneNameParam
+  ManagementHostedZoneBinding:
+    IncludeMasterAccount: true
+
   # binding for HostedZone, HostedZoneIdParam, HostedZoneNameParam
   HostedZoneBinding:
     AccountsWithTag: subdomain
@@ -55,6 +61,14 @@ Resources:
       HostedZoneConfig:
         Comment: Domain Hosted Zone
       Name: !Sub '${AWSAccount.Tags.subdomain}.${domainName}.'
+
+  ManagementHostedZoneBinding:
+    Type: AWS::Route53::HostedZone
+    OrganizationBinding: !Ref ManagementHostedZoneBinding
+    Properties:
+      HostedZoneConfig:
+        Comment: Domain Hosted Zone
+      Name: !Sub 'management.${domainName}.'
 
   #=========================================#
   # Parent Record

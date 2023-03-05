@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09-OC'
-Description: default template generated for organization with master account 015117255009
+Description: default template created for organization with master account 015117255009
 
 Organization:
   MasterAccount:
@@ -9,8 +9,6 @@ Organization:
       AccountId: '015117255009'
       RootEmail: root@jompx.com
       Alias: jompx-management
-      Tags:
-        budget-alarm-threshold: '25'
 
   OrganizationRoot:
     Type: OC::ORG::OrganizationRoot

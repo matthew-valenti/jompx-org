@@ -10,6 +10,7 @@ import * as jompx from '@jompx/constructs';
 import { Config as JompxConfig } from '@cdk/jompx.config';
 import { Local as JompxLocalConfig } from '@cdk/jompx.local';
 import { Config as OrganizationConfig } from '@cdk/config';
+import { ManagementStack } from '@cdk/lib/cdk/stacks/management-stack';
 
 // const yaml = require('js-yaml');
 // const fs   = require('fs');
@@ -60,3 +61,7 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
     // env: app.node.tryGetContext('stage') === 'prod' ? config.getEnv('cicd-prod') : config.getEnv('cicd-test')
 });
 
+/*
+Special stacks that are not part of the standard CDK Pipeline.
+*/
+new ManagementStack(app, 'ManagementStack', { env: config.env('management') }); // Management account only. Restricted access. Manual deploy.

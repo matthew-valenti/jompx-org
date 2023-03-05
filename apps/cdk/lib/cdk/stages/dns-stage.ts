@@ -7,6 +7,6 @@ export class DnsStage extends cdk.Stage {
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);
 
-        new DnsStack(this, 'DnsStack', {});
+        new DnsStack(this, 'DnsStack', props);
     }
 }

@@ -12,6 +12,7 @@ import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 import { AppSyncSubscription } from '@cdk/lib/app-sync/subscription.construct';
 
 export interface AppSyncStackProps extends cdk.StackProps {
+    stackProps: cdk.StackProps | undefined;
     userPool: cdk.aws_cognito.UserPool;
     dataSourceStack: {
         dynamoDbStack: DynamoDbStack

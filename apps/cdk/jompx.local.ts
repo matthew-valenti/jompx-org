@@ -2,7 +2,7 @@ import { ILocalConfig } from '@jompx/constructs';
 
 export const Local: ILocalConfig = {
     '@jompx-local': {
-        stage: 'sandbox1',
+        stage: 'sandbox1', // sandbox1, test, prod
         // stages: {
         //     sandbox1: {
         //         environments: [
