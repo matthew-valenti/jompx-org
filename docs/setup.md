@@ -35,7 +35,7 @@ Create a git repository for your organization or project. This repository will b
 
 Why Monorepo? Atomic changes, Shared code, single set of dependencies.
 
-### Create GitHub Personal Access Token
+### Create GitHub Personal Access Token (old see new codestar method below)
 https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 Scopes: repo, admin:repo_hook
 
@@ -55,8 +55,6 @@ The CDK does not support CodeBuild GitHub credentials. Get the GitHub token from
  https://docs.aws.amazon.com/cdk/api/latest/docs/aws-codebuild-readme.html
  ```
  aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token REPLACE_WITH_MY_TOKEN --profile jompx-sandbox1
- aws codebuild import-source-credentials --region us-west-2 --server-type GITHUB --auth-type PERSONAL_ACCESS_TOKEN --token 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 --profile jompx-cicd-test
-
  ```
 
 ### 5. Create Nx Workspace
@@ -609,11 +607,14 @@ https://docs.aws.amazon.com/codepipeline/latest/userguide/connections-github.htm
  ```
  // aws codestar-connections create-connection --provider-type GitHub --connection-name organization-name
  aws codestar-connections create-connection --provider-type GitHub --connection-name jompx --profile jompx-cicd-test
- // e.g. "ConnectionArn": "arn:aws:codestar-connections:us-west-2:863054937555:connection/38e739e3-ed21-4dbc-98f9-b97e40764d5b"
+ // e.g. "ConnectionArn": "arn:aws:codestar-connections:us-west-2:xxxxxxxxx555:connection/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
  ```
 
  Use the AWS console to complete the connection.
  https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html
+
+aws secretsmanager create-secret --name "/cicd/github/token" --secret-string "REPLACE_WITH_CODESTAR_CONNECTION_ARN" --profile jompx-sandbox1
+aws secretsmanager put-secret-value --secret-id "/cicd/github/token" --secret-string "REPLACE_WITH_CODESTAR_CONNECTION_ARN" --profile jompx-cicd-test
 
 You must deploy a pipeline manually once. After that, the pipeline will keep itself up to date from the source code repository, so make sure the code in the repo is the code you want deployed.
 
