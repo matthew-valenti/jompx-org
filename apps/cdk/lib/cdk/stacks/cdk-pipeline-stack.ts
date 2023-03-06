@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import { AppStage } from '../stages/app-stage';
-import { AllStage } from '../stages/all-stage';
+import { AccountStage } from '../stages/account-stage';
 import { DnsStage } from '../stages/dns-stage';
 // import { ManagementStage } from '../stages/management-stage';
 import get = require('get-value');
@@ -56,35 +56,68 @@ export class CdkPipelineStack extends cdk.Stack {
             // TODO: Add wave for performance???
 
             console.log('!!!!branch', branch);
+            // switch (true) {
+            //     // When stage = prod, listen for changes on branch main:
+            //     case (branch === 'main'):
+
+            //         // Deploy to organization AWS account.
+            //         // pipeline.addStage(new ManagementStage(this, 'ManagementStage', { ...this.props, env: config.env('management') }));
+
+            //         // Deploy to all AWS accounts. Deploy to test account first.
+            //         pipeline.addStage(new AllStage(this, 'AllStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first (override env stage to test).
+            //         pipeline.addStage(new AllStage(this, 'AllStageApp', { ...this.props, env: config.env('app') }));
+            //         pipeline.addStage(new AllStage(this, 'AllStageCiCd', { ...this.props, env: config.env('cicd') }));
+
+            //         pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') }));
+            //         pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first (override env stage to test).
+            //         pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') }));
+
+            //         break;
+            //     // When stage = test, listen for changes on branch: test.
+            //     // When stage = test, listen for changes on branch: test-test.
+            //     case (branch === 'test' || branch === 'test-test'):
+            //         // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') })); // For temporary testing only (in test env). Delete stack after use.
+            //         pipeline.addStage(new AllStage(this, 'AllStage', { ...this.props, env: config.env('app') })); // For manual deploy to test environment for troubleshooting issues.
+            //         pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') })); // For manual deploy to test environment for troubleshooting issues.
+            //         break;
+            //     // When stage = sandbox1, listen for changes on branch containing: sandbox1
+            //     // Developers can also deploy via CLI and should have their local config stage set to their sandbox e.g. stage: 'sandbox1'
+            //     case (branch.includes(`sandbox${branchIndex}`)):
+            //         pipeline.addStage(new AllStage(this, 'AllStage', { ...this.props, env: config.env('app', `sandbox${branchIndex}`) }));
+            //         pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app', `sandbox${branchIndex}`) }));
+            //         break;
+            // }
+
             switch (true) {
                 // When stage = prod, listen for changes on branch main:
                 case (branch === 'main'):
 
-                    // Deploy to organization AWS account.
-                    // pipeline.addStage(new ManagementStage(this, 'ManagementStage', { ...this.props, env: config.env('management') }));
+                    // Deploy to test environments first. If successful then deploy to production environments.
+                    pipeline.addStage(new AccountStage(this, 'AccountStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
 
-                    // Deploy to all AWS accounts. Deploy to test account first.
-                    pipeline.addStage(new AllStage(this, 'AllStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first (override env stage to test).
-                    pipeline.addStage(new AllStage(this, 'AllStageApp', { ...this.props, env: config.env('app') }));
-                    pipeline.addStage(new AllStage(this, 'AllStageCiCd', { ...this.props, env: config.env('cicd') }));
-
-                    pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') }));
-                    pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('app', 'test') })); // Deploy to test env first (override env stage to test).
-                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') }));
-
+                    // Deploy to production environments.
+                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCd', { ...this.props, env: config.env('cicd-prod') }));
+                    pipeline.addStage(new AccountStage(this, 'AccountStageProd', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('prod') }));
                     break;
+
                 // When stage = test, listen for changes on branch: test.
                 // When stage = test, listen for changes on branch: test-test.
                 case (branch === 'test' || branch === 'test-test'):
-                    // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('dns') })); // For temporary testing only (in test env). Delete stack after use.
-                    pipeline.addStage(new AllStage(this, 'AllStage', { ...this.props, env: config.env('app') })); // For manual deploy to test environment for troubleshooting issues.
-                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app') })); // For manual deploy to test environment for troubleshooting issues.
+                    pipeline.addStage(new AccountStage(this, 'AccountStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
+                    // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') })); // For temporary testing only (in test environments). Delete stack after use.
                     break;
+                    
                 // When stage = sandbox1, listen for changes on branch containing: sandbox1
                 // Developers can also deploy via CLI and should have their local config stage set to their sandbox e.g. stage: 'sandbox1'
                 case (branch.includes(`sandbox${branchIndex}`)):
-                    pipeline.addStage(new AllStage(this, 'AllStage', { ...this.props, env: config.env('app', `sandbox${branchIndex}`) }));
-                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('app', `sandbox${branchIndex}`) }));
+                    pipeline.addStage(new AccountStage(this, 'AccountStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
+                    pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
                     break;
             }
         }

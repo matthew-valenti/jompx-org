@@ -630,14 +630,14 @@ You must deploy a pipeline manually once. After that, the pipeline will keep its
 // Login cicd-test
 nx login cdk --profile jompx-cicd-test
 // Deploy to cicd-test
-nx synth cdk --args="CdkPipelineStack --context stage=test --profile jompx-cicd-test"
-nx deploy cdk --args="CdkPipelineStack --context stage=test --profile jompx-cicd-test"
+nx synth cdk CdkPipelineStack --context stage=test --profile jompx-cicd-test --quiet
+nx deploy cdk CdkPipelineStack --context stage=test --profile jompx-cicd-test --quiet --requireApproval never
 
 // Login cicd-prod
 nx login cdk --profile jompx-cicd-prod
 // Deploy to cicd-prod
-nx synth cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
-nx deploy cdk --args="CdkPipelineStack --context stage=prod --profile jompx-cicd-prod"
+nx synth cdk CdkPipelineStack --context stage=prod --profile jompx-cicd-prod --quiet
+nx deploy cdk CdkPipelineStack --context stage=prod --profile jompx-cicd-prod --quiet --requireApproval never
 ```
 
 The CDK pipeline stack is designed to be able to deploy anything to anywhere.

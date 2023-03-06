@@ -34,6 +34,7 @@ const app = new cdk.App({
 
 // Init Jompx config.
 const config = new jompx.Config(app.node);
+const stage = config.stage();
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -57,11 +58,14 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
     /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 
     // Deploy stack to prod: nx synth cdk --args="CdkPipelineStack --context env=cicd-prod"
-    env: config.env('cicd')
+    // env: config.env('cicd')
     // env: app.node.tryGetContext('stage') === 'prod' ? config.getEnv('cicd-prod') : config.getEnv('cicd-test')
+    env: stage === 'prod' ? config.env('cicd-prod') : config.env('cicd-test')
 });
 
 /*
 Special stacks that are not part of the standard CDK Pipeline.
 */
-new ManagementStack(app, 'ManagementStack', { env: config.env('management') }); // Management account only. Restricted access. Manual deploy.
+
+// Management account only. Restricted access. Manual deploy. Comment out otherwise will error for users without management account permissions.
+// new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
