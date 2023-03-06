@@ -35,9 +35,8 @@ export class CdkPipelineStack extends cdk.Stack {
             gitHub: {
                 owner: 'matthew-valenti',
                 repo: 'jompx-org',
-                // connectionArn: stage === 'prod' ? '' : 'arn:aws:codestar-connections:us-west-2:863054937555:connection/ebb40ed7-02c9-4916-a3ac-f9e965e8f4a4'
                 // token: SecretValue.secretsManager('cicd/github/token')
-                connectionArn: cdk.SecretValue.secretsManager('/cicd/github/token').toString()
+                connectionArn: cdk.SecretValue.secretsManager('/cicd/github/token').toString() // e.g. arn:aws:codestar-connections...
             }
         };
 
