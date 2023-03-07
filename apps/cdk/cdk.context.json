@@ -10,5 +10,9 @@
   "hosted-zone:account=281660020318:domainName=jompx.com:region=us-west-2": {
     "Id": "/hostedzone/Z0604602H8JAYNDH9QVU",
     "Name": "jompx.com."
+  },
+  "hosted-zone:account=863054937555:domainName=cicd-test.jompx.com:region=us-west-2": {
+    "Id": "/hostedzone/Z0908070W9X0PJ4KXJNN",
+    "Name": "cicd-test.jompx.com."
   }
 }
