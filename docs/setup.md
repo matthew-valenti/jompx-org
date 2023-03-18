@@ -876,7 +876,22 @@ Jompx AppSync datasources expose events. By subscribing to these events you can 
 1. Make additional data available to the datasource e.g. custom security data from internal databases and systems.
 e.g. A cognito user 
 
+1. Install module:
 npm i --save-dev @nrwl/js
+
+2. Create lib:
+nx g @nrwl/js:lib graphql --importPath="@jompx/graphql"
+nx g @nrwl/js:lib appsync-datasource-layer
+
+3. Lambda requires NodeJS layers to be in a specific directory structure.
+So in project.json, change the output path to include nodejs/node_modules
+e.g. "outputPath": "dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer",
+If you get a module not found error it most likely means your directory structure is wrong.
+
+4. Build
+nx build appsync-datasource-layer
+nx build appsync-datasource-layer --skip-nx-cache
+nx build appsync-datasource-layer --watch
 
 # Ionic/Angular
 https://nxtend.dev/docs/ionic-angular/getting-started/

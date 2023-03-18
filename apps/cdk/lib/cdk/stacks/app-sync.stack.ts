@@ -76,7 +76,22 @@ export class AppSyncStack extends cdk.Stack {
             // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
             //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
             // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
-            code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber', 'nodejs', 'dist', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber')),
+            code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'dist', 'libs', 'appsync-datasource-layer'), {
+                // bundling: {
+                //     image: lambda.Runtime.NODEJS_18_X.bundlingImage,
+                //     local: {
+                //         tryBundle(outputDir: string) {
+                //           try {
+                //             spawnSync('npm i')
+                //           } catch {
+                //             return false
+                //           }
+                //           return true
+                //         },
+                //     },
+                //     // command: ['npm', 'install']
+                // }
+            }),
             compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
             compatibleArchitectures: [lambda.Architecture.X86_64]
         });
