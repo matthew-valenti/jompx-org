@@ -2,7 +2,10 @@ import { IConfig } from '@jompx/constructs';
 
 export const Config: IConfig = {
     '@jompx': {
-        organizationName: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name.
+        organization: {
+            name: 'jompx', // Lower case (use dashes if needed). Used to uniquely name resources e.g. S3 bucket name. Use a short name or acronym.
+            id: 'o-v24jtne9gy'
+        },
         emails: [
             {
                 email: 'admin@jompx.com',

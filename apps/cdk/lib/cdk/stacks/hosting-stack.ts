@@ -16,10 +16,10 @@ export class HostingStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new jompx.Config(this.node);
-        const stage = config.stage();
+        const stage = config.stage;
 
-        const rootDomainNames = config.appRootDomainNames();
-        const apps = config.apps();
+        const rootDomainNames = config.appRootDomainNames;
+        const apps = config.apps;
 
         if (apps) {
 

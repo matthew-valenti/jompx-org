@@ -46,7 +46,7 @@ function callMethodFromEvent<T>(classInstance: any, event: any): any {
     // We must at least pass the event. Methods might need any type of event information.
     // Break out Cognito properties (if Cognito auth) for convenience only.
     // We must Cognito authorization to any methods that want to call GraphQL with the calling user Cognito permissions.
-    const props: jompx.IAppSyncMethodProps = {
+    const props: jompx.AppSyncMethodProps = {
         ...(cognito?.sub && { cognito }),
         event
     };

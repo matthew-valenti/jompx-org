@@ -34,7 +34,7 @@ const app = new cdk.App({
 
 // Init Jompx config.
 const config = new jompx.Config(app.node);
-const stage = config.stage();
+const stage = config.stage;
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -67,6 +67,7 @@ new CdkPipelineStack(app, 'CdkPipelineStack', {
 Special stacks that are not part of the standard CDK Pipeline.
 */
 
-
 // Management account only. Restricted access. Manual deploy. Comment out otherwise will error for users without management account permissions.
-// new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
+if (config.stage === 'management') {
+    new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
+}

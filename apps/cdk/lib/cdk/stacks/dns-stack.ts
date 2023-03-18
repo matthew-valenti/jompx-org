@@ -13,7 +13,7 @@ export class DnsStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new jompx.Config(this.node);
-        const stage = config.stage();
+        const stage = config.stage;
 
         // 1. Create NameCheap email DNS.
         // NameCheap doco: https://www.namecheap.com/support/knowledgebase/article.aspx/1340/2176/namecheap-private-email-records-for-domains-with-thirdparty-dns/

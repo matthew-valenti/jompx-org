@@ -102,12 +102,20 @@ Follow AWS security best practices for your root account:
 ### 10. Enable Organizations
 Organizations is a global service.
 
-### 11. Enable SSO
+### 10. Enable CloudTrail Trusted Access
+Required for creating an organization trail.
+https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-cloudtrail.html
+```
+aws organizations enable-aws-service-access --service-principal cloudtrail.amazonaws.com --profile jompx-management
+```
+Under AWS Organizations > Services > Cloud Trail, confirm access is enabled.
+
+### 11. Enable SSO (deprecated is now IAM Identity Center)
 check your selected region is correct. Enable SSO.
 Change User portal URL. Can change one time only??? Lame.
 Bookmark the start url. Use this to switch between AWS accounts: https://x-xxxxxxxxxx.awsapps.com/start
 
-### 12. Create Admin User in SSO
+### 12. Create Admin User in SSO (deprecated is now IAM Identity Center)
 This user will have elevated permissions. Use only for management tasks.
 
 Create administrator group.
@@ -736,7 +744,9 @@ npm install --save-dev esbuild
 
 ```
 // Manually deploy a stack to sandbox1:
+nx build cdk
 nx login cdk --profile jompx-sandbox1
+nx login cdk --profile jompx-management
 ***IAM Identity Center (successor to AWS Single Sign-On) streamlines how you manage workforce user access to AWS
 nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www.youtube.com/watch?v=4yJp5-jGGNk
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
@@ -744,7 +754,7 @@ Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyn
 
 // Deploy ManagementStack to management environment only.
 nx synth cdk ManagementStack --profile jompx-management
-nx deploy cdk ManagementStack --profile jompx-management
+nx deploy cdk ManagementStack --profile jompx-management --quiet --requireApproval never
 
 // Important: For temporary testing only (in test env). Delete stack after use.
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
@@ -755,6 +765,9 @@ nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile j
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 
 ---
+
+nx synth cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet
+nx deploy cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
 nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
@@ -857,6 +870,13 @@ By default then, with IAM AppSync permissions turned on, a call using Insomnia w
 cdk apps/cdk
 npm run test graphql-query.test.ts
 ```
+
+## AppSync Datasource Layer
+Jompx AppSync datasources expose events. By subscribing to these events you can run custom code. You can use events to:
+1. Make additional data available to the datasource e.g. custom security data from internal databases and systems.
+e.g. A cognito user 
+
+npm i --save-dev @nrwl/js
 
 # Ionic/Angular
 https://nxtend.dev/docs/ionic-angular/getting-started/
@@ -1007,6 +1027,7 @@ Grid of databases supported.
 Grid of operations per datasource supported.
 There is some repitino when defining the schema. But this can be a good thing. We can throw away the API and Jomppx and still be left with a fully functional database. What would happen if Jompx generated the schema? Instead AppSync Jompx sits on top of datasources.
 Jompx philosophy: all typescript, all full stack developers with specialized knowledge, feature owners work across layers, developer friction = cost.
+Anything that is a file or folder e.g. S3, etc. to be snake-case everywhere. Even on the frontend.
 
 https://typegraphql.com/ is annotated typescript GraphQL and is very popular. Why don't I like this? What am I missing.
 It's confusing to mix all this together. There is also doubling up. I want to write a method and then operationalize it.

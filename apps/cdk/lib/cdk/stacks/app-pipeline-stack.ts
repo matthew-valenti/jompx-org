@@ -12,7 +12,7 @@
 //         this.props = props;
 
 //         const config = new jompx.Config(this.node);
-//         const stage = config.stage();
+//         const stage = config.stage;
 
 //         const domainName = 'jompx.com'; // TODO: Move to config? What about multiple domain names?
 //         const appNames = ['admin']; // TODO: Move to config?

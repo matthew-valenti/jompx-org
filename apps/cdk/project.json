@@ -3,8 +3,14 @@
   "projectType": "application",
   "sourceRoot": "apps/cdk",
   "targets": {
-    "build": {
+    "jbuild": {
       "executor": "@jompx/jcdk:build",
+      "options": {
+        "script": "build"
+      }
+    },
+    "build": {
+      "executor": "nx:run-script",
       "options": {
         "script": "build"
       }

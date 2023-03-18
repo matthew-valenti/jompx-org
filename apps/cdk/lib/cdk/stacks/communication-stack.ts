@@ -9,7 +9,7 @@ export class CommunicationStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new jompx.Config(this.node);
-        const stage = config.stage();
+        const stage = config.stage;
         const environment = config.environmentByEnv(props?.env);
 
         // Create SES verified domain entities for all domains.

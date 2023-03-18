@@ -4,7 +4,7 @@ import { AxiosGraphqlService as GraphqlService } from '@jompx/graphql';
 import gql from 'graphql-tag';
 import * as gtype from '@root/schema.graphql.types';
 import get = require('get-value');
-import { IAppSyncMethodProps } from '@jompx/constructs';
+import { AppSyncMethodProps } from '@jompx/constructs';
 
 export class Post {
 
@@ -35,7 +35,7 @@ export class Post {
     //     return rv;
     // }
 
-    public async findExample(input: gtype.MPostFindExampleInput, props: IAppSyncMethodProps): Promise<gtype.MPostFindExampleOutput> { // TODO: Should our methods return a type?
+    public async findExample(input: gtype.MPostFindExampleInput, props: AppSyncMethodProps): Promise<gtype.MPostFindExampleOutput> { // TODO: Should our methods return a type?
 
         // 1. Define fragment. Must use codegen to create type e.g. FindExampleMMovieConnectionFragmentDoc
         // The fragment name must be unique because we're typing the output fields.
@@ -62,7 +62,7 @@ export class Post {
         };
     }
 
-    public async queryExample(input: gtype.MPostQueryExampleInput, props: IAppSyncMethodProps): Promise<gtype.MPostQueryExampleOutput> {
+    public async queryExample(input: gtype.MPostQueryExampleInput, props: AppSyncMethodProps): Promise<gtype.MPostQueryExampleOutput> {
 
         // Define query. Must use codegen to create type e.g. MMovieFindDocument
         gql`

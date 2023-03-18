@@ -1,7 +1,8 @@
 import * as path from 'path';
-import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct } from "constructs";
 import * as jompx from '@jompx/constructs';
 import * as jsql from '@jompx/sql-datasource';
@@ -10,6 +11,8 @@ import { DynamoDbStack } from './dynamo-db.stack';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 import { AppSyncSubscription } from '@cdk/lib/app-sync/subscription.construct';
+import { AppSyncDatasourcePreTrigger } from '@cdk/lib/app-sync/triggers/pre-trigger.construct';
+const spawnSync = require('child_process').spawnSync;
 
 export interface AppSyncStackProps extends cdk.StackProps {
     stackProps: cdk.StackProps | undefined;
@@ -33,7 +36,7 @@ export class AppSyncStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new jompx.Config(this.node);
-        const stage = config.stage();
+        const stage = config.stage;
 
         // Derive the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
         const domainName = stage === 'prod' ? `${props.domainName.label}.${props.domainName.rootDomainName}` : `${props.domainName.label}.${stage}.${props.domainName.rootDomainName}`;
@@ -64,6 +67,20 @@ export class AppSyncStack extends cdk.Stack {
         this.graphqlApi = appSync.graphqlApi;
         this.schemaBuilder = appSync.schemaBuilder;
 
+        const preTrigger = new AppSyncDatasourcePreTrigger(this, 'AppSyncDatasourcePreTrigger', props.stackProps);
+
+        // Create datasource layer.
+        const layer = new lambda.LayerVersion(this, 'LambdaLayerAppSyncDatasource', {
+            removalPolicy: cdk.RemovalPolicy.DESTROY,
+            description: 'AppSync datasource layer for Jompx.',
+            // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
+            //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
+            // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
+            code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber', 'nodejs', 'dist', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber')),
+            compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
+            compatibleArchitectures: [lambda.Architecture.X86_64]
+        });
+
         // Add MySQL datasource.
         const jompxMySqlDataSource = new jsql.JompxAppSyncSqlDataSource(this, 'MySql', {
             datasourceId: 'mysql',
@@ -74,6 +91,10 @@ export class AppSyncStack extends cdk.Stack {
                 // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
             },
             lambdaFunctionProps: { memorySize: 128 * 2 },
+            layers: [layer],
+            triggers: {
+                preLambda: preTrigger.lambdaFunction
+            },
             options: {
                 engine: 'mysql_8.0.x'
             }

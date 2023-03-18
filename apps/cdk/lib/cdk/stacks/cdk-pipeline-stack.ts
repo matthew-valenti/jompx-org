@@ -27,7 +27,7 @@ export class CdkPipelineStack extends cdk.Stack {
         this.props = props;
 
         const config = new jompx.Config(this.node);
-        const stage = config.stage();
+        const stage = config.stage;
         console.log(`debug: stage=${stage}`);
 
         const jompxCdkPipelineProps: jompx.ICdkPipelineProps = {

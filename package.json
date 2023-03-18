@@ -45,6 +45,7 @@
     "source-map-support": "^0.5.16",
     "tsconfig-paths": "^3.14.1",
     "tslib": "^2.0.0",
+    "uuid": "^9.0.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -75,10 +76,12 @@
     "@nrwl/workspace": "14.8.4",
     "@nxext/capacitor": "^14.0.0",
     "@nxext/ionic-angular": "^14.0.0",
+    "@types/aws-lambda": "^8.10.111",
     "@types/get-value": "^3.0.2",
     "@types/jest": "28.1.8",
     "@types/node": "16.11.7",
     "@types/set-value": "^4.0.1",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "aws-organization-formation": "^0.9.20-beta.3",
