@@ -67,7 +67,7 @@ export class AppSyncStack extends cdk.Stack {
         this.graphqlApi = appSync.graphqlApi;
         this.schemaBuilder = appSync.schemaBuilder;
 
-        const preTrigger = new AppSyncDatasourcePreTrigger(this, 'AppSyncDatasourcePreTrigger', props.stackProps);
+        // const preTrigger = new AppSyncDatasourcePreTrigger(this, 'AppSyncDatasourcePreTrigger', props.stackProps);
 
         // Create datasource layer.
         const layer = new lambda.LayerVersion(this, 'LambdaLayerAppSyncDatasource', {
@@ -76,25 +76,72 @@ export class AppSyncStack extends cdk.Stack {
             // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
             //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
             // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
-            code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'dist', 'libs', 'appsync-datasource-layer'), {
-                // bundling: {
-                //     image: lambda.Runtime.NODEJS_18_X.bundlingImage,
-                //     local: {
-                //         tryBundle(outputDir: string) {
-                //           try {
-                //             spawnSync('npm i')
-                //           } catch {
-                //             return false
-                //           }
-                //           return true
-                //         },
-                //     },
-                //     // command: ['npm', 'install']
-                // }
+            code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'libs', 'appsync-datasource-layer'), {
+                // TODO: Local bundling is an undocumented mystery. Why do we get error empty output dir. It's much easier to bundle using nx instead.
+                // https://dev.to/aws-builders/aws-cdk-fullstack-polyglot-with-asset-bundling-318h
+                bundling: {
+                    user: 'root', // https://github.com/aws/aws-cdk/issues/8707
+                    image: lambda.Runtime.NODEJS_18_X.bundlingImage,
+                    // command: ['npm install nx, nx run cdk:build-graphql'],
+                    // /nodejs/node_modules/@jompx-org/appsync-datasource-layer
+                    command: [
+                        'bash', '-c', [
+                          'ls',
+                        //   'npm -g install nx',
+                        //   'nx build appsync-datasource-layer'
+                        ].join(' && ')
+                      ],
+                    // local: {
+                    //     tryBundle(outputDir: string) {
+                    //         try {
+                    //             spawnSync('nx run cdk:build-graphql');
+                    //             // spawnSync('npm install', {cwd: '../../dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer'});
+                    //             // spawnSync(`cp -r ../../dist/libs/appsync-datasource-layer/* ${outputDir}`, {cwd: '../../dist/libs/appsync-datasource-layer'});
+                    //         } catch {
+                    //             return false
+                    //         }
+                    //         return true
+                    //     }
+                    // }
+                }
             }),
             compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
             compatibleArchitectures: [lambda.Architecture.X86_64]
         });
+        // const layer = new lambda.LayerVersion(this, 'LambdaLayerAppSyncDatasource', {
+        //     removalPolicy: cdk.RemovalPolicy.DESTROY,
+        //     description: 'AppSync datasource layer for Jompx.',
+        //     // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
+        //     //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
+        //     // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
+        //     code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'dist', 'libs', 'appsync-datasource-layer'), {
+        //         // TODO: Local bundling is an undocumented mystery. Why do we get error empty output dir. It's much easier to bundle using nx instead.
+        //         // https://dev.to/aws-builders/aws-cdk-fullstack-polyglot-with-asset-bundling-318h
+        //         bundling: {
+        //             image: lambda.Runtime.NODEJS_18_X.bundlingImage,
+        //             // command: ['npm install nx, nx run cdk:build-graphql'],
+        //             command: [
+        //                 'bash', '-c', [
+        //                   `npm install`
+        //                 ].join(' && ')
+        //               ],
+        //             // local: {
+        //             //     tryBundle(outputDir: string) {
+        //             //         try {
+        //             //             spawnSync('nx run cdk:build-graphql');
+        //             //             // spawnSync('npm install', {cwd: '../../dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer'});
+        //             //             // spawnSync(`cp -r ../../dist/libs/appsync-datasource-layer/* ${outputDir}`, {cwd: '../../dist/libs/appsync-datasource-layer'});
+        //             //         } catch {
+        //             //             return false
+        //             //         }
+        //             //         return true
+        //             //     }
+        //             // }
+        //         }
+        //     }),
+        //     compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
+        //     compatibleArchitectures: [lambda.Architecture.X86_64]
+        // });
 
         // Add MySQL datasource.
         const jompxMySqlDataSource = new jsql.JompxAppSyncSqlDataSource(this, 'MySql', {
@@ -108,7 +155,7 @@ export class AppSyncStack extends cdk.Stack {
             lambdaFunctionProps: { memorySize: 128 * 2 },
             layers: [layer],
             triggers: {
-                preLambda: preTrigger.lambdaFunction
+                // preLambda: preTrigger.lambdaFunction
             },
             options: {
                 engine: 'mysql_8.0.x'

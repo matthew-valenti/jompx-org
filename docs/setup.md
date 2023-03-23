@@ -790,7 +790,7 @@ nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --
 nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --requireApproval never
 nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --hotswap
 
-// TODO: Auto mate this on synth and deploy (otherwise schema files are out of date).
+// TODO: Automate this on synth and deploy (otherwise schema files are out of date).
 // Create files: schema.graphql & schema.graphql.directive.json
 nx run cdk:graphql-schema
 // Create files: schema.graphql.json & schema.graphql.types.ts
@@ -873,11 +873,20 @@ npm run test graphql-query.test.ts
 
 ## AppSync Datasource Layer
 Jompx AppSync datasources expose events. By subscribing to these events you can run custom code. You can use events to:
+
+{
+  "command": "nx build appsync-datasource-layer",
+  "forwardAllArgs": false
+}
+
+Unfortunately, the CDk does not provide auto bundling of layers like it does LambdaNJS so we have to create our own npm module and build it ourselves.
+
 1. Make additional data available to the datasource e.g. custom security data from internal databases and systems.
 e.g. A cognito user 
+2. Modify datasource CRUD queries.
 
 1. Install module:
-npm i --save-dev @nrwl/js
+npm i --save-dev @nrwl/js // Be sure to install the correct version to match your current nx version.
 
 2. Create lib:
 nx g @nrwl/js:lib graphql --importPath="@jompx/graphql"
@@ -887,6 +896,48 @@ nx g @nrwl/js:lib appsync-datasource-layer
 So in project.json, change the output path to include nodejs/node_modules
 e.g. "outputPath": "dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer",
 If you get a module not found error it most likely means your directory structure is wrong.
+
+4. Build the lib as part of synth and deploy.
+In workspace.json:
+```
+"build-lambda-layer": {
+  "executor": "nx:run-commands",
+  "options": {
+    "commands": [
+      {
+        "command": "nx build appsync-datasource-layer",
+        "forwardAllArgs": false,
+        "description": "Use nx to build and transpile typescript npm module."
+      },
+      {
+        "command": "cd dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer && npm install",
+        "forwardAllArgs": false,
+        "description": "Run npm install on the npm module to create the node_modules folder with any npm module dependencies."
+      }
+    ],
+    "parallel": false
+  }
+}
+```
+
+5. Nx will NOT create a lib node_modules folder for external npm modules. In the layer, specify local bundling and run npm install.
+```
+code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'dist', 'libs', 'appsync-datasource-layer'), {
+    bundling: {
+        image: lambda.Runtime.NODEJS_18_X.bundlingImage,
+        local: {
+            tryBundle(outputDir: string) {
+                try {
+                    spawnSync('npm install --prefix ./nodejs/node_modules/@jompx-org/appsync-datasource-layer');
+                } catch {
+                    return false
+                }
+                return true
+            }
+        }
+    }
+}),
+```
 
 4. Build
 nx build appsync-datasource-layer
