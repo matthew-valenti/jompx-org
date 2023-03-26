@@ -13,6 +13,10 @@ import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 import { AppSyncSubscription } from '@cdk/lib/app-sync/subscription.construct';
 import { AppSyncDatasourcePreTrigger } from '@cdk/lib/app-sync/triggers/pre-trigger.construct';
 const spawnSync = require('child_process').spawnSync;
+// import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
+import { cpSync, mkdirSync } from 'node:fs';
+import { spawn } from 'node:child_process';
 
 export interface AppSyncStackProps extends cdk.StackProps {
     stackProps: cdk.StackProps | undefined;
@@ -73,75 +77,56 @@ export class AppSyncStack extends cdk.Stack {
         const layer = new lambda.LayerVersion(this, 'LambdaLayerAppSyncDatasource', {
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             description: 'AppSync datasource layer for Jompx.',
-            // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
-            //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
-            // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
-            code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'libs', 'appsync-datasource-layer'), {
-                // TODO: Local bundling is an undocumented mystery. Why do we get error empty output dir. It's much easier to bundle using nx instead.
-                // https://dev.to/aws-builders/aws-cdk-fullstack-polyglot-with-asset-bundling-318h
+            // Bundle the layer lib (on CDK synth and deploy).
+            // Example: https://dev.to/aws-builders/aws-cdk-fullstack-polyglot-with-asset-bundling-318h
+            code: lambda.Code.fromAsset(path.join(process.cwd()), {
                 bundling: {
                     user: 'root', // https://github.com/aws/aws-cdk/issues/8707
                     image: lambda.Runtime.NODEJS_18_X.bundlingImage,
-                    // command: ['npm install nx, nx run cdk:build-graphql'],
-                    // /nodejs/node_modules/@jompx-org/appsync-datasource-layer
-                    command: [
-                        'bash', '-c', [
-                          'ls',
-                        //   'npm -g install nx',
-                        //   'nx build appsync-datasource-layer'
-                        ].join(' && ')
-                      ],
-                    // local: {
-                    //     tryBundle(outputDir: string) {
-                    //         try {
-                    //             spawnSync('nx run cdk:build-graphql');
-                    //             // spawnSync('npm install', {cwd: '../../dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer'});
-                    //             // spawnSync(`cp -r ../../dist/libs/appsync-datasource-layer/* ${outputDir}`, {cwd: '../../dist/libs/appsync-datasource-layer'});
-                    //         } catch {
-                    //             return false
-                    //         }
-                    //         return true
-                    //     }
-                    // }
+                    // Docker build command.
+                    command: ['sh', '-c', 'echo "Docker build not supported."'],
+                    // TODO: Consider supporting a Docker build. Note that this is very slow.
+                    // command: [
+                    //     'sh', '-c', [
+                    //         'npm install -g nx',
+                    //         'nx build appsync-datasource-layer'
+                    //     ].join(' && ')
+                    // ],
+                    // Local build command.
+                    local: {
+                        tryBundle(outputDir: string) {
+                            try {
+                                // It's important to get paths correct.
+                                // It doesn't seem to matter what path is given to fromAsset. The working directory is the cdk root.
+                                // outputDir is a full path to the cdk.out folder e.g. C:\Jompx.com\org\apps\cdk\cdk.out\asset.67a84092b65f2b2a8fab05e37765443cb312da0b800bd3b773155d919bff5275
+                                // console.log('outputDir', outputDir);
+                                const projectRootDir = path.join(process.cwd(), '..', '..');
+
+                                // Build the nx lib. Must be in project root directory.
+                                // On windows, execSync commands run in a command prompt (not powershell).
+                                const execSyncResult1 = execSync(`cd ${projectRootDir} && nx build appsync-datasource-layer`).toString();
+                                console.log('build appsync-datasource-layer: ', execSyncResult1);
+
+                                // Lambda requires NodeJS layers to be in a specific directory structure.
+                                // Put module files in a nodejs/node_modules folder. Files under node_modules should be in the same format as any other installed npm module.
+                                // If there was a cross platform copy command we could do this as part of the shell command above.
+                                // Copy dist files to the output directory.
+                                cpSync('../../dist/libs/appsync-datasource-layer/', `${outputDir}/nodejs/node_modules/@jompx-org/appsync-datasource-layer/`, { recursive: true }); // /nodejs/node_modules/@jompx-org/appsync-datasource-layer
+
+                                // Lambda layers must be self contained. Run npm install to include npm modules in the output directory.
+                                const execSyncResult2 = execSync(`cd ${outputDir}/nodejs/node_modules/@jompx-org/appsync-datasource-layer/ && npm install`).toString();
+                                console.log('npm install appsync-datasource-layer: ', execSyncResult2);
+                            } catch {
+                                return false
+                            }
+                            return true
+                        }
+                    }
                 }
             }),
             compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
             compatibleArchitectures: [lambda.Architecture.X86_64]
         });
-        // const layer = new lambda.LayerVersion(this, 'LambdaLayerAppSyncDatasource', {
-        //     removalPolicy: cdk.RemovalPolicy.DESTROY,
-        //     description: 'AppSync datasource layer for Jompx.',
-        //     // code: lambda.Code.fromAsset(path.join(process.cwd(), 'lib', 'app-sync', 'layers', 'subscriber')),
-        //     //  P:\wwwroot\Jompx.com\org\apps\cdk\tsc.out\apps\cdk\lib\app-sync\layers\subscriber
-        //     // code: lambda.Code.fromAsset(path.join(process.cwd(), 'tsc.out', 'apps', 'cdk', 'lib', 'app-sync', 'layers', 'subscriber'), {
-        //     code: lambda.Code.fromAsset(path.join(process.cwd(), '..', '..', 'dist', 'libs', 'appsync-datasource-layer'), {
-        //         // TODO: Local bundling is an undocumented mystery. Why do we get error empty output dir. It's much easier to bundle using nx instead.
-        //         // https://dev.to/aws-builders/aws-cdk-fullstack-polyglot-with-asset-bundling-318h
-        //         bundling: {
-        //             image: lambda.Runtime.NODEJS_18_X.bundlingImage,
-        //             // command: ['npm install nx, nx run cdk:build-graphql'],
-        //             command: [
-        //                 'bash', '-c', [
-        //                   `npm install`
-        //                 ].join(' && ')
-        //               ],
-        //             // local: {
-        //             //     tryBundle(outputDir: string) {
-        //             //         try {
-        //             //             spawnSync('nx run cdk:build-graphql');
-        //             //             // spawnSync('npm install', {cwd: '../../dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer'});
-        //             //             // spawnSync(`cp -r ../../dist/libs/appsync-datasource-layer/* ${outputDir}`, {cwd: '../../dist/libs/appsync-datasource-layer'});
-        //             //         } catch {
-        //             //             return false
-        //             //         }
-        //             //         return true
-        //             //     }
-        //             // }
-        //         }
-        //     }),
-        //     compatibleRuntimes: [lambda.Runtime.NODEJS_18_X],
-        //     compatibleArchitectures: [lambda.Architecture.X86_64]
-        // });
 
         // Add MySQL datasource.
         const jompxMySqlDataSource = new jsql.JompxAppSyncSqlDataSource(this, 'MySql', {
@@ -154,6 +139,10 @@ export class AppSyncStack extends cdk.Stack {
             },
             lambdaFunctionProps: { memorySize: 128 * 2 },
             layers: [layer],
+            subscriber: {
+                moduleName: '@jompx-org/appsync-datasource-layer',
+                className: 'Subscriber'
+            },
             triggers: {
                 // preLambda: preTrigger.lambdaFunction
             },

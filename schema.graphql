@@ -32,11 +32,23 @@ input InsertOneProps {
   returnValues: String
   returnConsumedCapacity: String
 }
+input InsertManyProps {
+  returnValues: String
+  returnConsumedCapacity: String
+}
 input UpsertOneProps {
   returnValues: String
   returnConsumedCapacity: String
 }
+input UpsertManyProps {
+  returnValues: String
+  returnConsumedCapacity: String
+}
 input UpdateOneProps {
+  returnValues: String
+  returnConsumedCapacity: String
+}
+input UpdateManyProps {
   returnValues: String
   returnConsumedCapacity: String
 }
@@ -162,57 +174,85 @@ input MMovieInput {
 type Mutation {
   mMovieInsertOne(insert: MMovieInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"])
+  mMovieInsertMany(insert: [MMovieInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"])
   mMovieUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"])
   mMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"])
+  mMovieUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"])
   mMovieDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"])
   mMovieActorInsertOne(insert: MMovieActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam
+  mMovieActorInsertMany(insert: [MMovieActorInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam
   mMovieActorUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam
   mMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam
+  mMovieActorUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam
   mMovieActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam
   mActorInsertOne(insert: MActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam
+  mActorInsertMany(insert: [MActorInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam
   mActorUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam
   mActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam
+  mActorUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam
   mActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam
   mFileInsertOne(insert: MFileInput! props: InsertOneProps): InsertOneOutput
   @aws_iam
+  mFileInsertMany(insert: [MFileInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam
   mFileUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam
   mFileUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam
+  mFileUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam
   mFileDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam
   dMovieInsertOne(insert: DMovieInput! props: InsertOneProps): InsertOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"]) @aws_api_key
+  dMovieInsertMany(insert: [DMovieInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"]) @aws_api_key
   dMovieUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"]) @aws_api_key
   dMovieUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"]) @aws_api_key
+  dMovieUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin", "author"]) @aws_api_key
   dMovieDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam @aws_cognito_user_pools(cognito_groups: ["admin"]) @aws_api_key
   dMovieActorInsertOne(insert: DMovieActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam
+  dMovieActorInsertMany(insert: [DMovieActorInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam
   dMovieActorUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam
   dMovieActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam
+  dMovieActorUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam
   dMovieActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam
   dActorInsertOne(insert: DActorInput! props: InsertOneProps): InsertOneOutput
   @aws_iam
+  dActorInsertMany(insert: [DActorInput!]! props: InsertManyProps): InsertManyOutput
+  @aws_iam
   dActorUpsertOne(filter: AWSJSON upsert: AWSJSON! props: UpsertOneProps): UpsertOneOutput
   @aws_iam
   dActorUpdateOne(filter: AWSJSON update: AWSJSON! props: UpdateOneProps): UpdateOneOutput
+  @aws_iam
+  dActorUpdateMany(filter: AWSJSON update: AWSJSON! props: UpdateManyProps): UpdateManyOutput
   @aws_iam
   dActorDeleteOne(filter: AWSJSON props: DeleteOneProps): DeleteOneOutput
   @aws_iam
@@ -500,11 +540,21 @@ type PageInfoOffset @auth(value: "{\"rules\":[{\"type\":\"iam\"},{\"type\":\"use
 type InsertOneOutput {
   insertedId: ID
 }
+type InsertManyOutput {
+  insertedIds: ID
+}
 type UpsertOneOutput {
   upsertedId: ID
   modifiedCount: Int
 }
+type UpsertManyOutput {
+  upsertedIds: ID
+  modifiedCount: Int
+}
 type UpdateOneOutput {
+  modifiedCount: Int
+}
+type UpdateManyOutput {
   modifiedCount: Int
 }
 type DeleteOneOutput {

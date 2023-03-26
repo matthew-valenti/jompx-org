@@ -3,6 +3,7 @@
   "projects": {
     "admin": "apps/admin",
     "admin-e2e": "apps/admin-e2e",
+    "appsync-datasource-layer": "libs/appsync-datasource-layer",
     "cdk": "apps/cdk",
     "org-formation": "apps/org-formation"
   },

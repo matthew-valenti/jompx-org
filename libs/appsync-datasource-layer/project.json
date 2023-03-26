@@ -1,0 +1,34 @@
+{
+  "name": "appsync-datasource-layer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/appsync-datasource-layer/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/appsync-datasource-layer",
+        "main": "libs/appsync-datasource-layer/src/index.ts",
+        "tsConfig": "libs/appsync-datasource-layer/tsconfig.lib.json",
+        "assets": ["libs/appsync-datasource-layer/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/appsync-datasource-layer/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/appsync-datasource-layer"],
+      "options": {
+        "jestConfig": "libs/appsync-datasource-layer/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

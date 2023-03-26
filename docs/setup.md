@@ -879,7 +879,7 @@ Jompx AppSync datasources expose events. By subscribing to these events you can 
   "forwardAllArgs": false
 }
 
-Unfortunately, the CDk does not provide auto bundling of layers like it does LambdaNJS so we have to create our own npm module and build it ourselves.
+Unfortunately, the CDk does not provide auto bundling of layers like it does LambdaNJS so we have to create our own npm module and build and bundle it ourselves.
 
 1. Make additional data available to the datasource e.g. custom security data from internal databases and systems.
 e.g. A cognito user 
@@ -889,7 +889,6 @@ e.g. A cognito user
 npm i --save-dev @nrwl/js // Be sure to install the correct version to match your current nx version.
 
 2. Create lib:
-nx g @nrwl/js:lib graphql --importPath="@jompx/graphql"
 nx g @nrwl/js:lib appsync-datasource-layer
 
 3. Lambda requires NodeJS layers to be in a specific directory structure.

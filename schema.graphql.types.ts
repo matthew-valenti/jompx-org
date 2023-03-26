@@ -290,6 +290,16 @@ export type FindProps = {
   returnConsumedCapacity?: InputMaybe<Scalars['String']>;
 };
 
+export type InsertManyOutput = {
+  __typename?: 'InsertManyOutput';
+  insertedIds?: Maybe<Scalars['ID']>;
+};
+
+export type InsertManyProps = {
+  returnConsumedCapacity?: InputMaybe<Scalars['String']>;
+  returnValues?: InputMaybe<Scalars['String']>;
+};
+
 export type InsertOneOutput = {
   __typename?: 'InsertOneOutput';
   insertedId?: Maybe<Scalars['ID']>;
@@ -521,31 +531,45 @@ export type MPostQueryExampleTestTestOutput = {
 export type Mutation = {
   __typename?: 'Mutation';
   dActorDeleteOne?: Maybe<DeleteOneOutput>;
+  dActorInsertMany?: Maybe<InsertManyOutput>;
   dActorInsertOne?: Maybe<InsertOneOutput>;
+  dActorUpdateMany?: Maybe<UpdateManyOutput>;
   dActorUpdateOne?: Maybe<UpdateOneOutput>;
   dActorUpsertOne?: Maybe<UpsertOneOutput>;
   dMovieActorDeleteOne?: Maybe<DeleteOneOutput>;
+  dMovieActorInsertMany?: Maybe<InsertManyOutput>;
   dMovieActorInsertOne?: Maybe<InsertOneOutput>;
+  dMovieActorUpdateMany?: Maybe<UpdateManyOutput>;
   dMovieActorUpdateOne?: Maybe<UpdateOneOutput>;
   dMovieActorUpsertOne?: Maybe<UpsertOneOutput>;
   dMovieDeleteOne?: Maybe<DeleteOneOutput>;
+  dMovieInsertMany?: Maybe<InsertManyOutput>;
   dMovieInsertOne?: Maybe<InsertOneOutput>;
+  dMovieUpdateMany?: Maybe<UpdateManyOutput>;
   dMovieUpdateOne?: Maybe<UpdateOneOutput>;
   dMovieUpsertOne?: Maybe<UpsertOneOutput>;
   mActorDeleteOne?: Maybe<DeleteOneOutput>;
+  mActorInsertMany?: Maybe<InsertManyOutput>;
   mActorInsertOne?: Maybe<InsertOneOutput>;
+  mActorUpdateMany?: Maybe<UpdateManyOutput>;
   mActorUpdateOne?: Maybe<UpdateOneOutput>;
   mActorUpsertOne?: Maybe<UpsertOneOutput>;
   mFileDeleteOne?: Maybe<DeleteOneOutput>;
+  mFileInsertMany?: Maybe<InsertManyOutput>;
   mFileInsertOne?: Maybe<InsertOneOutput>;
+  mFileUpdateMany?: Maybe<UpdateManyOutput>;
   mFileUpdateOne?: Maybe<UpdateOneOutput>;
   mFileUpsertOne?: Maybe<UpsertOneOutput>;
   mMovieActorDeleteOne?: Maybe<DeleteOneOutput>;
+  mMovieActorInsertMany?: Maybe<InsertManyOutput>;
   mMovieActorInsertOne?: Maybe<InsertOneOutput>;
+  mMovieActorUpdateMany?: Maybe<UpdateManyOutput>;
   mMovieActorUpdateOne?: Maybe<UpdateOneOutput>;
   mMovieActorUpsertOne?: Maybe<UpsertOneOutput>;
   mMovieDeleteOne?: Maybe<DeleteOneOutput>;
+  mMovieInsertMany?: Maybe<InsertManyOutput>;
   mMovieInsertOne?: Maybe<InsertOneOutput>;
+  mMovieUpdateMany?: Maybe<UpdateManyOutput>;
   mMovieUpdateOne?: Maybe<UpdateOneOutput>;
   mMovieUpsertOne?: Maybe<UpsertOneOutput>;
   mPostFindExample?: Maybe<MPostFindExampleOutput>;
@@ -559,9 +583,22 @@ export type MutationDActorDeleteOneArgs = {
 };
 
 
+export type MutationDActorInsertManyArgs = {
+  insert: Array<DActorInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationDActorInsertOneArgs = {
   insert: DActorInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationDActorUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -585,9 +622,22 @@ export type MutationDMovieActorDeleteOneArgs = {
 };
 
 
+export type MutationDMovieActorInsertManyArgs = {
+  insert: Array<DMovieActorInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationDMovieActorInsertOneArgs = {
   insert: DMovieActorInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationDMovieActorUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -611,9 +661,22 @@ export type MutationDMovieDeleteOneArgs = {
 };
 
 
+export type MutationDMovieInsertManyArgs = {
+  insert: Array<DMovieInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationDMovieInsertOneArgs = {
   insert: DMovieInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationDMovieUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -637,9 +700,22 @@ export type MutationMActorDeleteOneArgs = {
 };
 
 
+export type MutationMActorInsertManyArgs = {
+  insert: Array<MActorInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationMActorInsertOneArgs = {
   insert: MActorInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationMActorUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -663,9 +739,22 @@ export type MutationMFileDeleteOneArgs = {
 };
 
 
+export type MutationMFileInsertManyArgs = {
+  insert: Array<MFileInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationMFileInsertOneArgs = {
   insert: MFileInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationMFileUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -689,9 +778,22 @@ export type MutationMMovieActorDeleteOneArgs = {
 };
 
 
+export type MutationMMovieActorInsertManyArgs = {
+  insert: Array<MMovieActorInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationMMovieActorInsertOneArgs = {
   insert: MMovieActorInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationMMovieActorUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -715,9 +817,22 @@ export type MutationMMovieDeleteOneArgs = {
 };
 
 
+export type MutationMMovieInsertManyArgs = {
+  insert: Array<MMovieInput>;
+  props?: InputMaybe<InsertManyProps>;
+};
+
+
 export type MutationMMovieInsertOneArgs = {
   insert: MMovieInput;
   props?: InputMaybe<InsertOneProps>;
+};
+
+
+export type MutationMMovieUpdateManyArgs = {
+  filter?: InputMaybe<Scalars['AWSJSON']>;
+  props?: InputMaybe<UpdateManyProps>;
+  update: Scalars['AWSJSON'];
 };
 
 
@@ -914,12 +1029,33 @@ export type Subscription = {
   dMovieUpdated?: Maybe<UpdateOneOutput>;
 };
 
+export type UpdateManyOutput = {
+  __typename?: 'UpdateManyOutput';
+  modifiedCount?: Maybe<Scalars['Int']>;
+};
+
+export type UpdateManyProps = {
+  returnConsumedCapacity?: InputMaybe<Scalars['String']>;
+  returnValues?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateOneOutput = {
   __typename?: 'UpdateOneOutput';
   modifiedCount?: Maybe<Scalars['Int']>;
 };
 
 export type UpdateOneProps = {
+  returnConsumedCapacity?: InputMaybe<Scalars['String']>;
+  returnValues?: InputMaybe<Scalars['String']>;
+};
+
+export type UpsertManyOutput = {
+  __typename?: 'UpsertManyOutput';
+  modifiedCount?: Maybe<Scalars['Int']>;
+  upsertedIds?: Maybe<Scalars['ID']>;
+};
+
+export type UpsertManyProps = {
   returnConsumedCapacity?: InputMaybe<Scalars['String']>;
   returnValues?: InputMaybe<Scalars['String']>;
 };

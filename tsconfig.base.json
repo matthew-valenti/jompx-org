@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@cdk/*": ["apps/cdk/*"],
+      "@jompx-org/appsync-datasource-layer": [
+        "libs/appsync-datasource-layer/src/index.ts"
+      ],
       "@root/*": ["./*"]
     }
   },
