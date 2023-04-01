@@ -73,15 +73,25 @@ npx create-nx-workspace
 https://nx.dev/using-nx/updating-nx
 ```
 // https://stackoverflow.com/questions/68710271/can-i-update-my-monorepo-nx-workspace-without-upgrading-angular-version
-nx migrate latest OR nx migrate 13.10.3 OR nx migrate latest --to="@nrwl/angular@13.10.6" (to upgrade/keep Angular version)
+nx migrate latest OR nx migrate 15.8.9 OR nx migrate latest --to="@nrwl/angular@14.8.8" (to upgrade/keep Angular version in: @nrwl/angular)
 // Inspect package.json to see if changes make sense. Manually adjust if needed.
-// Run multiple times can help "could not resolve dependency" issues. Or consider --force but use with care.
+// Don't run this unless troulbeshooting/fixing migrate errors. Run multiple times can help "could not resolve dependency" issues. Or consider --force but use with care.
 npm install
 // For big projects comment out and reorder items in: migrations.json (or run all for small projects).
 nx migrate --run-migrations // Runs npm install if needed
 // Test upgrade successful.
 nx --version // If comand does nothing then run npm i again.
 ```
+
+### Upgrade Ionic/Angular/Capacitor (Draft)
+There don't seem to be any explicit instructions.
+'''
+// upgrade ??? resolved peer dependency error after upgrading nx 14.x to 15.x.
+@nxext/capacitor
+@nxext/ionic-angular
+@ionic/angular
+@ionic/angular-toolkit
+'''
 
 ### 6. Create an AWS Account
 Requires a credit card.
