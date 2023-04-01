@@ -81,6 +81,7 @@ npm install
 nx migrate --run-migrations // Runs npm install if needed
 // Test upgrade successful.
 nx --version // If comand does nothing then run npm i again.
+// If errors, consider upgrading to a lower version first and then from that version to the latest.
 ```
 
 ### Upgrade Ionic/Angular/Capacitor (Draft)
