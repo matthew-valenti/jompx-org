@@ -10,15 +10,20 @@ export class Subscriber {
     }
 
     public subscribe() {
-        console.log('subscribe');
-        this.eventEmitter.on('event', () => {
-            console.log('Awesome!!! on event fired!');
+
+        this.eventEmitter.on('onInit', (datasourceId: string, event: any, props: any) => {
+            console.log(`onInit ${datasourceId}`);
             const uuid = uuidv4();
             console.log('uuid', uuid);
+            event.request.headers['x-jompxorg'] = { uuid };
         });
-    }
 
-    public log() {
-        console.log('log');
+        this.eventEmitter.on('beforeQuery', (datasourceId: string, event: any, props: any) => {
+            console.log(`beforeQuery ${datasourceId}, ${event}, ${props}`);
+        });
+
+        this.eventEmitter.on('afterQuery', (datasourceId: string, event: any, props: any) => {
+            console.log(`afterQuery ${datasourceId}, ${event}, ${props}`);
+        });
     }
 }

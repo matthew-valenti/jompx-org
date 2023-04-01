@@ -1,3 +1,5 @@
+import { cpSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import * as path from 'path';
 import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
@@ -11,12 +13,6 @@ import { DynamoDbStack } from './dynamo-db.stack';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
 import { AppSyncSubscription } from '@cdk/lib/app-sync/subscription.construct';
-import { AppSyncDatasourcePreTrigger } from '@cdk/lib/app-sync/triggers/pre-trigger.construct';
-const spawnSync = require('child_process').spawnSync;
-// import { execSync } from 'child_process';
-import { execSync } from 'node:child_process';
-import { cpSync, mkdirSync } from 'node:fs';
-import { spawn } from 'node:child_process';
 
 export interface AppSyncStackProps extends cdk.StackProps {
     stackProps: cdk.StackProps | undefined;
@@ -65,7 +61,13 @@ export class AppSyncStack extends cdk.Stack {
                         expires: cdk.Expiration.after(cdk.Duration.days(365)),
                     }
                 }
-            ]
+            ],
+            graphqlSchema: {
+                filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
+                directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
+                // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+                // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+            }
         });
 
         this.graphqlApi = appSync.graphqlApi;
@@ -111,15 +113,15 @@ export class AppSyncStack extends cdk.Stack {
                                 // Put module files in a nodejs/node_modules folder. Files under node_modules should be in the same format as any other installed npm module.
                                 // If there was a cross platform copy command we could do this as part of the shell command above.
                                 // Copy dist files to the output directory.
-                                cpSync('../../dist/libs/appsync-datasource-layer/', `${outputDir}/nodejs/node_modules/@jompx-org/appsync-datasource-layer/`, { recursive: true }); // /nodejs/node_modules/@jompx-org/appsync-datasource-layer
+                                cpSync('../../dist/libs/appsync-datasource-layer/', `${outputDir}/nodejs/node_modules/@jompx-org/appsync-datasource-layer/`, { recursive: true });
 
                                 // Lambda layers must be self contained. Run npm install to include npm modules in the output directory.
                                 const execSyncResult2 = execSync(`cd ${outputDir}/nodejs/node_modules/@jompx-org/appsync-datasource-layer/ && npm install`).toString();
                                 console.log('npm install appsync-datasource-layer: ', execSyncResult2);
                             } catch {
-                                return false
+                                return false;
                             }
-                            return true
+                            return true;
                         }
                     }
                 }
@@ -131,21 +133,21 @@ export class AppSyncStack extends cdk.Stack {
         // Add MySQL datasource.
         const jompxMySqlDataSource = new jsql.JompxAppSyncSqlDataSource(this, 'MySql', {
             datasourceId: 'mysql',
-            graphqlSchema: {
-                filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
-                directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
-                // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
-                // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
-            },
+            // graphqlSchema: {
+            //     filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
+            //     directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
+            //     // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+            //     // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+            // },
             lambdaFunctionProps: { memorySize: 128 * 2 },
-            layers: [layer],
+            layers: [appSync.graphqlLambdaLayer, layer],
             subscriber: {
                 moduleName: '@jompx-org/appsync-datasource-layer',
                 className: 'Subscriber'
             },
-            triggers: {
-                // preLambda: preTrigger.lambdaFunction
-            },
+            // triggers: {
+            //     // preLambda: preTrigger.lambdaFunction
+            // },
             options: {
                 engine: 'mysql_8.0.x'
             }
@@ -155,13 +157,18 @@ export class AppSyncStack extends cdk.Stack {
         // Add DynamoDb datasource.
         const jompxDynamoDbDataSource = new jdynamodb.JompxAppSyncDynamoDbDataSource(this, 'DynamoDb', {
             datasourceId: 'dynamodb',
-            graphqlSchema: {
-                filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
-                directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
-                // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
-                // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
-            },
+            // graphqlSchema: {
+            //     filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
+            //     directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
+            //     // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+            //     // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+            // },
             lambdaFunctionProps: { memorySize: 128 * 2 },
+            layers: [appSync.graphqlLambdaLayer, layer],
+            subscriber: {
+                moduleName: '@jompx-org/appsync-datasource-layer',
+                className: 'Subscriber'
+            },
             options: {}
         });
         this.schemaBuilder.addDataSource(jompxDynamoDbDataSource.lambdaFunction);
