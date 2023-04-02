@@ -11,26 +11,19 @@ export class Subscriber {
 
     public subscribe() {
 
-        this.eventEmitter.on('onInit', () => {
-            console.log('onInit hooray!');
-            // const uuid = uuidv4();
-            // console.log('uuid', uuid);
-            // event.request.headers['x-jompxorg'] = { uuid };
+        this.eventEmitter.on('onInit', (datasourceId: string, event: any, props: any) => {
+            console.log(`onInit ${datasourceId}, ${event}, ${props}`);
+            const uuid = uuidv4();
+            console.log('uuid', uuid);
+            event.request.headers['x-org'] = { uuid };
         });
 
-        // this.eventEmitter.on('onInit', (datasourceId: string, event: any, props: any) => {
-        //     console.log(`onInit ${datasourceId}, ${event}, ${props}`);
-        //     // const uuid = uuidv4();
-        //     // console.log('uuid', uuid);
-        //     // event.request.headers['x-jompxorg'] = { uuid };
-        // });
+        this.eventEmitter.on('beforeQuery', (datasourceId: string, event: any, props: any) => {
+            console.log(`beforeQuery ${datasourceId}, ${event}, ${props}`);
+        });
 
-        // this.eventEmitter.on('beforeQuery', (datasourceId: string, event: any, props: any) => {
-        //     console.log(`beforeQuery ${datasourceId}, ${event}, ${props}`);
-        // });
-
-        // this.eventEmitter.on('afterQuery', (datasourceId: string, event: any, props: any) => {
-        //     console.log(`afterQuery ${datasourceId}, ${event}, ${props}`);
-        // });
+        this.eventEmitter.on('afterQuery', (datasourceId: string, event: any, props: any) => {
+            console.log(`afterQuery ${datasourceId}, ${event}, ${props}`);
+        });
     }
 }
