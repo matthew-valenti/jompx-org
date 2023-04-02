@@ -42,24 +42,6 @@
         "parallel": false
       }
     },
-    "build-lambda-layer": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "nx build appsync-datasource-layer",
-            "forwardAllArgs": false,
-            "description": "Use nx to build and transpile typescript npm module."
-          },
-          {
-            "command": "cd dist/libs/appsync-datasource-layer/nodejs/node_modules/@jompx-org/appsync-datasource-layer && npm install",
-            "forwardAllArgs": false,
-            "description": "Run npm install on the npm module to create the node_modules folder with any npm module dependencies."
-          }
-        ],
-        "parallel": false
-      }
-    },
     "synth": {
       "executor": "nx:run-commands",
       "options": {
@@ -83,10 +65,6 @@
       "options": {
         "cwd": "apps/cdk",
         "commands": [
-          {
-            "command": "nx run cdk:build-graphql",
-            "forwardAllArgs": false
-          },
           {
             "command": "npx aws-cdk deploy",
             "forwardAllArgs": true
