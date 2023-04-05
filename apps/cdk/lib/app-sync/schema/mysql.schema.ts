@@ -139,6 +139,7 @@ export class MySqlSchema {
                     { type: 'userPool', props: { groups: ['admin'] }, actions: ['*'], comment: 'Group admin has full access.' },
                     { type: 'userPool', props: { groups: ['author'] }, actions: ['create', 'read', 'update'], condition: { $expr: { $in: ['$$event.identity.username', '$owners'] } }, 'comment': 'Group author has access owned movies only. and cannot delete.' },
                     { type: 'userPool', props: { groups: ['user'] }, actions: ['read'], 'comment': 'Group user can read all.' },
+                    { type: 'userPool', props: { groups: ['guest'] }, actions: ['read'], 'comment': 'Group user can read all.' },
                 ]),
                 datasource('mysql'),
                 source('movie'),

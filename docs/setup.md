@@ -1137,3 +1137,5 @@ aggregate {
   security hub
   audit manager - e.g. will audit pci compliance.
   config performance pack - e.g. will set account to pci.
+
+  The CDK does not currently support --hotswap on Lambdas with layers.
