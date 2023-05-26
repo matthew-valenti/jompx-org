@@ -5,7 +5,7 @@ import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import * as jsql from '@jompx/sql-datasource';
 import * as jdynamodb from '@jompx/dynamodb-datasource';

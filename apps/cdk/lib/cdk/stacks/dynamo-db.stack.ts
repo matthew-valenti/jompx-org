@@ -2,7 +2,7 @@
 // import * as path from 'path';
 // import * as appsync from '@aws-cdk/aws-appsync-alpha';
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 // import * as jompx from '@jompx/constructs';

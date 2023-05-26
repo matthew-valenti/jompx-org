@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as route53 from 'aws-cdk-lib/aws-route53';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 
 /**

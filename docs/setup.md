@@ -736,6 +736,24 @@ case (branch === 'sandbox1'): {
 ```
 *Note that addStage is an AWS CDK pipeline term (and not a Jompx stage). An AWS CDK pipeline stage is simply a container for deploying multiple stacks to an environment.
 
+### Replace the Default VPC
+
+Replace the default VPC with your own custom VPC.
+Amazon VPC is virtual network that you can define and then deploy resources into.
+By replacing the default VPC, we can use IAC to create and enhance our network over time.
+
+1.
+Delete the default VPC in each AWS account that will be replaced with a custom VPC.
+https://docs.aws.amazon.com/vpc/latest/userguide/delete-vpc.html#delete-vpc-cli
+In short, select the VPC to delete and choose Actions > Delete VPC.
+
+2.
+Create a network (or any name you like) stack and create your VPC with CDK constructs.
+Read thru the CDK VPC doco and plan out your network.
+You can start out by replacing the default network and grow from there as needed.
+
+e.g. If creating an RDS Aurora MySQL cluster you'll need a VPC to 
+
 ### Upgrade CDK
 Version change often.
 ```
@@ -774,6 +792,11 @@ nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile 
 // Deploy DnsStack to prod only.
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
+
+---
+
+nx synth cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet
+nx deploy cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 ---
 

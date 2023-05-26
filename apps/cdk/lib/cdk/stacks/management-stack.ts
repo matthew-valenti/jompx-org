@@ -1,14 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
 
 /*
-Management account only. Restricted access. To be deployed manually to the AWS management account only.
-Stack does NOT have a stage. There is not "test" management account. AWS only allows one manager/master account (that manages all other accounts).
-It is best practice NOT to deploy resources to the managmeent account. However, we do need some bare essentials e.g. billing alarm.
+Management account only. Restricted access. To be deployed to the AWS management account only.
+Stack does NOT have a stage. There is no "test" management account. AWS only allows one manager/master account (that manages all other accounts).
+It is best practice NOT to deploy resources to the managmeent account. However, we do need some bare essentials e.g. billing alarm, organization trail, etc.
 */
 export class ManagementStack extends cdk.Stack {
     public athenaResultsBucket: cdk.aws_s3.Bucket;
@@ -18,7 +18,6 @@ export class ManagementStack extends cdk.Stack {
 
         const config = new jompx.Config(this.node);
         const environment = config.environmentByEnv(props?.env);
-        const x = config.accountIds;
 
         // Create SES verified domain entities for all domains.
         if (environment?.name) {
@@ -38,7 +37,7 @@ export class ManagementStack extends cdk.Stack {
 
         // Setup Athena query results bucket.
         this.athenaResultsBucket = new s3.Bucket(this, 'AthenaResults', {
-            bucketName: `${config.organizationName}-${config.stage}-athena-results`,
+            bucketName: `${config.organizationName}-${environment?.name}-athena-results`,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             encryption: s3.BucketEncryption.S3_MANAGED,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL

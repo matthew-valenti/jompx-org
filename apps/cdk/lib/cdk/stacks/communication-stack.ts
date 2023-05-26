@@ -1,5 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
 

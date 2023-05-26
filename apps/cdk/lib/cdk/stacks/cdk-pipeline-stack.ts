@@ -2,9 +2,8 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import { AppStage } from '../stages/app-stage';
-import { AccountStage } from '../stages/account-stage';
+import { MainStage } from '../stages/main-stage';
 import { DnsStage } from '../stages/dns-stage';
-// import { ManagementStage } from '../stages/management-stage';
 import get = require('get-value');
 
 /**
@@ -93,13 +92,13 @@ export class CdkPipelineStack extends cdk.Stack {
                 case (branch === 'main'):
 
                     // Deploy to test environments first. If successful then deploy to production environments.
-                    pipeline.addStage(new AccountStage(this, 'AccountStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new MainStage(this, 'MainStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new MainStage(this, 'MainStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
 
                     // Deploy to production environments.
-                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCd', { ...this.props, env: config.env('cicd-prod') }));
-                    pipeline.addStage(new AccountStage(this, 'AccountStageProd', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new MainStage(this, 'MainStageCiCd', { ...this.props, env: config.env('cicd-prod') }));
+                    pipeline.addStage(new MainStage(this, 'MainStageProd', { ...this.props, env: config.env('prod') }));
                     pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
                     pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('prod') }));
                     break;
@@ -107,8 +106,8 @@ export class CdkPipelineStack extends cdk.Stack {
                 // When stage = test, listen for changes on branch: test.
                 // When stage = test, listen for changes on branch: test-test.
                 case (branch === 'test' || branch === 'test-test'):
-                    pipeline.addStage(new AccountStage(this, 'AccountStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new AccountStage(this, 'AccountStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new MainStage(this, 'MainStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new MainStage(this, 'MainStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
                     // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') })); // For temporary testing only (in test environments). Delete stack after use.
                     break;
@@ -116,7 +115,7 @@ export class CdkPipelineStack extends cdk.Stack {
                 // When stage = sandbox1, listen for changes on branch containing: sandbox1
                 // Developers can also deploy via CLI and should have their local config stage set to their sandbox e.g. stage: 'sandbox1'
                 case (branch.includes(`sandbox${branchIndex}`)):
-                    pipeline.addStage(new AccountStage(this, 'AccountStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
+                    pipeline.addStage(new MainStage(this, 'MainStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
                     pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
                     break;
             }

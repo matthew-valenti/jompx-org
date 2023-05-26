@@ -1,17 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import { AppSyncStack } from '@cdk/lib/cdk/stacks/app-sync.stack';
 import { CognitoStack } from '@cdk/lib/cdk/stacks/cognito-stack';
 import { DynamoDbStack } from '@cdk/lib/cdk/stacks/dynamo-db.stack';
 import { HostingStack } from '@cdk/lib/cdk/stacks/hosting-stack';
-import { SetupStack } from '@cdk/lib/cdk/stacks/setup-stack';
 
 export class AppStage extends cdk.Stage {
 
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);
-
-        new SetupStack(this, 'SetupStack', props);
 
         const hostingStack = new HostingStack(this, 'HostingStack', props);
 

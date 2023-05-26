@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 
 export class CognitoStack extends cdk.Stack {
