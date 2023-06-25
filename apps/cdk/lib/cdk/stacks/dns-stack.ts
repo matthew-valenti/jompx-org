@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
+import { Config } from '@jompx-org/config';
 
 /**
  * CAUTION: Changing a record id param (after it's been deployed) will result in the record being deleted from Route53. This feels like a CDK bug.
@@ -12,14 +13,16 @@ export class DnsStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const config = new jompx.Config(this.node);
-        const stage = config.stage;
+        const config = new Config(this.node);
+
+        const environment =  config.environmentById(props?.env?.account);
+        if (!environment) return;
 
         // 1. Create NameCheap email DNS.
         // NameCheap doco: https://www.namecheap.com/support/knowledgebase/article.aspx/1340/2176/namecheap-private-email-records-for-domains-with-thirdparty-dns/
 
         // Lookup jompx.com public hosted zone (created by org-formation).
-        const domainName = stage === 'prod' ? 'jompx.com' : `${stage}.jompx.com`;
+        const domainName = environment?.name === 'prod' ? 'jompx.com' : `${environment?.name}.jompx.com`;
         const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName });
 
         new route53.MxRecord(this, 'MxRecord1', {

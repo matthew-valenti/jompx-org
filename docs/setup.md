@@ -1162,3 +1162,7 @@ aggregate {
   config performance pack - e.g. will set account to pci.
 
   The CDK does not currently support --hotswap on Lambdas with layers.
+
+  ## Org Config Library @jompx-org/config
+  Creat config lib to share across all apps.
+  ```nx g @nrwl/js:lib config

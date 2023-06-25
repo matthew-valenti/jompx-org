@@ -3,6 +3,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 import { Tags } from 'aws-cdk-lib';
 import * as jompx from '@jompx/constructs';
+import { Config } from '@jompx-org/config';
 
 export class NetworkStack extends cdk.Stack {
 
@@ -11,8 +12,11 @@ export class NetworkStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const config = new jompx.Config(this.node);
-        const cidr = '10.2.0.0';
+        const config = new Config(this.node);
+        const environment =  config.environmentById(props?.env?.account);
+
+        const cidr = environment?.cidr; // '10.2.0.0';
+        if (!cidr) return;
 
         // TODO: Combine all configs into one file. Move file to root. We just need to type it with && so we have jompx and custom config.
         //  vpcs: [

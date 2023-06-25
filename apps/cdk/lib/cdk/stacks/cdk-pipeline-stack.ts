@@ -1,8 +1,10 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
+import { Config } from '@jompx-org/config';
 import { AppStage } from '../stages/app-stage';
-import { MainStage } from '../stages/main-stage';
+import { CommonStage } from '../stages/common-stage';
+import { CiCdStage } from '../stages/cicd-stage';
 import { DnsStage } from '../stages/dns-stage';
 import get = require('get-value');
 
@@ -19,24 +21,29 @@ import get = require('get-value');
 */
 export class CdkPipelineStack extends cdk.Stack {
 
+    public readonly pipelineName = 'cdk';
     public props: cdk.StackProps | undefined;
 
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
         this.props = props;
 
-        const config = new jompx.Config(this.node);
-        const stage = config.stage;
+        const config = new Config(this.node);
+        const stage = this.node.tryGetContext('stage') ?? 'test';
         console.log(`debug: stage=${stage}`);
 
-        const jompxCdkPipelineProps: jompx.ICdkPipelineProps = {
+        const jompxCdkPipelineProps: jompx.CdkPipelineProps = {
             stage,
+            branches: config.value.deployment.branches
+                .filter(branch => branch.pipelines.includes('cdk'))
+                .map(branch => branch.name),
             gitHub: {
                 owner: 'matthew-valenti',
                 repo: 'jompx-org',
                 // token: SecretValue.secretsManager('cicd/github/token')
                 connectionArn: cdk.SecretValue.secretsManager('/cicd/github/token').toString() // e.g. arn:aws:codestar-connections...
-            }
+            },
+            primaryOutputDirectory: 'apps/cdk/cdk.out'
         };
 
         // Create CDK pipelines. Two pipelines per stage (one for each CICD stage). e.g. prod, test-prod.
@@ -92,13 +99,13 @@ export class CdkPipelineStack extends cdk.Stack {
                 case (branch === 'main'):
 
                     // Deploy to test environments first. If successful then deploy to production environments.
-                    pipeline.addStage(new MainStage(this, 'MainStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new MainStage(this, 'MainStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new CommonStage(this, 'CommonStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new CiCdStage(this, 'CiCdStage', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
 
                     // Deploy to production environments.
-                    pipeline.addStage(new MainStage(this, 'MainStageCiCd', { ...this.props, env: config.env('cicd-prod') }));
-                    pipeline.addStage(new MainStage(this, 'MainStageProd', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new CommonStage(this, 'CommonStageCiCd', { ...this.props, env: config.env('cicd-prod') }));
+                    pipeline.addStage(new CiCdStage(this, 'CiCdStageProd', { ...this.props, env: config.env('prod') }));
                     pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
                     pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env('prod') }));
                     break;
@@ -106,8 +113,8 @@ export class CdkPipelineStack extends cdk.Stack {
                 // When stage = test, listen for changes on branch: test.
                 // When stage = test, listen for changes on branch: test-test.
                 case (branch === 'test' || branch === 'test-test'):
-                    pipeline.addStage(new MainStage(this, 'MainStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new MainStage(this, 'MainStageCiCdTest', { ...this.props, env: config.env('cicd-test') }));
+                    pipeline.addStage(new CommonStage(this, 'CommonStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
+                    pipeline.addStage(new CiCdStage(this, 'CiCdStageTest', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new AppStage(this, 'AppStageTest', { ...this.props, env: config.env('test') }));
                     // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') })); // For temporary testing only (in test environments). Delete stack after use.
                     break;
@@ -115,7 +122,7 @@ export class CdkPipelineStack extends cdk.Stack {
                 // When stage = sandbox1, listen for changes on branch containing: sandbox1
                 // Developers can also deploy via CLI and should have their local config stage set to their sandbox e.g. stage: 'sandbox1'
                 case (branch.includes(`sandbox${branchIndex}`)):
-                    pipeline.addStage(new MainStage(this, 'MainStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
+                    pipeline.addStage(new CommonStage(this, 'CommonStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
                     pipeline.addStage(new AppStage(this, 'AppStage', { ...this.props, env: config.env(`sandbox${branchIndex}`) }));
                     break;
             }

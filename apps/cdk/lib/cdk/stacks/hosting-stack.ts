@@ -6,6 +6,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
+import { Config } from '@jompx-org/config';
 
 export class HostingStack extends cdk.Stack {
 
@@ -15,11 +16,13 @@ export class HostingStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const config = new jompx.Config(this.node);
-        const stage = config.stage;
+        const config = new Config(this.node);
+
+        const environment =  config.environmentById(props?.env?.account);
+        if (!environment) return;
 
         const rootDomainNames = config.appRootDomainNames;
-        const apps = config.apps;
+        const apps = config.value.apps;
 
         if (apps) {
 
@@ -27,6 +30,7 @@ export class HostingStack extends cdk.Stack {
             const hostingCertificates = new Map<string, jompx.HostingCertificate>();
             rootDomainNames?.forEach(rootDomainName => {
                 const hostingCertificate = new jompx.HostingCertificate(this, 'HostingCertificate', {
+                    environmentName: environment.name,
                     rootDomainName
                 });
                 hostingCertificates.set(rootDomainName, hostingCertificate);
@@ -35,10 +39,10 @@ export class HostingStack extends cdk.Stack {
             apps.forEach(app => {
                 const appNamePascalCase = changeCase.pascalCase(app.name);
 
-                // Derive the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
-                const domainName = stage === 'prod' ? `${app.name}.${app.rootDomainName}` : `${app.name}.${stage}.${app.rootDomainName}`;
+                // Derive the app domain name from environment name e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
+                const domainName = environment.name === 'prod' ? `${app.name}.${app.rootDomainName}` : `${app.name}.${environment.name}.${app.rootDomainName}`;
 
-                const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName: `${stage}.${app.rootDomainName}` });
+                const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName: `${environment.name}.${app.rootDomainName}` });
                 const certificate = hostingCertificates.get(app.rootDomainName)?.certificate;
                 
                 if (certificate) {
@@ -54,6 +58,7 @@ export class HostingStack extends cdk.Stack {
 
                     // Create one CloudFront distribution per app.
                     const hostingCloudFront = new jompx.HostingCloudFront(this, `HostingCloudFront${appNamePascalCase}`, {
+                        organizationName: config.value.organization.name,
                         domainName,
                         bucket: hostingS3.bucket,
                         certificate,
@@ -74,7 +79,7 @@ export class HostingStack extends cdk.Stack {
                         version: 0.2,
                         env: {
                             variables: {
-                                STAGE: `${stage}`,
+                                ENVIRONMENT_NAME: `${environment.name}`,
                                 BUCKET_NAME: `${hostingS3.bucket.bucketName}`,
                                 APP_NAME: `${app.name}`
                             }
@@ -90,10 +95,11 @@ export class HostingStack extends cdk.Stack {
                             },
                             build: {
                                 commands: [
-                                    'echo STAGE=$STAGE',
+                                    'echo ENVIRONMENT_NAME=$ENVIRONMENT_NAME',
                                     'echo APP_NAME=$APP_NAME',
                                     'ionic build --project $APP_NAME'
-                                    // 'ionic build --project $APP_NAME --configuration=$STAGE'
+                                    // TODO: When app configuration files setup.
+                                    // 'ionic build --project $APP_NAME --configuration=$ENVIRONMENT_NAME'
                                 ]
                             },
                             post_build: {
@@ -104,9 +110,11 @@ export class HostingStack extends cdk.Stack {
                         }
                     };
 
+                    // Move this to the CICD environment. Can it be done without adding additional complexity.
                     new jompx.AppPipeline(this, `AppPipeline${appNamePascalCase}`, {
-                        stage,
+                        environmentName: environment.name,
                         appName: app.name,
+                        branch: '', // TODO: Fix this.
                         hostingBucket: hostingS3.bucket,
                         pipelinegBucket: pipelineS3.bucket,
                         gitHub: {

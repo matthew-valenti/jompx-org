@@ -19,6 +19,7 @@
       "@jompx-org/appsync-datasource-layer": [
         "libs/appsync-datasource-layer/src/index.ts"
       ],
+      "@jompx-org/config": ["libs/config/src/index.ts"],
       "@root/*": ["./*"]
     }
   },

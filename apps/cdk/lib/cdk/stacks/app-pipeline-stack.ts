@@ -11,7 +11,7 @@
 //         super(scope, id, props);
 //         this.props = props;
 
-//         const config = new jompx.Config(this.node);
+//         const config = new Config(this.node);
 //         const stage = config.stage;
 
 //         const domainName = 'jompx.com'; // TODO: Move to config? What about multiple domain names?

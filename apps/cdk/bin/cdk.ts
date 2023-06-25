@@ -6,10 +6,9 @@ import * as cdk from 'aws-cdk-lib';
 // import { CdkPipelineStack } from '@cdk/lib/stacks/cdk-pipeline-stack';
 import { CdkPipelineStack } from '@cdk/lib/cdk/stacks/cdk-pipeline-stack';
 // import { TestStack } from '@cdk/lib/test-stack';
-import * as jompx from '@jompx/constructs';
-import { Config as JompxConfig } from '@cdk/jompx.config';
-import { Local as JompxLocalConfig } from '@cdk/jompx.local';
-import { Config as OrganizationConfig } from '@cdk/config';
+import { Config } from '@jompx-org/config';
+import { Config as OrgConfig } from '@root/config';
+import { Local as LocalConfig } from '@root/config.local';
 import { ManagementStack } from '@cdk/lib/cdk/stacks/management-stack';
 
 // const yaml = require('js-yaml');
@@ -29,12 +28,12 @@ import { ManagementStack } from '@cdk/lib/cdk/stacks/management-stack';
 
 // Add configs to CDK context. Context is available in the CDK app e.g. app.node.tryGetContext('@jompx').organizationName
 const app = new cdk.App({
-    context: { ...JompxConfig, ...JompxLocalConfig, ...OrganizationConfig }
+    context: { ...OrgConfig, ...LocalConfig }
 });
 
 // Init Jompx config.
-const config = new jompx.Config(app.node);
-const stage = config.stage;
+const config = new Config(app.node);
+const stage = app.node.tryGetContext('stage');
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -68,6 +67,6 @@ Special stacks that are not part of the standard CDK Pipeline.
 */
 
 // Management account only. Restricted access. Manual deploy. Comment out otherwise will error for users without management account permissions.
-if (config.stage === 'management') {
+if (stage === 'management') {
     new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
 }

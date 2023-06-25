@@ -9,6 +9,7 @@ import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import * as jsql from '@jompx/sql-datasource';
 import * as jdynamodb from '@jompx/dynamodb-datasource';
+import { Config } from '@jompx-org/config';
 import { DynamoDbStack } from './dynamo-db.stack';
 import { AppSyncBuild } from '@cdk/lib/app-sync/build.construct';
 import { AppSyncBusiness } from '@cdk/lib/app-sync/business.construct';
@@ -35,11 +36,13 @@ export class AppSyncStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: AppSyncStackProps) {
         super(scope, id, props);
 
-        const config = new jompx.Config(this.node);
-        const stage = config.stage;
+        const config = new Config(this.node);
 
-        // Derive the app domain name from stage e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
-        const domainName = stage === 'prod' ? `${props.domainName.label}.${props.domainName.rootDomainName}` : `${props.domainName.label}.${stage}.${props.domainName.rootDomainName}`;
+        const environment = config.environmentByEnv(props?.env);
+        if (!environment) return;
+
+        // Derive the app domain name from environment name e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com
+        const domainName = environment.name === 'prod' ? `${props.domainName.label}.${props.domainName.rootDomainName}` : `${props.domainName.label}.${environment.name}.${props.domainName.rootDomainName}`;
 
         // Create AppSync resource.
         const appSync = new jompx.AppSync(this, 'AppSync', {

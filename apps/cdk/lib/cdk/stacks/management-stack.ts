@@ -4,6 +4,7 @@ import { Construct } from 'constructs';
 import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
+import { Config } from '@jompx-org/config';
 
 /*
 Management account only. Restricted access. To be deployed to the AWS management account only.
@@ -16,28 +17,29 @@ export class ManagementStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const config = new jompx.Config(this.node);
+        const config = new Config(this.node);
         const environment = config.environmentByEnv(props?.env);
 
-        // Create SES verified domain entities for all domains.
         if (environment?.name) {
-            config.domains?.forEach(domain => {
+            // Create SES verified domain entities for all domains.
+            config.value.domains?.forEach(domain => {
                 const domainName = `${environment.name}.${domain.rootDomainName}`;
                 new jompx.SesDomainEntity(this, `SesDomainEntity${changeCase.pascalCase(environment.name)}`, {
                     domainName
                 });
             });
-        }
 
-        // Create biling alarm.
-        new jompx.BillingAlarm(this, 'BillingAlarm', {
-            estimatedMonthlyThreshold: 5,
-            topicSubscriptions: config.emailsByTag('billing')?.map(email => new subscriptions.EmailSubscription(email))
-        });
+            // Create biling alarm.
+            new jompx.BillingAlarm(this, 'BillingAlarm', {
+                environmentName: environment?.name,
+                estimatedMonthlyThreshold: 5,
+                topicSubscriptions: config.emailsByTag('billing')?.map(email => new subscriptions.EmailSubscription(email))
+            });
+        }
 
         // Setup Athena query results bucket.
         this.athenaResultsBucket = new s3.Bucket(this, 'AthenaResults', {
-            bucketName: `${config.organizationName}-${environment?.name}-athena-results`,
+            bucketName: `${config.value.organization.name}-${environment?.name}-athena-results`,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             encryption: s3.BucketEncryption.S3_MANAGED,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
@@ -49,7 +51,8 @@ export class ManagementStack extends cdk.Stack {
             region: props?.env?.region ?? '',
             organizationAccount: props?.env?.account ?? '',
             organizationRegion: props?.env?.region ?? '',
-            organizationId: config.organizationId,
+            organizationId: config.value.organization.id,
+            organizationName: config.value.organization.name,
             athenaQueryResultsS3Url: this.athenaResultsBucket.s3UrlForObject(),
             projection: {
                 accountIds: config.accountIds,
