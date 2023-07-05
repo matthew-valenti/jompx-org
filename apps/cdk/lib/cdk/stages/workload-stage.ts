@@ -5,7 +5,7 @@ import { CognitoStack } from '@cdk/lib/cdk/stacks/cognito-stack';
 import { DynamoDbStack } from '@cdk/lib/cdk/stacks/dynamo-db.stack';
 import { HostingStack } from '@cdk/lib/cdk/stacks/hosting-stack';
 
-export class AppStage extends cdk.Stage {
+export class WorkloadStage extends cdk.Stage {
 
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);

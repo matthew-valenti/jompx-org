@@ -37,7 +37,10 @@ export interface IApp {
     rootDomainName: string;
 }
 
+export type DeploymentStage = 'prod' | 'test';
+
 export interface Deployment {
+    defaultStage: DeploymentStage;
     branches: DeploymentBranch[];
 }
 

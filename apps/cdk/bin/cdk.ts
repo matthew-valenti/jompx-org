@@ -33,7 +33,7 @@ const app = new cdk.App({
 
 // Init Jompx config.
 const config = new Config(app.node);
-const stage = app.node.tryGetContext('stage');
+const stage = config.deploymentStage;
 
 /**
  * CDK continuous integration and delivery (CI/CD) stack.
@@ -67,6 +67,7 @@ Special stacks that are not part of the standard CDK Pipeline.
 */
 
 // Management account only. Restricted access. Manual deploy. Comment out otherwise will error for users without management account permissions.
-if (stage === 'management') {
-    new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
-}
+// TODO: Move management to it's own CDK app.
+// if (stage === 'management') {
+//     new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
+// }

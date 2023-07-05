@@ -5,6 +5,7 @@ import * as jompx from '@jompx/constructs';
 import { Config } from '@jompx-org/config';
 
 /**
+ * Centralized DNS management (i.e. deploy to one AWS account).
  * CAUTION: Changing a record id param (after it's been deployed) will result in the record being deleted from Route53. This feels like a CDK bug.
  * To recover, remove the record code and then deploy. Put back the record code and then deploy again.
  */

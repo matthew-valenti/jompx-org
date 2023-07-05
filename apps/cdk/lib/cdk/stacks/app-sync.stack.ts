@@ -38,7 +38,7 @@ export class AppSyncStack extends cdk.Stack {
 
         const config = new Config(this.node);
 
-        const environment = config.environmentByEnv(props?.env);
+        const environment = config.environmentByEnv(props.stackProps?.env);
         if (!environment) return;
 
         // Derive the app domain name from environment name e.g. admin.jompx.com, admin.test.jompx.com, admin.sandbox1.admin.com

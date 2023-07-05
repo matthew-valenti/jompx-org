@@ -25,10 +25,6 @@
     "@graphql-typed-document-node/core": "^3.1.1",
     "@ionic/angular": "^6.7.1",
     "@ionic/angular-toolkit": "^8.1.0",
-    "@jompx/constructs": "file:../jompx/dist/libs/constructs",
-    "@jompx/dynamodb-datasource": "file:../jompx/dist/libs/dynamodb-datasource",
-    "@jompx/graphql": "file:../jompx/dist/libs/graphql",
-    "@jompx/sql-datasource": "file:../jompx/dist/libs/sql-datasource",
     "aws-amplify": "^4.3.37",
     "aws-cdk": "2.66.1",
     "aws-cdk-lib": "2.66.1",
@@ -44,7 +40,7 @@
     "set-value": "^4.1.0",
     "source-map-support": "^0.5.16",
     "tsconfig-paths": "^3.14.1",
-    "tslib": "^2.0.0",
+    "tslib": "^2.3.0",
     "uuid": "^9.0.0",
     "zone.js": "0.12.0"
   },
@@ -67,7 +63,6 @@
     "@graphql-codegen/typescript": "^2.5.1",
     "@graphql-codegen/typescript-operations": "^2.4.2",
     "@graphql-eslint/eslint-plugin": "^3.10.4",
-    "@jompx/jcdk": "file:../jompx/dist/libs/jcdk",
     "@nrwl/angular": "15.9.2",
     "@nrwl/cli": "15.9.2",
     "@nrwl/cypress": "15.9.2",
@@ -104,4 +99,3 @@
     "typescript": "4.9.5"
   }
 }
-

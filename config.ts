@@ -68,6 +68,7 @@ export const Config: OrgConfiguration = {
             }
         ],
         deployment: {
+            defaultStage: 'prod',
             branches: [
                 { name: 'main', pipelines: ['cdk', 'apps'] },
                 { name: 'test', pipelines: ['cdk', 'apps'] },

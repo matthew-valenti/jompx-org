@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as changeCase from 'change-case';
@@ -17,12 +18,14 @@ export class HostingStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new Config(this.node);
+        const stage = config.deploymentStage;
 
-        const environment =  config.environmentById(props?.env?.account);
+        const environment = config.environmentById(props?.env?.account);
         if (!environment) return;
 
         const rootDomainNames = config.appRootDomainNames;
         const apps = config.value.apps;
+        const appProps: jompx.AppPipelineAppProps[] = [];
 
         if (apps) {
 
@@ -44,7 +47,7 @@ export class HostingStack extends cdk.Stack {
 
                 const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName: `${environment.name}.${app.rootDomainName}` });
                 const certificate = hostingCertificates.get(app.rootDomainName)?.certificate;
-                
+
                 if (certificate) {
                     this.certificates.set(app.rootDomainName, certificate);
                 }
@@ -73,7 +76,7 @@ export class HostingStack extends cdk.Stack {
                         recordName: app.name
                     });
 
-                    const pipelineS3 = new jompx.AppPipelineS3(this, `AppPipelineS3${appNamePascalCase}`);
+                    // const pipelineS3 = new jompx.AppPipelineS3(this, `AppPipelineS3${appNamePascalCase}`);
 
                     const codebuildBuildSpecObject = {
                         version: 0.2,
@@ -110,20 +113,31 @@ export class HostingStack extends cdk.Stack {
                         }
                     };
 
-                    // Move this to the CICD environment. Can it be done without adding additional complexity.
-                    new jompx.AppPipeline(this, `AppPipeline${appNamePascalCase}`, {
-                        environmentName: environment.name,
-                        appName: app.name,
-                        branch: '', // TODO: Fix this.
-                        hostingBucket: hostingS3.bucket,
-                        pipelinegBucket: pipelineS3.bucket,
-                        gitHub: {
-                            owner: 'matthew-valenti',
-                            repo: 'jompx-org',
-                            token: cdk.SecretValue.secretsManager('/cicd/github/token')
-                        },
-                        codebuildBuildSpecObject
+                    appProps.push({
+                        name: app.name,
+                        bucket: hostingS3.bucket,
+                        codebuildBuildSpecObject,
+                        buildEnvironment: {
+                            buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_3,
+                            computeType: codebuild.ComputeType.SMALL
+                        }
                     });
+                }
+            });
+
+            const branches = config.value.deployment.branches
+                .filter(branch => branch.pipelines.includes('apps'))
+                .map(branch => branch.name);
+
+            new jompx.AppPipeline(this, `AppPipeline`, {
+                organizationName: config.value.organization.name,
+                stage,
+                branches,
+                apps: appProps,
+                gitHub: {
+                    owner: 'matthew-valenti',
+                    repo: 'jompx-org',
+                    token: cdk.SecretValue.secretsManager('/cicd/github/token')
                 }
             });
         }

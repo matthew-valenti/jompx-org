@@ -652,6 +652,8 @@ nx login cdk --profile jompx-cicd-test
 // Deploy to cicd-test
 nx synth cdk CdkPipelineStack --context stage=test --profile jompx-cicd-test --quiet
 nx deploy cdk CdkPipelineStack --context stage=test --profile jompx-cicd-test --quiet --requireApproval never
+nx synth cdk AppPipelineStack --context stage=test --profile jompx-cicd-test --quiet
+nx deploy cdk AppPipelineStack --context stage=test --profile jompx-cicd-test --quiet
 
 // Login cicd-prod
 nx login cdk --profile jompx-cicd-prod
@@ -755,7 +757,7 @@ You can start out by replacing the default network and grow from there as needed
 e.g. If creating an RDS Aurora MySQL cluster you'll need a VPC to 
 
 ### Upgrade CDK
-Version change often.
+Versions change often.
 ```
 // In package.json bump versions:
 aws-cdk-lib
@@ -800,7 +802,7 @@ nx deploy cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 -
 
 ---
 
-nx synth cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet
+nx synth cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet 
 nx deploy cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
@@ -820,6 +822,7 @@ nx deploy cdk CdkPipelineStack/AppStage/DynamoDbStack --profile jompx-sandbox1
 nx deploy cdk CdkPipelineStack/AppStage/DynamoDbStack --profile jompx-sandbox1 --hotswap
 
 nx synth cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet
+nx synth cdk CdkPipelineStack/AppStage/AppSyncStack --context stage=prod branch=sandbox1 --profile jompx-sandbox1 --quiet
 nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet
 nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --requireApproval never
 nx deploy cdk CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1 --quiet --hotswap
