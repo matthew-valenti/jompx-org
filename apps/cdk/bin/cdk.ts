@@ -69,5 +69,5 @@ Special stacks that are not part of the standard CDK Pipeline.
 // Management account only. Restricted access. Manual deploy. Comment out otherwise will error for users without management account permissions.
 // TODO: Move management to it's own CDK app.
 // if (stage === 'management') {
-//     new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
+    // new ManagementStack(app, 'ManagementStack', { env: config.env('management') });
 // }

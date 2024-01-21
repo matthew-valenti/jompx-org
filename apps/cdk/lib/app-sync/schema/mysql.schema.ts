@@ -1,6 +1,6 @@
 import * as jompx from '@jompx/constructs';
 import { auth, datasource, defaultValue, lookup, operation, readonly, source } from '@jompx/constructs'; // Custom directives.
-import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from '@aws-cdk/aws-appsync-alpha';
+import { Field, GraphqlType, InterfaceType, ObjectType, ResolvableField } from 'awscdk-appsync-utils';
 
 export class MySqlSchema {
 

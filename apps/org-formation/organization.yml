@@ -24,6 +24,28 @@ Organization:
         - !Ref CicdTestAccount
         - !Ref CicdProdAccount
 
+  InfrastructureOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Infrastructure
+      Accounts:
+        - !Ref NetworkAccount
+        - !Ref SecurityAccount
+
+  NetworkAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: network
+      AccountId: '767397869266'
+      RootEmail: network@jompx.com
+
+  SecurityAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: security
+      AccountId: '992382594865'
+      RootEmail: security@jompx.com
+
   SuspendedOU:
     Type: OC::ORG::OrganizationalUnit
     Properties:
@@ -33,7 +55,7 @@ Organization:
   OrganizationAccount:
     Type: OC::ORG::Account
     Properties:
-      AccountName: Organization
+      AccountName: organization
       AccountId: '076164328019'
       RootEmail: organization@jompx.com
 
@@ -60,6 +82,7 @@ Organization:
       OrganizationalUnits:
         - !Ref ProdOU
         - !Ref TestOU
+        - !Ref DevOU
 
   ProdOU:
     Type: OC::ORG::OrganizationalUnit
@@ -74,6 +97,20 @@ Organization:
       AccountName: prod
       AccountId: '281660020318'
       RootEmail: prod@jompx.com
+
+  DevOU:
+    Type: OC::ORG::OrganizationalUnit
+    Properties:
+      OrganizationalUnitName: Dev
+      Accounts:
+        - !Ref SharedServicesDevAccount
+
+  SharedServicesDevAccount:
+    Type: OC::ORG::Account
+    Properties:
+      AccountName: shared-services-dev
+      AccountId: '058264302432'
+      RootEmail: shared-services-dev@jompx.com
 
   TestOU:
     Type: OC::ORG::OrganizationalUnit

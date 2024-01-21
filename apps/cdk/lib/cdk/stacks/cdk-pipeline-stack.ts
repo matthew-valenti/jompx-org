@@ -2,10 +2,12 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
 import { Config } from '@jompx-org/config';
-import { WorkloadStage } from '../stages/workload-stage';
 import { CommonStage } from '../stages/common-stage';
 import { CiCdStage } from '../stages/cicd-stage';
 import { DnsStage } from '../stages/dns-stage';
+import { ManagementStage } from '../stages/management-stage';
+import { SecurityStage } from '../stages/security-stage';
+import { WorkloadStage } from '../stages/workload-stage';
 import get = require('get-value');
 
 /**
@@ -108,10 +110,12 @@ export class CdkPipelineStack extends cdk.Stack {
                     pipeline.addStage(new WorkloadStage(this, 'WorkloadStageTest', { ...this.props, env: config.env('test') }));
 
                     // Deploy to production environments.
-                    pipeline.addStage(new CommonStage(this, 'CommonStage', { ...this.props, env: config.env('cicd-prod') }));
-                    pipeline.addStage(new CiCdStage(this, 'CiCdStage', { ...this.props, env: config.env('prod') }));
-                    pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
-                    pipeline.addStage(new WorkloadStage(this, 'WorkloadStage', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new ManagementStage(this, 'ManagementStage', { ...this.props, env: config.env('management') }));
+                    pipeline.addStage(new SecurityStage(this, 'SecurityStage', { ...this.props, env: config.env('security') }));
+                    // pipeline.addStage(new CommonStage(this, 'CommonStage', { ...this.props, env: config.env('cicd-prod') }));
+                    // pipeline.addStage(new CiCdStage(this, 'CiCdStage', { ...this.props, env: config.env('prod') }));
+                    // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
+                    // pipeline.addStage(new WorkloadStage(this, 'WorkloadStage', { ...this.props, env: config.env('prod') }));
                     break;
 
                 // When stage = test, listen for changes on branch: test.

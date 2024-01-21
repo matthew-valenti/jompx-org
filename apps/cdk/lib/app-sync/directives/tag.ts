@@ -1,5 +1,5 @@
 import * as graphql from 'graphql';
-import { Directive } from '@aws-cdk/aws-appsync-alpha';
+import { Directive } from 'awscdk-appsync-utils';
 import { CustomDirective } from '@jompx/constructs';
 
 const directiveName = 'tag';

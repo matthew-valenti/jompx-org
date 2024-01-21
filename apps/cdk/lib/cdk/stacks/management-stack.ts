@@ -1,5 +1,4 @@
 import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as changeCase from 'change-case';
@@ -37,29 +36,9 @@ export class ManagementStack extends cdk.Stack {
             });
         }
 
-        // Setup Athena query results bucket.
-        this.athenaResultsBucket = new s3.Bucket(this, 'AthenaResults', {
-            bucketName: `${config.value.organization.name}-${environment?.name}-athena-results`,
-            removalPolicy: cdk.RemovalPolicy.DESTROY,
-            encryption: s3.BucketEncryption.S3_MANAGED,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
-        });
-
         // Create organization trail.
         new jompx.OrganizationTrail(this, 'OrganizationTrail', {
-            accountId: props?.env?.account ?? '',
-            region: props?.env?.region ?? '',
-            organizationAccount: props?.env?.account ?? '',
-            organizationRegion: props?.env?.region ?? '',
-            organizationId: config.value.organization.id,
-            organizationName: config.value.organization.name,
-            athenaQueryResultsS3Url: this.athenaResultsBucket.s3UrlForObject(),
-            projection: {
-                accountIds: config.accountIds,
-                regions: config.regions,
-                timestampRange: '2023/03/10,NOW'
-            },
-            expiration: cdk.Duration.days(30)
+            bucketName: `${config.value.organization.name}-${config.environmentByName('security')?.name}-organization-trail`,
         });
     }
 }

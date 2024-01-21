@@ -1,4 +1,4 @@
-import { AuthorizationType } from '@aws-cdk/aws-appsync-alpha';
+import { AuthorizationType } from 'aws-cdk-lib/aws-appsync';
 import { PostBusiness } from './post.types'
 import { AxiosGraphqlService as GraphqlService } from '@jompx/graphql';
 import gql from 'graphql-tag';

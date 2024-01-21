@@ -36,7 +36,8 @@ export const Config: OrgConfiguration = {
             {
                 accountId: '015117255009',
                 region: 'us-west-2',
-                name: 'management'
+                name: 'management',
+                cidr: '10.0.0.0'
             },
             {
                 accountId: '863054937555',
@@ -47,24 +48,44 @@ export const Config: OrgConfiguration = {
             {
                 accountId: '896371249616',
                 region: 'us-west-2',
-                name: 'cicd-prod'
+                name: 'cicd-prod',
+                cidr: '10.2.0.0'
+            },
+            {
+                accountId: '767397869266',
+                region: 'us-west-2',
+                name: 'network',
+                cidr: '10.3.0.0'
+            },
+            {
+                accountId: '992382594865',
+                region: 'us-west-2',
+                name: 'security',
+                cidr: '10.4.0.0'
             },
             {
                 accountId: '281660020318',
                 region: 'us-west-2',
                 name: 'prod',
-                cidr: '10.0.0.0'
+                cidr: '10.5.0.0'
             },
             {
                 accountId: '706457422044',
                 region: 'us-west-2',
-                name: 'test'
+                name: 'test',
+                cidr: '10.6.0.0'
+            },
+            {
+                accountId: '058264302432',
+                region: 'shared-services-dev',
+                name: 'test',
+                cidr: '10.7.0.0'
             },
             {
                 accountId: '066209653567',
                 region: 'us-west-2',
                 name: 'sandbox1',
-                cidr: '10.255.0.0'
+                cidr: '10.255.0.0' // Start sandbox CIDR range from end of range.
             }
         ],
         deployment: {

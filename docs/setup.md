@@ -21,12 +21,7 @@ If you don't already have a domain name, go ahead and purchase one from one of t
 
 ### 3. Create Email Accounts
 You'll need multiple email accounts (at least one unique email address for each AWS account we'll create). Consider using email aliases or plus addressing. e.g.
-##### TODO:
-- root@yourdomain.com
-- admin@yourdomain.com
-- production@yourdomain.com
-- development@yourdomain.com
-- test@yourdomain.com
+root@yourdomain.com or aws+root@yourdomain.com
 
 An email address that is a distribution group, rather than an individual's email.
 
@@ -209,6 +204,10 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#sso-usin
 // Do we need this (and manually run credentials update): aws sso login --profile jompx-management
 nx login cdk --profile jompx-management
 
+### 14. Plan Your AWS Multiple Account Environment
+https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/patterns-for-organizing-your-aws-accounts.html
+https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/architecture.html
+
 ### 15. Create Organization YAML
 ```
 // npm install -g aws-organization-formation
@@ -240,7 +239,7 @@ As you change your yaml and want to deploy with additional organization choices
 ```
 npx org-formation update organization.yml --profile jompx-management
 npx org-formation create-change-set organization.yml --profile jompx-management
-npx org-formation execute-change-set fbcf712f-ceba-4323-b92d-73ec0e139e81 --profile jompx-management
+npx org-formation execute-change-set 1c7148fc-ec12-459e-bc8f-f6ed723c9348 --profile jompx-management
 ```
 
 ### 16. Add SCP to Restrict Regions
@@ -551,6 +550,9 @@ Version can be found in parameter store variable: /cdk-bootstrap/xxxxxxxxx/versi
 Maybe this helps -- boostrap all accounts in one script: https://stackoverflow.com/questions/59206845/how-to-provide-multiple-account-credentials-to-cdk-bootstrap
 
 Bootstrap all accounts (that the CDK will deploy to). Include the trust param to give the CICD accounts access to deploy to other accounts.
+
+Consider using Stack Sets in the future: https://aws.amazon.com/blogs/mt/bootstrapping-multiple-aws-accounts-for-aws-cdk-using-cloudformation-stacksets/
+
  ```
 // https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html
 // Windows run in command prompt (not Powershell).
@@ -560,17 +562,39 @@ npx cdk bootstrap aws://ACCOUNT-NUMBER/REGION --profile ADMIN-PROFILE ^
     aws://ACCOUNT-ID/REGION
 
 // management
-// For security, do NOT specify --trust. Manual restricted access stack deploys only.
+// is there a security issue here where CI/CD can deploy to the management account?
 set CDK_NEW_BOOTSTRAP=1
 npx cdk bootstrap aws://015117255009/us-west-2 --profile jompx-management ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    --trust "863054937555, 896371249616" ^
     aws://015117255009/us-west-2
+
+// cicd-prod
+set CDK_NEW_BOOTSTRAP=1 
+npx cdk bootstrap aws://896371249616/us-west-2 --profile jompx-cicd-prod ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    aws://896371249616/us-west-2
 
 // cicd-test
 set CDK_NEW_BOOTSTRAP=1 
 npx cdk bootstrap aws://863054937555/us-west-2 --profile jompx-cicd-test ^
     --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
     aws://863054937555/us-west-2
+
+// security
+// Add the management account as a trusted account (required to be able to deploy an organization trail)
+set CDK_NEW_BOOTSTRAP=1
+npx cdk bootstrap aws://992382594865/us-west-2 --profile jompx-security ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    --trust "863054937555, 896371249616, 015117255009" ^
+    aws://992382594865/us-west-2
+
+// network
+set CDK_NEW_BOOTSTRAP=1
+npx cdk bootstrap aws://767397869266/us-west-2 --profile jompx-network ^
+    --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess ^
+    --trust "863054937555, 896371249616" ^
+    aws://767397869266/us-west-2
 
 // prod
 set CDK_NEW_BOOTSTRAP=1
@@ -762,7 +786,8 @@ Versions change often.
 // In package.json bump versions:
 aws-cdk-lib
 constructs
-@aws-cdk/aws-appsync-alpha
+aws-cdk-lib/aws-appsync
+awscdk-appsync-utils
 aws-cdk
 ```
 
@@ -773,19 +798,22 @@ Install esbuild for fast bundling of Lambda code.
 npm install --save-dev esbuild
 ```
 
+Deploying to multiple accounts manually (from a developer machine) requires that the developer be logged in with a profile that has access to deploy to multiple accounts. So when manually deploying stacks always use a CI/CD profile (e.g. jompx-cicd-prod or jompx-cicd-test) to avoid error: Could not assume role in target account using current credentials. CDK bootstrap all AWS accounts to trust CI/CD accounts.
+
 ```
 // Manually deploy a stack to sandbox1:
 nx build cdk
-nx login cdk --profile jompx-sandbox1
+nx login cdk --profile jompx-cicd-prod
 nx login cdk --profile jompx-management
+nx login cdk --profile jompx-sandbox1
 ***IAM Identity Center (successor to AWS Single Sign-On) streamlines how you manage workforce user access to AWS
 nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www.youtube.com/watch?v=4yJp5-jGGNk
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
 ---
 
 // Deploy ManagementStack to management environment only.
-nx synth cdk ManagementStack --profile jompx-management
-nx deploy cdk ManagementStack --profile jompx-management --quiet --requireApproval never
+nx synth cdk CdkPipelineStack/ManagementStage/ManagementStack --context branch=main --profile jompx-cicd-prod --quiet
+nx deploy cdk CdkPipelineStack/ManagementStage/ManagementStack --context branch=main --profile jompx-cicd-prod --quiet --requireApproval never
 
 // Important: For temporary testing only (in test env). Delete stack after use.
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
@@ -795,15 +823,16 @@ nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile 
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
 
+// Deploy SecurityStack to security account only (there is no test security account).
+nx synth cdk CdkPipelineStack/SecurityStage/SecurityStack --context branch=main --profile jompx-cicd-prod --quiet 
+nx deploy cdk CdkPipelineStack/SecurityStage/SecurityStack --context branch=main --profile jompx-cicd-prod --quiet --requireApproval never
+
 ---
 
 nx synth cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet
 nx deploy cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 ---
-
-nx synth cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet 
-nx deploy cdk CdkPipelineStack/AppStage/SetupStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
 nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
@@ -1168,4 +1197,35 @@ aggregate {
 
   ## Org Config Library @jompx-org/config
   Creat config lib to share across all apps.
-  ```nx g @nrwl/js:lib config
+  ```nx g @nrwl/js:lib config```
+
+  ## Database CI/CD
+  There are other popular solutions available like Liquibase and Flyway.
+  However, umzug is NodeJS native and framework agnositic. e.g. It can be used to deploy change scripts for RDBMS in SQL and DynamoDB in Typescript.
+  https://github.com/sequelize/umzug
+
+  ## Client VPN Setup
+
+  1. Create SAML 2.0 Application
+
+  a. In the AWS Management Console, go to IAM Identity Center > Applications.
+  b. Add a new application > I have an application I want to set up > SAML 2.0
+  c. Enter the following:
+    Display name = AWS Client VPN
+    Description = Custom SAML 2.0 application for AWS Client VPN, enabling MFA and policy based authorization to network segments.
+    Important: IAM Identity Center SAML metadata file
+    Important: Download the IAM Identity Center certificate and save it to a secure place.
+    Application ACS URL = http://127.0.0.1:35001
+    Application SAML audience = urn:amazon:webservices:clientvpn
+  d. Assign users and groups who will have VPN access.
+  e. Edit attribute mappings:
+    Subject | ${user:email} | emailAddress
+    memberOf | ${user:groups} | unspecified
+
+  f.  Now Create an IAM Identity provider:
+    Go to IAM > Identity providers > Add provider
+    Provider type = SAML
+    Provider name = AWS_SSO_For_Client_VPN
+
+
+

@@ -1,4 +1,5 @@
-import * as appsync from '@aws-cdk/aws-appsync-alpha';
+import * as appsync from 'aws-cdk-lib/aws-appsync';
+import * as appsyncUtils from 'awscdk-appsync-utils';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
@@ -7,7 +8,7 @@ import * as jompx from '@jompx/constructs';
 import { PostSchema } from '@cdk/lib/post/post.construct';
 
 export interface AppSyncSubscriptionProps extends cdk.StackProps {
-    graphqlApi: appsync.GraphqlApi;
+    codeFirstSchema: appsyncUtils.CodeFirstSchema,
     schemaBuilder: jompx.AppSyncSchemaBuilder;
 }
 
@@ -18,13 +19,13 @@ export class AppSyncSubscription extends Construct {
 
         if (props?.schemaBuilder) {
 
-            props.graphqlApi.addSubscription('dMovieUpdated', new appsync.Field({
+            props.codeFirstSchema.addSubscription('dMovieUpdated', new appsyncUtils.Field({
                 returnType: props.schemaBuilder.schemaTypes.objectTypes['UpdateOneOutput'].attribute(),
                 // Filter subscriptions with args e.g. subscribe to movie updates for a speicifc movie id.
                 // args: {
                 //     id: appsync.GraphqlType.id({ isRequired: true })
                 // },
-                directives: [appsync.Directive.subscribe('dMovieUpdateOne')] // TODO: How do we handle upserts that create (not update).
+                directives: [appsyncUtils.Directive.subscribe('dMovieUpdateOne')] // TODO: How do we handle upserts that create (not update).
             }));
         }
     }

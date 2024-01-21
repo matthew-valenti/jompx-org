@@ -1,4 +1,4 @@
-import * as appsync from '@aws-cdk/aws-appsync-alpha';
+import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';

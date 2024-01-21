@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as lambdanjs from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
-import { GraphqlType, InputType, ObjectType, Field } from '@aws-cdk/aws-appsync-alpha';
+import { GraphqlType, InputType, ObjectType, Field } from 'awscdk-appsync-utils';
 import * as jompx from '@jompx/constructs';
 
 export interface PostSchemaProps {

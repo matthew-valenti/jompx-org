@@ -1,7 +1,8 @@
 import { cpSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import * as path from 'path';
-import * as appsync from '@aws-cdk/aws-appsync-alpha';
+import * as appsync from 'aws-cdk-lib/aws-appsync';
+import * as appsyncUtils from 'awscdk-appsync-utils';
 import * as cdk from 'aws-cdk-lib';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -30,6 +31,7 @@ export interface AppSyncStackProps extends cdk.StackProps {
 
 export class AppSyncStack extends cdk.Stack {
 
+    public codeFirstSchema: appsyncUtils.CodeFirstSchema;
     public graphqlApi: appsync.GraphqlApi;
     public schemaBuilder: jompx.AppSyncSchemaBuilder;
 
@@ -157,46 +159,46 @@ export class AppSyncStack extends cdk.Stack {
         });
         this.schemaBuilder.addDataSource(jompxMySqlDataSource.lambdaFunction);
 
-        // Add DynamoDb datasource.
-        const jompxDynamoDbDataSource = new jdynamodb.JompxAppSyncDynamoDbDataSource(this, 'DynamoDb', {
-            datasourceId: 'dynamodb',
-            // graphqlSchema: {
-            //     filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
-            //     directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
-            //     // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
-            //     // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
-            // },
-            lambdaFunctionProps: { memorySize: 128 * 4 },
-            layers: [appSync.graphqlLambdaLayer, layer],
-            subscriber: {
-                moduleName: '@jompx-org/appsync-datasource-layer',
-                className: 'Subscriber'
-            },
-            options: {}
-        });
-        this.schemaBuilder.addDataSource(jompxDynamoDbDataSource.lambdaFunction);
+        // // Add DynamoDb datasource.
+        // const jompxDynamoDbDataSource = new jdynamodb.JompxAppSyncDynamoDbDataSource(this, 'DynamoDb', {
+        //     datasourceId: 'dynamodb',
+        //     // graphqlSchema: {
+        //     //     filePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.json'), // OS safe path to file.
+        //     //     directivesFilePathJson: path.join(process.cwd(), '..', '..', 'schema.graphql.directives.json'), // OS safe path to file.
+        //     //     // filePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.json'), // OS safe path to file. // Array(5).fill(..)
+        //     //     // directivesFilePathJson: path.join(__dirname, '..', '..', '..', '..', '..', 'schema.graphql.directives.json'), // OS safe path to file. // Array(5).fill(..)
+        //     // },
+        //     lambdaFunctionProps: { memorySize: 128 * 4 },
+        //     layers: [appSync.graphqlLambdaLayer, layer],
+        //     subscriber: {
+        //         moduleName: '@jompx-org/appsync-datasource-layer',
+        //         className: 'Subscriber'
+        //     },
+        //     options: {}
+        // });
+        // this.schemaBuilder.addDataSource(jompxDynamoDbDataSource.lambdaFunction);
 
-        // Security: Grant the DynamoDb Lambda datasource read/write access to all DynamoDb tables.
-        props.dataSourceStack.dynamoDbStack.tables.forEach(table => {
-            table.grantReadWriteData(jompxDynamoDbDataSource.lambdaFunction);
-        });
+        // // Security: Grant the DynamoDb Lambda datasource read/write access to all DynamoDb tables.
+        // props.dataSourceStack.dynamoDbStack.tables.forEach(table => {
+        //     table.grantReadWriteData(jompxDynamoDbDataSource.lambdaFunction);
+        // });
 
-        // Add auto build GraphQL endpoints.
-        new AppSyncBuild(this, 'AppSyncBuild', {
-            graphqlApi: this.graphqlApi,
-            schemaBuilder: this.schemaBuilder
-        });
+        // // Add auto build GraphQL endpoints.
+        // new AppSyncBuild(this, 'AppSyncBuild', {
+        //     graphqlApi: this.graphqlApi,
+        //     schemaBuilder: this.schemaBuilder
+        // });
 
-        // Add business GraphQL endpoints.
-        new AppSyncBusiness(this, 'AppSyncBusiness', {
-            graphqlApi: this.graphqlApi,
-            schemaBuilder: this.schemaBuilder
-        });
+        // // Add business GraphQL endpoints.
+        // new AppSyncBusiness(this, 'AppSyncBusiness', {
+        //     graphqlApi: this.graphqlApi,
+        //     schemaBuilder: this.schemaBuilder
+        // });
 
-        // Add subscriptions.
-        new AppSyncSubscription(this, 'AppSyncSubscription', {
-            graphqlApi: this.graphqlApi,
-            schemaBuilder: this.schemaBuilder
-        });
+        // // Add subscriptions.
+        // new AppSyncSubscription(this, 'AppSyncSubscription', {
+        //     codeFirstSchema: this.codeFirstSchema,
+        //     schemaBuilder: this.schemaBuilder
+        // });
     }
 }

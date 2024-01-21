@@ -1,0 +1,10 @@
+{
+    "deepLink": true,
+    "packages": [
+        "../jompx/dist/libs/constructs",
+        "../jompx/dist/libs/dynamodb-datasource",
+        "../jompx/dist/libs/graphql",
+        "../jompx/dist/libs/jcdk",
+        "../jompx/dist/libs/sql-datasource"
+    ]
+}
