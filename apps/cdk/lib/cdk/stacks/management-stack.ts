@@ -21,12 +21,12 @@ export class ManagementStack extends cdk.Stack {
 
         if (environment?.name) {
             // Create SES verified domain entities for all domains.
-            config.value.domains?.forEach(domain => {
-                const domainName = `${environment.name}.${domain.rootDomainName}`;
-                new jompx.SesDomainEntity(this, `SesDomainEntity${changeCase.pascalCase(environment.name)}`, {
-                    domainName
-                });
-            });
+            // config.value.domains?.forEach(domain => {
+            //     const domainName = `${environment.name}.${domain.rootDomainName}`;
+            //     new jompx.SesDomainEntity(this, `SesDomainEntity${changeCase.pascalCase(environment.name)}`, {
+            //         domainName
+            //     });
+            // });
 
             // Create biling alarm.
             new jompx.BillingAlarm(this, 'BillingAlarm', {
@@ -38,7 +38,8 @@ export class ManagementStack extends cdk.Stack {
 
         // Create organization trail.
         new jompx.OrganizationTrail(this, 'OrganizationTrail', {
-            bucketName: `${config.value.organization.name}-${config.environmentByName('security')?.name}-organization-trail`,
+            trailName: 'organization-trail',
+            bucketName: `${config.value.organization.name}-organization-trail`
         });
     }
 }

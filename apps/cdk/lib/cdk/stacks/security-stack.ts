@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import * as athena from 'aws-cdk-lib/aws-athena';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import * as jompx from '@jompx/constructs';
@@ -15,29 +16,29 @@ export class SecurityStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new Config(this.node);
-        const environment = config.environmentByEnv(props?.env);
+        const organizationEnvironment = config.environmentByName('management');
 
         // Setup Athena query results bucket.
         this.athenaResultsBucket = new s3.Bucket(this, 'AthenaResults', {
-            bucketName: `${config.value.organization.name}-${environment?.name}-athena-results`,
+            bucketName: `aws-athena-query-results-${this.account}-${this.region}`,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             encryption: s3.BucketEncryption.S3_MANAGED,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
         });
 
-        // Create organization trail.
-        new jompx.OrganizationTrailBucket(this, 'OrganizationTrailBucket', {
-            bucketName: `${config.value.organization.name}-${environment?.name}-organization-trail`,
-            accountId: props?.env?.account ?? '',
-            region: props?.env?.region ?? '',
-            organizationAccount: props?.env?.account ?? '',
-            organizationRegion: props?.env?.region ?? '',
+        // Create organization trail storage. Logs will be saved to this bucket.
+        new jompx.OrganizationTrailStorage(this, 'OrganizationTrailStorage', {
+            bucketName: `${config.value.organization.name}-organization-trail`,
+            accountId: this.account,
+            region: this.region,
+            organizationAccount: organizationEnvironment?.accountId ?? '',
+            organizationRegion: this.region,
             organizationId: config.value.organization.id,
             athenaQueryResultsS3Url: this.athenaResultsBucket.s3UrlForObject(),
             projection: {
                 accountIds: config.accountIds,
                 regions: config.regions,
-                timestampRange: '2024/01/09,NOW'
+                timestampRange: '2024/01/01,NOW'
             },
             expiration: cdk.Duration.days(7)
         });

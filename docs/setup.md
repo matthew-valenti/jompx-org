@@ -804,8 +804,6 @@ Deploying to multiple accounts manually (from a developer machine) requires that
 // Manually deploy a stack to sandbox1:
 nx build cdk
 nx login cdk --profile jompx-cicd-prod
-nx login cdk --profile jompx-management
-nx login cdk --profile jompx-sandbox1
 ***IAM Identity Center (successor to AWS Single Sign-On) streamlines how you manage workforce user access to AWS
 nx run cdk:list // Set local config stage = prod or test or sandbox1 https://www.youtube.com/watch?v=4yJp5-jGGNk
 Raw AWS CDK (for reference): npx aws-cdk deploy CdkPipelineStack/AppStage/AppSyncStack --profile jompx-sandbox1
@@ -819,9 +817,9 @@ nx deploy cdk CdkPipelineStack/ManagementStage/ManagementStack --context branch=
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile jompx-test
 
-// Deploy DnsStack to prod only.
-nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
-nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=prod --profile jompx-prod
+// Deploy DnsStack to network account only.
+nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context branch=main --profile jompx-cicd-prod
+nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context branch=main --profile jompx-cicd-prod
 
 // Deploy SecurityStack to security account only (there is no test security account).
 nx synth cdk CdkPipelineStack/SecurityStage/SecurityStack --context branch=main --profile jompx-cicd-prod --quiet 
@@ -834,9 +832,9 @@ nx deploy cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 -
 
 ---
 
-nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
-nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1
-nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --profile jompx-sandbox1 --hotswap
+nx synth cdk CdkPipelineStack/AllStage/CommunicationStack --context branch=main --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --context branch=main --profile jompx-sandbox1
+nx deploy cdk CdkPipelineStack/AllStage/CommunicationStack --context branch=main --profile jompx-sandbox1 --hotswap
 
 nx synth cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1
 nx deploy cdk CdkPipelineStack/AppStage/HostingStack --profile jompx-sandbox1

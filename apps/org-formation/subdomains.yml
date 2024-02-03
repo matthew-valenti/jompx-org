@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09-OC'
+AWSTemplateFormatVersion: "2010-09-09-OC"
 
 # Include file that contains Organization Section.
 # The Organization Section describes Accounts, Organizational Units, etc.
@@ -9,12 +9,20 @@ Organization: !Include ./organization.yml
 DefaultOrganizationBindingRegion: us-west-2
 
 # Matthew Notes:
-# Create a hosted zone across multiple AWS accounts.
-# Create a stack in each account (that matches OrganizationBindings). The name of the stack is a command line parameter.
-# A Route53 public hosted zone domain created in management/master account with subdomain management. The master account cannot have tags.
-# A Route53 public hosted zone domain created in prod account.
+# Follow AWS best practices for centralized domain management in an AWS multi-account environment.
+# Create a primary (or root) hosted zone on one AWS account. e.g. jompx.com
+# This account acts as the authoritative source for DNS records for the domain.
+# For subdomains, delegate DNS authority to other AWS accounts via NS and SOA records. e.g. test.jompx.com
+# This approach allows different teams to manage their own DNS records for their own subdomains while still maintaining centralized control over the primary domain.
+# Note that this setup is complicated to achieve using the AWS CDK.
+
+# Matthew Create:
+# Create a stack in an account (that matches OrganizationBindings). The name of the stack is a command line parameter.
+# A Route53 public hosted zone domain created in network account.
 # A Route53 public hosted zone subdomain created in accounts with subdomain tag (in organization.yml).
-# Removed the SSM params in original template and changed root binding account to prod (instead of management).
+# (commented out) A Route53 public hosted zone domain created in management/organization account with subdomain management. Org formation does not support tags on the management/organization account so we explicitly need to add the subdomain.
+
+# Removed the SSM params in original template and changed root binding account to network (instead of management).
 
 # Matthew TODO:
 # Cannot make region a param. Org-formation expects region to be a literal string and doesn't appear to support !Ref like account.
@@ -23,22 +31,20 @@ DefaultOrganizationBindingRegion: us-west-2
 # TTL: 300 = 5 mins, 3600 = 1 hour, 86400 = 1 day
 
 Parameters:
-
   domainName:
     Type: String
 
   ttl:
     Type: Number
-    Default: 3600
+    Default: 86400
 
 # Section contains a named set of Bindings.
 # Bindings determine what resources are deployed where
 # These bindings can be !Ref'd from the Resources in the resource section
 OrganizationBindings:
-
   # binding for ManagementHostedZone, ManagementHostedZoneIdParam, ManagementHostedZoneNameParam
-  ManagementHostedZoneBinding:
-    IncludeMasterAccount: true
+  #ManagementHostedZoneBinding:
+  #  IncludeMasterAccount: true
 
   # binding for HostedZone, HostedZoneIdParam, HostedZoneNameParam
   HostedZoneBinding:
@@ -46,10 +52,9 @@ OrganizationBindings:
 
   # binding for RootHostedZone, ParentNsRecord
   RootHostedZoneBinding:
-    Account: !Ref ProdAccount
+    Account: !Ref NetworkAccount
 
 Resources:
-
   #=========================================#
   # Zone
   #=========================================#
@@ -60,15 +65,15 @@ Resources:
     Properties:
       HostedZoneConfig:
         Comment: Domain Hosted Zone
-      Name: !Sub '${AWSAccount.Tags.subdomain}.${domainName}.'
+      Name: !Sub "${AWSAccount.Tags.subdomain}.${domainName}."
 
-  ManagementHostedZoneBinding:
-    Type: AWS::Route53::HostedZone
-    OrganizationBinding: !Ref ManagementHostedZoneBinding
-    Properties:
-      HostedZoneConfig:
-        Comment: Domain Hosted Zone
-      Name: !Sub 'management.${domainName}.'
+  #ManagementHostedZoneBinding:
+  #  Type: AWS::Route53::HostedZone
+  #  OrganizationBinding: !Ref ManagementHostedZoneBinding
+  #  Properties:
+  #    HostedZoneConfig:
+  #      Comment: Domain Hosted Zone
+  #    Name: !Sub "management.${domainName}."
 
   #=========================================#
   # Parent Record
@@ -91,8 +96,7 @@ Resources:
     ForeachAccount: !Ref HostedZoneBinding
     Properties:
       Type: NS
-      HostedZoneName: !Sub '${domainName}.'
-      Name: !Sub '${CurrentAccount.Tags.subdomain}.${domainName}.'
+      HostedZoneName: !Sub "${domainName}."
+      Name: !Sub "${CurrentAccount.Tags.subdomain}.${domainName}."
       TTL: !Ref ttl
       ResourceRecords: !GetAtt CurrentAccount.Resources.HostedZone.NameServers
-

@@ -11,7 +11,7 @@ export class CiCdStage extends cdk.Stage {
     constructor(scope: Construct, id: string, props?: cdk.StageProps) {
         super(scope, id, props);
 
-        new CommunicationStack(this, 'CommunicationStack', props);
+        // new CommunicationStack(this, 'CommunicationStack', props);
         // TODO: Use or lose.
         // new AppsPipelineStack(this, 'AppsPipelineStack', props);
     }

@@ -106,7 +106,7 @@ export class CdkPipelineStack extends cdk.Stack {
 
                     // Deploy to test environments first. If successful then deploy to production environments.
                     pipeline.addStage(new CommonStage(this, 'CommonStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new CiCdStage(this, 'CiCdStageTest', { ...this.props, env: config.env('cicd-test') }));
+                    // pipeline.addStage(new CiCdStage(this, 'CiCdStageTest', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new WorkloadStage(this, 'WorkloadStageTest', { ...this.props, env: config.env('test') }));
 
                     // Deploy to production environments.
@@ -114,7 +114,7 @@ export class CdkPipelineStack extends cdk.Stack {
                     pipeline.addStage(new SecurityStage(this, 'SecurityStage', { ...this.props, env: config.env('security') }));
                     // pipeline.addStage(new CommonStage(this, 'CommonStage', { ...this.props, env: config.env('cicd-prod') }));
                     // pipeline.addStage(new CiCdStage(this, 'CiCdStage', { ...this.props, env: config.env('prod') }));
-                    // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') }));
+                    pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('network') }));
                     // pipeline.addStage(new WorkloadStage(this, 'WorkloadStage', { ...this.props, env: config.env('prod') }));
                     break;
 
@@ -122,7 +122,7 @@ export class CdkPipelineStack extends cdk.Stack {
                 // When stage = test, listen for changes on branch: test-test.
                 case (branch === 'test' || branch === 'test-test'):
                     pipeline.addStage(new CommonStage(this, 'CommonStageTest', { ...this.props, env: config.env('test') })); // Deploy to test env first. 
-                    pipeline.addStage(new CiCdStage(this, 'CiCdStageTest', { ...this.props, env: config.env('cicd-test') }));
+                    // pipeline.addStage(new CiCdStage(this, 'CiCdStageTest', { ...this.props, env: config.env('cicd-test') }));
                     pipeline.addStage(new WorkloadStage(this, 'WorkloadStageTest', { ...this.props, env: config.env('test') }));
                     // pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('prod') })); // For temporary testing only (in test environments). Delete stack after use.
                     break;

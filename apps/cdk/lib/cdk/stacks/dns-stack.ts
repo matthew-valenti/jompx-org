@@ -23,7 +23,7 @@ export class DnsStack extends cdk.Stack {
         // NameCheap doco: https://www.namecheap.com/support/knowledgebase/article.aspx/1340/2176/namecheap-private-email-records-for-domains-with-thirdparty-dns/
 
         // Lookup jompx.com public hosted zone (created by org-formation).
-        const domainName = environment?.name === 'prod' ? 'jompx.com' : `${environment?.name}.jompx.com`;
+        const domainName = 'jompx.com';
         const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName });
 
         new route53.MxRecord(this, 'MxRecord1', {
@@ -98,7 +98,7 @@ export class DnsStack extends cdk.Stack {
         new route53.TxtRecord(this, "TxtRecord3", {
             zone: zone,
             ttl: cdk.Duration.minutes(86400),
-            values: ['v=DMARC1; p=reject; rua=mailto:admin@jompx.com;'],
+            values: ['v=DMARC1; p=reject;'], // To send dmarc reports via email add: rua=mailto:admin@jompx.com;
             recordName: '_dmarc'
         });
     }

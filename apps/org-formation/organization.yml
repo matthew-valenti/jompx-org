@@ -65,8 +65,6 @@ Organization:
       AccountName: cicd-test
       AccountId: '863054937555'
       RootEmail: cicd-test@jompx.com
-      Tags:
-        subdomain: cicd-test
 
   CicdProdAccount:
     Type: OC::ORG::Account
@@ -125,8 +123,6 @@ Organization:
       AccountName: test
       AccountId: '706457422044'
       RootEmail: test@jompx.com
-      Tags:
-        subdomain: test
 
   SandboxOU:
     Type: OC::ORG::OrganizationalUnit

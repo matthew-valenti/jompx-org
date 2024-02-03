@@ -36,5 +36,9 @@
     "us-west-2b",
     "us-west-2c",
     "us-west-2d"
-  ]
+  ],
+  "hosted-zone:account=767397869266:domainName=jompx.com:region=us-west-2": {
+    "Id": "/hostedzone/Z08233302RSXFS5B8D18E",
+    "Name": "jompx.com."
+  }
 }
