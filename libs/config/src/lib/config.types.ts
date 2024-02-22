@@ -5,10 +5,12 @@ export interface OrgConfiguration {
 export interface Configuration {
     organization: Organization;
     emails: Email[];
+    phones: Phone[];
     domains: Domain[];
-    environments: IEnvironment[];
+    apps: App[];
+    environments: Environment[];
     deployment: Deployment;
-    apps: IApp[];
+    clientVpns: ClientVpn[];
 }
 
 export interface Organization {
@@ -21,18 +23,23 @@ export interface Email {
     tags: string[];
 }
 
+export interface Phone {
+    phone: string;
+    tags: string[];
+}
+
 export interface Domain {
     rootDomainName: string;
 }
 
-export interface IEnvironment {
+export interface Environment {
     accountId: string;
     region: string;
     name: string;
-    cidr?: string;
+    cidrBlock?: string;
 }
 
-export interface IApp {
+export interface App {
     name: string;
     rootDomainName: string;
 }
@@ -40,7 +47,6 @@ export interface IApp {
 export type DeploymentStage = 'prod' | 'test';
 
 export interface Deployment {
-    defaultStage: DeploymentStage;
     branches: DeploymentBranch[];
 }
 
@@ -51,31 +57,19 @@ export interface DeploymentBranch {
 
 export type Pipeline = 'cdk' | 'apps';
 
-export interface IStage {
-    [key: string]: IStageProperties;
+export interface ClientVpn {
+    name: string;
+    samlProviderName: string;
+    cidr: string;
+    dnsServers: string[];
 }
 
-export interface IStageProperties {
-    branch: string;
-    deployments: IStageDeployment[];
-}
-
-export interface IStageDeployment {
-    type: string;
-    environmentName: string;
-}
-
-export interface IEnv {
-    account: string;
-    region: string;
-}
-
-export interface ILocalConfig {
-    [key: string]: {
-        stage?: string;
-        // stages?: IStage; // TODO: Do we need the ability to override stages on local? What about putting the stage in the CLI deploy instead?
-    };
-}
+// export interface ILocalConfig {
+//     [key: string]: {
+//         stage?: string;
+//         // stages?: IStage; // TODO: Do we need the ability to override stages on local? What about putting the stage in the CLI deploy instead?
+//     };
+// }
 
 /*
 appSync: {

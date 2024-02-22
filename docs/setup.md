@@ -821,14 +821,12 @@ nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context stage=test --profile 
 nx synth cdk CdkPipelineStack/DnsStage/DnsStack --context branch=main --profile jompx-cicd-prod
 nx deploy cdk CdkPipelineStack/DnsStage/DnsStack --context branch=main --profile jompx-cicd-prod
 
+nx synth cdk CdkPipelineStack/NetworkStage/NetworkStack --context branch=main --profile jompx-cicd-prod --quiet
+nx deploy cdk CdkPipelineStack/NetworkStage/NetworkStack --context branch=main --profile jompx-cicd-prod --quiet --requireApproval never
+
 // Deploy SecurityStack to security account only (there is no test security account).
 nx synth cdk CdkPipelineStack/SecurityStage/SecurityStack --context branch=main --profile jompx-cicd-prod --quiet 
 nx deploy cdk CdkPipelineStack/SecurityStage/SecurityStack --context branch=main --profile jompx-cicd-prod --quiet --requireApproval never
-
----
-
-nx synth cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet
-nx deploy cdk CdkPipelineStack/MainStage/NetworkStack --profile jompx-sandbox1 --quiet --requireApproval never
 
 ---
 
@@ -1204,26 +1202,32 @@ aggregate {
 
   ## Client VPN Setup
 
+https://aws.amazon.com/blogs/networking-and-content-delivery/using-aws-sso-with-aws-client-vpn-for-authentication-and-authorization/
   1. Create SAML 2.0 Application
-
+  Unfortunately, as of Feb 2024 there is no way to progamatically to create this SAML application.
+  AWS Management Console instructions:
   a. In the AWS Management Console, go to IAM Identity Center > Applications.
   b. Add a new application > I have an application I want to set up > SAML 2.0
   c. Enter the following:
     Display name = AWS Client VPN
     Description = Custom SAML 2.0 application for AWS Client VPN, enabling MFA and policy based authorization to network segments.
-    Important: IAM Identity Center SAML metadata file
-    Important: Download the IAM Identity Center certificate and save it to a secure place.
+    Download the AWS SSO metadata file (required for setting up the IAM Identity provider below).
     Application ACS URL = http://127.0.0.1:35001
-    Application SAML audience = urn:amazon:webservices:clientvpn
-  d. Assign users and groups who will have VPN access.
-  e. Edit attribute mappings:
+    Application SAML audience = urn:amazon:webservices:clientvpn 
+  d. Edit attribute mappings:
     Subject | ${user:email} | emailAddress
     memberOf | ${user:groups} | unspecified
+  e. Assign users and groups who will have VPN access.
 
-  f.  Now Create an IAM Identity provider:
-    Go to IAM > Identity providers > Add provider
+  2. Create an IAM Identity provider
+  a. Go to IAM > Identity providers > Add provider
     Provider type = SAML
     Provider name = AWS_SSO_For_Client_VPN
+    Upload the metadata file you downloaded previously when creating the SSO Application
+  
+  3. Deploy the Jompx SSO client vpn construct.
 
-
-
+  4. Connect your computer to AWS Client VPN
+  a. Download software: https://aws.amazon.com/vpn/client-vpn-download/
+  b. Download configuration file: VPC > Client VPN Endpoints > Your Client VPN > Download Client Configuration.
+  c. Add a new connection profile to the client

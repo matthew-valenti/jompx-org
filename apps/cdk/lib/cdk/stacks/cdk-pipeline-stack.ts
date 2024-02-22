@@ -6,6 +6,7 @@ import { CommonStage } from '../stages/common-stage';
 import { CiCdStage } from '../stages/cicd-stage';
 import { DnsStage } from '../stages/dns-stage';
 import { ManagementStage } from '../stages/management-stage';
+import { NetworkStage } from '../stages/network-stage';
 import { SecurityStage } from '../stages/security-stage';
 import { WorkloadStage } from '../stages/workload-stage';
 import get = require('get-value');
@@ -112,6 +113,7 @@ export class CdkPipelineStack extends cdk.Stack {
                     // Deploy to production environments.
                     pipeline.addStage(new ManagementStage(this, 'ManagementStage', { ...this.props, env: config.env('management') }));
                     pipeline.addStage(new SecurityStage(this, 'SecurityStage', { ...this.props, env: config.env('security') }));
+                    pipeline.addStage(new NetworkStage(this, 'NetworkStage', { ...this.props, env: config.env('network') }));
                     // pipeline.addStage(new CommonStage(this, 'CommonStage', { ...this.props, env: config.env('cicd-prod') }));
                     // pipeline.addStage(new CiCdStage(this, 'CiCdStage', { ...this.props, env: config.env('prod') }));
                     pipeline.addStage(new DnsStage(this, 'DnsStage', { ...this.props, env: config.env('network') }));

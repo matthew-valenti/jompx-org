@@ -20,6 +20,7 @@
     "@angular/platform-browser": "15.2.5",
     "@angular/platform-browser-dynamic": "15.2.5",
     "@angular/router": "15.2.5",
+    "@aws-sdk/client-sso-admin": "^3.515.0",
     "@capacitor/core": "^3.8.0",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@ionic/angular": "^6.7.1",

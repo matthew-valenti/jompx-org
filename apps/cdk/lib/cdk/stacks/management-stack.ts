@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as changeCase from 'change-case';
 import * as jompx from '@jompx/constructs';
 import { Config } from '@jompx-org/config';
 
@@ -17,24 +16,16 @@ export class ManagementStack extends cdk.Stack {
         super(scope, id, props);
 
         const config = new Config(this.node);
-        const environment = config.environmentByEnv(props?.env);
 
-        if (environment?.name) {
-            // Create SES verified domain entities for all domains.
-            // config.value.domains?.forEach(domain => {
-            //     const domainName = `${environment.name}.${domain.rootDomainName}`;
-            //     new jompx.SesDomainEntity(this, `SesDomainEntity${changeCase.pascalCase(environment.name)}`, {
-            //         domainName
-            //     });
-            // });
-
-            // Create biling alarm.
-            new jompx.BillingAlarm(this, 'BillingAlarm', {
-                environmentName: environment?.name,
-                estimatedMonthlyThreshold: 5,
-                topicSubscriptions: config.emailsByTag('billing')?.map(email => new subscriptions.EmailSubscription(email))
-            });
-        }
+        // Create budget alarm.
+        new jompx.BudgetAlarm(this, 'BudgetAlarm', {
+            budgetLimit: {
+                amount: 6,
+                unit: 'USD'
+            },
+            emailSubscribers: config.emailsByTag('billing'),
+            phoneSubscribers: config.phonesByTag('billing')
+        });
 
         // Create organization trail.
         new jompx.OrganizationTrail(this, 'OrganizationTrail', {

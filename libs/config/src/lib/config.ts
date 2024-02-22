@@ -49,8 +49,8 @@ export class Config {
      * @param name
      * @returns
      */
-    public environmentByName(name: string): ltype.IEnvironment | undefined {
-        return this.value.environments.find((o: ltype.IEnvironment) => o.name === name);
+    public environmentByName(name: string): ltype.Environment | undefined {
+        return this.value.environments.find((o: ltype.Environment) => o.name === name);
     }
 
     /**
@@ -58,8 +58,8 @@ export class Config {
      * @param accountId
      * @returns
      */
-    public environmentByEnv(env: cdk.Environment | undefined): ltype.IEnvironment | undefined {
-        return this.value.environments.find((o: ltype.IEnvironment) => o.accountId === env?.account && o.region === env?.region);
+    public environmentByEnv(env: cdk.Environment | undefined): ltype.Environment | undefined {
+        return this.value.environments.find((o: ltype.Environment) => o.accountId === env?.account && o.region === env?.region);
     }
 
     /**
@@ -70,6 +70,16 @@ export class Config {
         const emails = this.value.emails as ltype.Email[];
         const tags = Array.isArray(tag) ? tag : [tag];
         return emails.filter(email => tags.some(tag => email.tags.includes(tag))).map(email => email.email);
+    }
+
+    /**
+     * Given a list of tags, return a list of phone numnbers that have at least one matching tag.
+     * @returns
+     */
+    public phonesByTag(tag: string | string[]): string[] | undefined {
+        const phones = this.value.phones as ltype.Phone[];
+        const tags = Array.isArray(tag) ? tag : [tag];
+        return phones.filter(phone => tags.some(tag => phone.tags.includes(tag))).map(phone => phone.phone);
     }
 
     /**
@@ -95,10 +105,10 @@ export class Config {
         return rv;
     }
 
-    public environmentById(accountId: string | undefined): ltype.IEnvironment | undefined {
+    public environmentById(accountId: string | undefined): ltype.Environment | undefined {
         let rv = undefined;
 
-        const environment = this.value.environments.find((o: ltype.IEnvironment) => o.accountId === accountId);
+        const environment = this.value.environments.find((o: ltype.Environment) => o.accountId === accountId);
         if (!environment) throw Error(`Environment account id not found! Add environment to config.ts.`);
         rv = environment;
 
