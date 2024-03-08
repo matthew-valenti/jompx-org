@@ -27,7 +27,7 @@ export class DnsStack extends cdk.Stack {
         const zone = route53.PublicHostedZone.fromLookup(this, 'LookupHostedZone', { domainName });
 
         new route53.MxRecord(this, 'MxRecord1', {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             values: [
                 {
@@ -43,32 +43,32 @@ export class DnsStack extends cdk.Stack {
 
         // SPF. Use -all (instead of ~all) to improve email delivery (according to NameCheap support).
         new route53.TxtRecord(this, "TxtRecord1", {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             values: ['v=spf1 include:spf.privateemail.com -all'],
         });
 
         new route53.CnameRecord(this, `CnameApiRecord1`, {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             domainName: 'privateemail.com',
             recordName: 'mail'
         });
         new route53.CnameRecord(this, `CnameApiRecord2`, {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             domainName: 'privateemail.com',
             recordName: 'autodiscover'
         });
         new route53.CnameRecord(this, `CnameApiRecord3`, {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             domainName: 'privateemail.com',
             recordName: 'autoconfig'
         });
 
         new route53.SrvRecord(this, 'MySrvRecord1', {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             values: [{
                 hostName: 'privateemail.com',
@@ -85,7 +85,7 @@ export class DnsStack extends cdk.Stack {
         // Value: the string which begins with "v=DKIM1; k=rsa; p=MIIBIjANB..." (should be entered without brackets and quotes)
         // Copy/paste from NameCheap: default._domainkey IN TXT ("v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyPU9k501244Q/kkQ/xMpPaHBXULMvIq6l0cedSi4iswMXaVP80FoORPvx9IjCvDC8Ud7OwNAW5ZYxGFlwMU+08AmJ1z29rX9+vASQ2TOt15lLj4I+rbI0QW+ujYDxlXUTPj+HuHp17Iwg88IKPK4x6b3PmZl0JjFSdZmbz5zLPexhhZqZPIB+wLZWcalLJYcUufeGdPfZJ/l0ORZ6qAxwFBrA0bXhja2pZcFXpAmlcBpFll//WKru0dPUtBxUfyN0S3SPfUa3rgK4zIjMBX34yB+x+BueE/fQNi0bOnSSWqKszWd/qlHrulmUlhkRqZRMRDpeg3DH5hwaIZr652ySQIDAQAB");
         new route53.TxtRecord(this, "TxtRecord2", {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             values: ['v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyPU9k501244Q/kkQ/xMpPaHBXULMvIq6l0cedSi4iswMXaVP80FoORPvx9IjCvDC8Ud7OwNAW5ZYxGFlwMU+08AmJ1z29rX9+vASQ2TOt15lLj4I+rbI0QW+ujYDxlXUTPj+HuHp17Iwg88IKPK4x6b3PmZl0JjFSdZmbz5zLPexhhZqZPIB+wLZWcalLJYcUufeGdPfZJ/l0ORZ6qAxwFBrA0bXhja2pZcFXpAmlcBpFll//WKru0dPUtBxUfyN0S3SPfUa3rgK4zIjMBX34yB+x+BueE/fQNi0bOnSSWqKszWd/qlHrulmUlhkRqZRMRDpeg3DH5hwaIZr652ySQIDAQAB'],
             recordName: 'default._domainkey'
@@ -96,7 +96,7 @@ export class DnsStack extends cdk.Stack {
         // p=quarantine	Once your DMARC compliance is high enough, you may direct receiving organizations mark messages failing DMARC as spam. You’re telling the world your SPF and DKIM deployment is very accurate and to be careful with any message that fail.
         // p=reject	Once you’re sure all of your important messages are passing DMARC, you may direct organizations to outright reject messages that fail. You’re telling the world your SPF and DKIM deployment is fully complete and up to date.
         new route53.TxtRecord(this, "TxtRecord3", {
-            zone: zone,
+            zone,
             ttl: cdk.Duration.minutes(86400),
             values: ['v=DMARC1; p=reject;'], // To send dmarc reports via email add: rua=mailto:admin@jompx.com;
             recordName: '_dmarc'

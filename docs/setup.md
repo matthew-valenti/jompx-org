@@ -1206,7 +1206,7 @@ https://aws.amazon.com/blogs/networking-and-content-delivery/using-aws-sso-with-
   1. Create SAML 2.0 Application
   Unfortunately, as of Feb 2024 there is no way to progamatically to create this SAML application.
   AWS Management Console instructions:
-  a. In the AWS Management Console, go to IAM Identity Center > Applications.
+  a. In the AWS Management Console, and management AWS account, go to IAM Identity Center > Applications.
   b. Add a new application > I have an application I want to set up > SAML 2.0
   c. Enter the following:
     Display name = AWS Client VPN
@@ -1219,15 +1219,18 @@ https://aws.amazon.com/blogs/networking-and-content-delivery/using-aws-sso-with-
     memberOf | ${user:groups} | unspecified
   e. Assign users and groups who will have VPN access.
 
-  2. Create an IAM Identity provider
-  a. Go to IAM > Identity providers > Add provider
+  2. Create an IAM Identity provider. The provider MUST be on the same AWS account as the Client VPN.
+  Note that the SAML Application metadata document effectively "links" the identity provider with the SAML application, 
+  a. In the network AWS account, go to IAM > Identity providers > Add provider
     Provider type = SAML
     Provider name = AWS_SSO_For_Client_VPN
-    Upload the metadata file you downloaded previously when creating the SSO Application
+    Upload the metadata file you downloaded previously when creating the SAML Application
   
-  3. Deploy the Jompx SSO client vpn construct.
+  3. Create a Client VPN. 
+  a. Update client vpn in project config. 
+  b. Deploy the Jompx SSO client vpn construct.
 
   4. Connect your computer to AWS Client VPN
   a. Download software: https://aws.amazon.com/vpn/client-vpn-download/
   b. Download configuration file: VPC > Client VPN Endpoints > Your Client VPN > Download Client Configuration.
-  c. Add a new connection profile to the client
+  c. Add a new connection profile to the client.

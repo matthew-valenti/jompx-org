@@ -40,22 +40,22 @@ export class NetworkStack extends cdk.Stack {
             const vpcConstruct = new Vpc(this, 'Vpc', { cidrBlock: environment.cidrBlock });
 
             // Create Client VPN.
-
-            const managementEnvironment = config.environmentByName('management');
-            const clientVpnConfig = config.value.clientVpns.find(o => o.name === `vpn-${managementEnvironment?.region}-developer`)
-
-            // if (managementEnvironment && clientVpnConfig) {
-            //     new jompx.ClientVpn(this, 'ClientVpn', {
-            //         cidr: clientVpnConfig.cidr,
-            //         vpc: vpcConstruct.vpc,
-            //         vpcSubnets: vpcConstruct.vpc.selectSubnets({
-            //             subnetGroupName: 'client-vpn'
-            //         }),
-            //         samlProviderName: clientVpnConfig.samlProviderName,
-            //         rootDomainName: config.value.domains[0].rootDomainName,
-            //         logRetentionDays: logs.RetentionDays.ONE_WEEK
-            //     })
-            // }
+            const clientVpnConfig = config.value.clientVpns.find(o => o.name === `vpn-${this.region}-developer`)
+            if (clientVpnConfig) {
+                new jompx.ClientVpnSso(this, 'ClientVpn', {
+                    accountId: this.account,
+                    cidr: clientVpnConfig.cidr,
+                    dnsServers: clientVpnConfig.dnsServers,
+                    vpc: vpcConstruct.vpc,
+                    vpcSubnets: vpcConstruct.vpc.selectSubnets({
+                        subnetGroupName: 'client-vpn'
+                    }),
+                    samlProviderName: clientVpnConfig.samlProviderName,
+                    rootDomainName: config.value.domains[0].rootDomainName,
+                    logRetentionDays: logs.RetentionDays.ONE_WEEK,
+                    splitTunnel: true // If true, only traffic intended for the VPC will traverse the VPN tunnel.
+                })
+            }
         }
     }
 }
