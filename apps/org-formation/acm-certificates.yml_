@@ -1,0 +1,176 @@
+AWSTemplateFormatVersion: '2010-09-09-OC'
+
+# IMPORTANT:
+# - The ACM certificate is ALWAYS created in us-east-1.
+# - The SSM parameter is ALSO written to us-east-1 by default.
+# - To write the SSM parameter into additional AWS regions,
+#   manually add those regions under CertificateSsmBinding.Region.
+#   Example provided below (us-west-2 is commented-out).
+
+# Include file that contains Organization Section.
+# The Organization Section describes Accounts, Organizational Units, etc.
+Organization: !Include ./organization.yml
+
+# This template is intentionally *us-east-1 only*.
+# We hard-code the region here so that certificates required by CloudFront
+# are always created in us-east-1, even if regions.yml does not contain us-east-1.
+DefaultOrganizationBindingRegion: us-east-1
+
+# Default binding so that non-standard "resources" such as Fn::ForEach
+# (which OrgFormation also validates) still have an OrganizationBinding.
+# Keep this aligned with CertificateBinding below.
+DefaultOrganizationBinding:
+  AccountsWithTag: certificate
+  Region: us-east-1
+
+# Enable CloudFormation language extensions (Fn::ForEach) for DRY resource generation.
+Transform: AWS::LanguageExtensions
+
+# Jompx Notes:
+# High-level:
+# - Creates a wildcard ACM certificate in us-east-1 for a single root domainName.
+# - Runs in every account tagged with a certificate subdomain.
+# - Automatically validates the certificate via Route 53 using the provided hostedZoneId.
+#
+# Usage:
+# - Parameter domainName = root domain (e.g. jompx.com)
+# - Parameter hostedZoneId = Route 53 hosted zone ID in the workload account
+#   for either:
+#     - "<subdomain>.<domainName>" (e.g. sandbox1.jompx.com), or
+#     - "<domainName>" when the certificate tag is empty (e.g. jompx.com)
+#
+# - In organization.yml, tag accounts with the subdomain to use:
+#
+#     # Sandbox / non-prod
+#     SandboxAccount:
+#       Type: OC::ORG::Account
+#       Properties:
+#         Tags:
+#           certificate: sandbox1
+#
+#     # Prod (root domain only)
+#     ProdAccount:
+#       Type: OC::ORG::Account
+#       Properties:
+#         Tags:
+#           certificate: ""
+
+Parameters:
+  domainName:
+    Type: String
+    Description: 'Root domain for the wildcard certificate (e.g. jompx.com).'
+
+  hostedZoneId:
+    Type: String
+    Description: 'Route 53 public hosted zone ID for the delegated subdomain (or root domain) used for DNS validation.'
+
+# Section contains a named set of Bindings.
+# Bindings determine what resources are deployed where.
+# These bindings can be !Ref'd from the Resources in the resource section.
+OrganizationBindings:
+  CertificateBinding:
+    # Target all accounts that have a "certificate" tag.
+    AccountsWithTag: certificate
+
+    # ACM certificates used with CloudFront must be in us-east-1.
+    Region: us-east-1
+
+  CertificateSsmBinding:
+    AccountsWithTag: certificate
+
+    # IMPORTANT:
+    # - SSM parameter will be deployed to ALL regions listed here.
+    # - By default, only us-east-1 is active.
+    # - Uncomment us-west-2 or add more regions as needed.
+
+    Region:
+      - us-east-1
+      # - us-west-2        # optional: add more regions as needed
+
+Conditions:
+  # Determine whether the account has a non-empty subdomain.
+  # If false, we use the root domain only.
+  HasCertificateSubdomain: !Not
+    - !Equals [!GetAtt AWSAccount.Tags.certificate, '']
+
+Resources:
+  #=========================================#
+  # Wildcard ACM Certificate
+  #=========================================#
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    OrganizationBinding: !Ref CertificateBinding
+    Properties:
+      # If certificate tag (subdomain) is set:
+      #   *.sandbox1.jompx.com
+      # Else (certificate: ""):
+      #   *.jompx.com
+      DomainName: !If
+        - HasCertificateSubdomain
+        - !Sub '*.${AWSAccount.Tags.certificate}.${domainName}'
+        - !Sub '*.${domainName}'
+
+      # Ensure the base FQDN is also covered:
+      #   sandbox1.jompx.com  OR  jompx.com
+      SubjectAlternativeNames:
+        - !If
+          - HasCertificateSubdomain
+          - !Sub '${AWSAccount.Tags.certificate}.${domainName}'
+          - !Ref domainName
+
+      # DNS validation: use the provided hostedZoneId so ACM creates
+      # validation CNAME records automatically in the correct zone.
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !If
+            - HasCertificateSubdomain
+            - !Sub '${AWSAccount.Tags.certificate}.${domainName}'
+            - !Ref domainName
+          HostedZoneId: !Ref hostedZoneId
+
+      Tags:
+        - Key: Vendor
+          Value: jompx
+        - Key: DomainName
+          Value: !If
+            - HasCertificateSubdomain
+            - !Sub '${AWSAccount.Tags.certificate}.${domainName}'
+            - !Ref domainName
+
+  #=========================================#
+  # SSM Parameters for Certificate ARN per region
+  #   /certificate/<fullDomain>/arn
+  #=========================================#
+  CertificateArnParam:
+    Type: AWS::SSM::Parameter
+    OrganizationBinding: !Ref CertificateSsmBinding
+    Properties:
+      Name: !If
+        - HasCertificateSubdomain
+        - !Sub '/certificate/${AWSAccount.Tags.certificate}.${domainName}/arn'
+        - !Sub '/certificate/${domainName}/arn'
+      Description: !Sub 'Wildcard certificate ARN alias for this domain (ACM certificate is in us-east-1).'
+      Type: String
+      Value: !Ref Certificate
+      Tags:
+        Vendor: jompx
+
+Outputs:
+  accountId:
+    Value: !Ref 'AWS::AccountId'
+    Description: 'Account in which this wildcard certificate was created.'
+
+  region:
+    Value: !Ref 'AWS::Region'
+    Description: 'Region in which certificates were created (always us-east-1).'
+
+  domainName:
+    Value: !If
+      - HasCertificateSubdomain
+      - !Sub '${AWSAccount.Tags.certificate}.${domainName}'
+      - !Ref domainName
+    Description: 'Fully-qualified domain used for the wildcard certificate.'
+
+  certificateArn:
+    Value: !Ref Certificate
+    Description: 'Wildcard ACM certificate ARN for this account/domain.'

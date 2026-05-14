@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.cdk.json",
+  "compilerOptions": {
+    "baseUrl": "../../",
+    "types": [
+      "node"
+    ],
+    "noEmit": true,
+    "typeRoots": [
+      "../../node_modules/@types"
+    ]
+  },
+  "references": [],
+  "include": [
+    "bin/**/*.ts",
+    "lib/**/*.ts"
+  ]
+}

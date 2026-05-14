@@ -1,0 +1,34 @@
+{
+  "name": "authorization",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/authorization/src",
+  "projectType": "library",
+  "tags": ["domain:authorization", "platform:server"],
+  "targets": {
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "{projectRoot}/src/index.ts",
+        "outputPath": "dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
+        "rollupConfig": "{projectRoot}/rollup.config.cjs",
+        "format": ["esm", "cjs"],
+        "generateExportsField": true,
+        "useLegacyTypescriptPlugin": false,
+        "skipTypeCheck": true
+      }
+    },
+    "gen": {
+      "executor": "@jompx/nx-plugin:authorization-gen",
+      "options": {
+        "schemaFile": "../../libs/catalog/src/lib/generated/catalog.json",
+        "cedarSchemaFile": "src/lib/global/org.cedarschema",
+        "cedarPolicyFilePattern": "src/lib/**/!(combined-policies).cedar",
+        "outputCombinedCedarPolicyFile": "src/lib/generated/combined-policies.cedar",
+        "outputCombinedCedarPolicyJsonFile": "src/lib/generated/combined-policies.json"
+      },
+      "dependsOn": ["^gen", "catalog:gen"]
+    }
+  }
+}

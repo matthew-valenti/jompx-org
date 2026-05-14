@@ -1,0 +1,43 @@
+generates:
+
+  ./src/lib/api/generated/api.schema.types.ts:
+    schema: ./src/lib/api/schema/api.schema.graphql
+    # documents: apps/infra/graphql/**/*.{ts,tsx,graphql}
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+
+  ./src/lib/api/generated/api.schema.introspection.json:
+    schema: ./src/lib/api/schema/api.schema.graphql
+    plugins:
+      - introspection
+
+  ./src/lib/api/generated/api.schema.directives.json:
+    schema: ./src/lib/api/schema/api.schema.graphql
+    plugins:
+      - "@jompx/nx-plugin/src/codegen/directives-sidecar.js"
+    config:
+      includeIntrospectionTypes: false
+      sort: true
+
+  ./src/lib/admin/generated/admin.schema.types.ts:
+    schema: ./src/lib/admin/schema/admin.schema.graphql
+    # documents: apps/infra/graphql/**/*.{ts,tsx,graphql}
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+
+  ./src/lib/admin/generated/admin.schema.introspection.json:
+    schema: ./src/lib/admin/schema/admin.schema.graphql
+    plugins:
+      - introspection
+
+  ./src/lib/admin/generated/admin.schema.directives.json:
+    schema: ./src/lib/admin/schema/admin.schema.graphql
+    plugins:
+      - "@jompx/nx-plugin/src/codegen/directives-sidecar.js"
+    config:
+      includeIntrospectionTypes: false
+      sort: true

@@ -1,0 +1,10 @@
+{
+  "api": {
+    "allowedPrincipalTypes": ["IAM", "CognitoGroup"],
+    "groupNames": ["Admin", "Editor", "Guest"]
+  },
+  "admin": {
+    "allowedPrincipalTypes": ["IAM", "CognitoGroup"],
+    "groupNames": ["Admin"]
+  }
+}

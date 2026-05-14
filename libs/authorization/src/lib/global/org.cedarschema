@@ -1,0 +1,238 @@
+// AUTO-GENERATED CODE - DO NOT EDIT
+entity Provider;
+
+entity ApiKey in Provider;
+
+entity IAM in Provider {
+  "accountId": String,
+  "cognitoIdentityPoolId": String,
+  "cognitoIdentityId": String,
+  "sourceIp": Set<String>,
+  "username": String,
+  "userArn": String,
+  "cognitoIdentityAuthType": String,
+  "cognitoIdentityAuthProvider": String
+};
+
+entity CognitoGroup in Provider {
+  "groupName": String
+};
+
+entity CognitoUser in Provider {
+  "sub": String,
+  "issuer": String,
+  "username": String,
+  "sourceIp": Set<String>,
+  "defaultAuthStrategy": String,
+  "groups": Set<String>
+};
+
+entity OIDC in Provider {
+  "sub": String,
+  "issuer": String
+};
+
+entity MysqlActor {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MysqlFile {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MysqlMovie {
+  "int": Long,
+  "owners": Set<String>,
+  "mysqlMovieActor": Set<MysqlMovieActor>,
+  "mysqlFile": MysqlFile,
+  "dynamodbAnalytics": Set<DynamodbAnalytics>,
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MysqlMovieActor {
+  "mysqlMovie": MysqlMovie,
+  "mysqlActor": MysqlActor,
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MongodbActor {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MongodbFile {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MongodbMovie {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity MongodbMovieActor {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbActor {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbAnalytics {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbMovie {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbMovieActor {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbMovieAttribute {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity DynamodbMovieGsi1 {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+entity RelatedMovie {
+  "auth": {
+    "labels": Set<String>,
+  }
+};
+
+// Control access to GraphQL objects.
+action GraphQLObjectAccess appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlActor, MysqlFile, MysqlMovie, MysqlMovieActor, MongodbActor, MongodbFile, MongodbMovie, MongodbMovieActor, DynamodbActor, DynamodbAnalytics, DynamodbMovie, DynamodbMovieActor, DynamodbMovieAttribute, DynamodbMovieGsi1, RelatedMovie],
+  context: {
+    "api": String,
+  }
+};
+
+// Control access to GraphQL object fields.
+action GraphQLFieldAccess appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaAttribute],
+  context: {
+    "api": String,
+  }
+};
+
+action Find appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlFile, MysqlMovie, MysqlMovieActor, MongodbActor, MongodbFile, MongodbMovie, MongodbMovieActor, DynamodbActor, DynamodbAnalytics, DynamodbMovie, DynamodbMovieActor, DynamodbMovieAttribute, DynamodbMovieGsi1],
+  context: {
+    "api": String,
+  }
+};
+
+action FindOne appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlFile, MysqlMovie, MysqlMovieActor, MongodbActor, MongodbFile, MongodbMovie, MongodbMovieActor, DynamodbActor, DynamodbAnalytics, DynamodbMovie, DynamodbMovieActor, DynamodbMovieAttribute, DynamodbMovieGsi1],
+  context: {
+    "api": String,
+  }
+};
+
+action InsertOne appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action InsertMany appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action UpdateOne appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action UpdateMany appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action UpsertOne appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action UpsertMany appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action DeleteOne appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+
+action DeleteMany appliesTo {
+  principal: [CognitoUser, CognitoGroup, IAM, ApiKey, OIDC],
+  resource: [SchemaEntity, MysqlMovie, MysqlMovieActor, MongodbMovie, DynamodbMovie],
+  context: {
+    "api": String,
+  }
+};
+// END AUTO-GENERATED CODE
+
+// CUSTOM CODE START - SAFE TO EDIT
+entity SchemaEntity {
+};
+
+entity SchemaAttribute in SchemaEntity {
+};
+
+// CUSTOM CODE END

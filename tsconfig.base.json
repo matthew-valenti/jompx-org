@@ -16,6 +16,12 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["development"]
+    "customConditions": ["development"],
+    "paths": {
+      "@learnsnax/authorization": ["./libs/authorization/src/index.ts"],
+      "@learnsnax/catalog": ["./libs/catalog/src/index.ts"],
+      "@learnsnax/config": ["./libs/config/src/index.ts"],
+      "@learnsnax/jgraphql": ["./libs/jgraphql/src/index.ts"]
+    }
   }
 }

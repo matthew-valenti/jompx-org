@@ -1,0 +1,13 @@
+diff --git a/node_modules/@nx/rollup/src/plugins/with-nx/with-nx.js b/node_modules/@nx/rollup/src/plugins/with-nx/with-nx.js
+index ab276ba..05367cb 100644
+--- a/node_modules/@nx/rollup/src/plugins/with-nx/with-nx.js
++++ b/node_modules/@nx/rollup/src/plugins/with-nx/with-nx.js
+@@ -191,6 +191,8 @@ dependencies) {
+                             composite: false,
+                             outDir: rollupOutputDir,
+                             declarationDir: rollupOutputDir,
++                            module: 'NodeNext',
++                            moduleResolution: 'NodeNext',
+                             noEmitOnError: !options.skipTypeCheck,
+                         },
+                     });

@@ -1,0 +1,44 @@
+{
+  "name": "config",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/config/src",
+  "projectType": "library",
+  "tags": ["domain:config", "platform:server"],
+  "targets": {
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "{projectRoot}/src/index.ts",
+        "outputPath": "dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
+        "rollupConfig": "{projectRoot}/rollup.config.cjs",
+        "format": ["esm", "cjs"],
+        "generateExportsField": true,
+        "useLegacyTypescriptPlugin": false,
+        "skipTypeCheck": true
+      }
+    },
+    "edit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker run --rm -it -v $PWD:/sops -w /sops mozilla/sops:latest sops edit {options.file}"
+      },
+      "configurations": {
+        "default": {
+          "file": "src/config.schema.ts"
+        }
+      }
+    },
+    "gen": {
+      "executor": "@jompx/nx-plugin:config-gen",
+      "options": {
+        "schemaFile": "config.schema.ts",
+        "schemaYamlFile": "config.yaml",
+        "rootSchemaName": "ConfigSchema",
+        "outputSchemaFile": "generated/schema.generated.json",
+        "outputConfigFile": "generated/config.generated.ts"
+      }
+    }
+  }
+}

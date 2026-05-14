@@ -1,0 +1,49 @@
+{
+  "name": "infra",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/infra/src",
+  "targets": {
+    "help": {
+      "executor": "@jompx/nx-plugin:cdk",
+      "options": {}
+    },
+    "bootstrap": {
+      "executor": "@jompx/nx-plugin:cdk-bootstrap",
+      "options": {
+        "cloudformationExecutionPolicies": "arn:aws:iam::aws:policy/AdministratorAccess"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "apps/infra/bin/infra.ts",
+        "outputPath": "apps/infra/cdk.out",
+        "tsConfig": "apps/infra/tsconfig.json"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "jestConfig": "apps/infra/jest.config.js",
+        "tsConfig": "apps/infra/tsconfig.json",
+        "passWithNoTests": true
+      }
+    },
+    "list": {
+      "executor": "@jompx/nx-plugin:cdk-list"
+    },
+    "synth": {
+      "executor": "@jompx/nx-plugin:cdk-synth"
+    },
+    "deploy": {
+      "executor": "@jompx/nx-plugin:cdk-deploy"
+    },
+    "destroy": {
+      "executor": "@jompx/nx-plugin:cdk-destroy"
+    }
+  }
+}
